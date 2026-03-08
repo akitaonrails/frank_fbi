@@ -117,13 +117,27 @@ class ApplicationMailboxTest < ActionMailbox::TestCase
     assert ApplicationMailbox.send(:email_authenticated?, inbound)
   end
 
-  # --- Admin cannot be rejected ---
+  # --- Admin command vs analysis routing ---
 
-  test "admin is never routed to rejection even without AllowedSender record" do
+  test "admin with command keyword routes to admin_command" do
     inbound = create_inbound_email_from_mail(
       from: "admin@example.com", to: "fbi@example.com", subject: "list", body: ""
     )
+    assert ApplicationMailbox.send(:admin_command?, inbound)
+  end
+
+  test "admin without command keyword routes to fraud_analysis" do
+    inbound = create_inbound_email_from_mail(
+      from: "admin@example.com", to: "fbi@example.com", subject: "Fwd: Suspicious email", body: "spam content"
+    )
+    assert_not ApplicationMailbox.send(:admin_command?, inbound)
     assert ApplicationMailbox.send(:admin_email?, inbound)
-    # Admin check happens before allowed_sender check, so admin never hits rejection
+  end
+
+  test "admin is never routed to rejection" do
+    inbound = create_inbound_email_from_mail(
+      from: "admin@example.com", to: "fbi@example.com", subject: "Check this spam", body: ""
+    )
+    assert ApplicationMailbox.send(:admin_email?, inbound)
   end
 end

@@ -10,7 +10,7 @@ class MailFetcher
     @port = 993
     @username = ENV.fetch("GMAIL_USERNAME")
     @password = ENV.fetch("GMAIL_PASSWORD")
-    @ingress_password = ENV.fetch("ACTION_MAILBOX_INGRESS_PASSWORD")
+    @ingress_password = ENV.fetch("RAILS_INBOUND_EMAIL_PASSWORD")
     @app_host = ENV.fetch("APP_HOST", "http://localhost:3000")
   end
 
@@ -61,10 +61,10 @@ class MailFetcher
 
     Rails.logger.info("MailFetcher: Processing message: #{envelope.subject}")
 
-    relay_to_action_mailbox(rfc822)
-
-    # Mark as read
-    imap.store(msg_id, "+FLAGS", [:Seen])
+    if relay_to_action_mailbox(rfc822)
+      # Only mark as read after successful relay
+      imap.store(msg_id, "+FLAGS", [:Seen])
+    end
   rescue => e
     Rails.logger.error("MailFetcher: Failed to process message #{msg_id}: #{e.message}")
   end
@@ -81,8 +81,11 @@ class MailFetcher
 
     response = http.request(request)
 
-    unless response.is_a?(Net::HTTPSuccess) || response.is_a?(Net::HTTPNoContent)
+    if response.is_a?(Net::HTTPSuccess) || response.is_a?(Net::HTTPNoContent)
+      true
+    else
       Rails.logger.error("MailFetcher: Action Mailbox relay returned #{response.code}: #{response.body}")
+      false
     end
   end
 end

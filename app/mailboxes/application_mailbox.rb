@@ -1,9 +1,19 @@
 class ApplicationMailbox < ActionMailbox::Base
-  routing ->(inbound_email) { admin_email?(inbound_email) } => :admin_command
-  routing ->(inbound_email) { allowed_sender?(inbound_email) } => :fraud_analysis
+  ADMIN_COMMANDS = %w[add remove list stats].freeze
+
+  routing ->(inbound_email) { admin_command?(inbound_email) } => :admin_command
+  routing ->(inbound_email) { admin_email?(inbound_email) || allowed_sender?(inbound_email) } => :fraud_analysis
   routing :all => :rejection
 
   private
+
+  # Route to AdminCommandMailbox only when the admin sends a recognized command
+  def self.admin_command?(inbound_email)
+    return false unless admin_email?(inbound_email)
+
+    subject = inbound_email.mail.subject.to_s.downcase.strip
+    ADMIN_COMMANDS.any? { |cmd| subject.include?(cmd) }
+  end
 
   def self.admin_email?(inbound_email)
     admin = ENV["ADMIN_EMAIL"]&.downcase&.strip

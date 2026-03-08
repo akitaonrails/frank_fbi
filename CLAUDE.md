@@ -96,7 +96,7 @@ suspects/                — ~30 sample .eml files used for testing
 All secrets in `.env` (see `.env.example`):
 - `ACTIVE_RECORD_ENCRYPTION_*` — 3 keys for Active Record Encryption
 - `GMAIL_USERNAME` / `GMAIL_PASSWORD` — Gmail IMAP/SMTP credentials
-- `ACTION_MAILBOX_INGRESS_PASSWORD` — Action Mailbox relay auth
+- `RAILS_INBOUND_EMAIL_PASSWORD` — Action Mailbox relay auth
 - `OPENROUTER_API_KEY` — LLM access via OpenRouter
 - `VIRUSTOTAL_API_KEY` — URL scanning
 - `WHOISXML_API_KEY` — WHOIS lookups

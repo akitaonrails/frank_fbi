@@ -6,7 +6,7 @@ if [ -f /usr/local/lib/libjemalloc.so ]; then
 fi
 
 # If running the rails server then create or migrate existing database
-if [ "${*}" == *"server"* ]; then
+if [[ "${*}" == *"server"* ]]; then
   ./bin/rails db:prepare
 fi
 

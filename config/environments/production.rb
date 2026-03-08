@@ -81,12 +81,12 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Allow Docker internal hostnames and healthcheck requests.
+  config.hosts = [
+    "localhost",
+    "app",               # Docker Compose service name
+    IPAddr.new("0.0.0.0/0"),  # All IPv4 (Docker internal networking)
+    IPAddr.new("::/0")        # All IPv6
+  ]
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
