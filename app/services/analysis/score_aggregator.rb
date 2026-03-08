@@ -41,7 +41,11 @@ module Analysis
       weight_sum = 0.0
 
       layers.each do |layer|
-        effective_weight = layer.weight * layer.confidence
+        # Layers that scored near 0 ("found nothing") provide weak evidence of
+        # legitimacy — absence of evidence is not evidence of absence. Dampen
+        # their influence so they don't drown out layers that found real problems.
+        dampening = [[layer.score / 50.0, 1.0].min, 0.1].max
+        effective_weight = layer.weight * layer.confidence * dampening
         weighted_sum += layer.score * effective_weight
         weight_sum += effective_weight
       end
