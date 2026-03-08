@@ -55,6 +55,49 @@ namespace :frank_fbi do
     end
   end
 
+  desc "Add an allowed sender"
+  task :add_sender, [:email] => :environment do |_t, args|
+    email = args[:email]
+    abort("Usage: bin/rails frank_fbi:add_sender[email@example.com]") unless email.present?
+
+    sender = AllowedSender.find_or_initialize_by(email_address: email.downcase.strip)
+    if sender.new_record?
+      sender.added_by = "rake"
+      sender.save!
+      puts "Added: #{email}"
+    elsif !sender.active?
+      sender.update!(active: true)
+      puts "Reactivated: #{email}"
+    else
+      puts "Already exists: #{email}"
+    end
+  end
+
+  desc "Remove an allowed sender"
+  task :remove_sender, [:email] => :environment do |_t, args|
+    email = args[:email]
+    abort("Usage: bin/rails frank_fbi:remove_sender[email@example.com]") unless email.present?
+
+    sender = AllowedSender.find_by(email_address: email.downcase.strip)
+    if sender&.active?
+      sender.update!(active: false)
+      puts "Removed: #{email}"
+    else
+      puts "Not found or already inactive: #{email}"
+    end
+  end
+
+  desc "List all allowed senders"
+  task list_senders: :environment do
+    senders = AllowedSender.active.order(:email_address)
+    if senders.empty?
+      puts "No allowed senders configured."
+    else
+      puts "Allowed senders (#{senders.size}):"
+      senders.each { |s| puts "  - #{s.email_address} (added by #{s.added_by || 'unknown'})" }
+    end
+  end
+
   desc "Smoke test: process a known spam email and verify high score"
   task smoke_test: :environment do
     spam_file = Rails.root.join("suspects/YOUR ATM CARD COMPENSATION PAYMENT !!!!.eml")

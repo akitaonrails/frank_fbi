@@ -33,6 +33,11 @@ bin/rails frank_fbi:fetch_mail
 
 # Start the web server
 bin/rails server
+
+# Manage allowed senders
+bin/rails "frank_fbi:add_sender[user@example.com]"
+bin/rails "frank_fbi:remove_sender[user@example.com]"
+bin/rails frank_fbi:list_senders
 ```
 
 ## Architecture
@@ -62,6 +67,7 @@ Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(ema
 - `KnownSender` — sender reputation tracking, belongs_to KnownDomain
 - `UrlScanResult` — VirusTotal/URLhaus cache with TTL, unique on [url, source]
 - `AnalysisReport` — rendered HTML/text report per email
+- `AllowedSender` — whitelisted sender emails (encrypted, managed by admin)
 
 ### Key Directories
 
@@ -69,10 +75,10 @@ Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(ema
 app/services/analysis/   — analyzers, consensus builder, score aggregator, pipeline orchestrator
 app/services/            — email_parser, mail_fetcher, API clients (virustotal, urlhaus, whois), report_renderer
 app/jobs/                — 10 job classes for pipeline stages
-app/mailboxes/           — FraudAnalysisMailbox (routes all inbound mail)
-app/mailers/             — AnalysisReportMailer (thread-aware reply with In-Reply-To/References)
-app/models/              — 7 models with validations, associations, encryption
-lib/tasks/frank_fbi.rake — rake tasks for analysis, smoke testing, mail fetching
+app/mailboxes/           — FraudAnalysisMailbox, AdminCommandMailbox, RejectionMailbox
+app/mailers/             — AnalysisReportMailer, AdminMailer
+app/models/              — 8 models with validations, associations, encryption
+lib/tasks/frank_fbi.rake — rake tasks for analysis, smoke testing, mail fetching, sender management
 suspects/                — ~30 sample .eml files used for testing
 ```
 
@@ -94,6 +100,15 @@ All secrets in `.env` (see `.env.example`):
 - `OPENROUTER_API_KEY` — LLM access via OpenRouter
 - `VIRUSTOTAL_API_KEY` — URL scanning
 - `WHOISXML_API_KEY` — WHOIS lookups
+- `ADMIN_EMAIL` — admin email for system management via email commands
+
+### Access Control
+
+- `ADMIN_EMAIL` env var defines the single admin who can manage the system
+- `AllowedSender` whitelist — only pre-approved emails get analyzed
+- Admin sends email commands (subject: add/remove/list/stats) to manage senders
+- Non-whitelisted senders receive a rejection reply
+- Routing: admin → `AdminCommandMailbox`, allowed → `FraudAnalysisMailbox`, others → `RejectionMailbox`
 
 ## Security Notes
 
