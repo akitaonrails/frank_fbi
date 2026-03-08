@@ -11,13 +11,13 @@ class AdminMailer < ApplicationMailer
 
     mail(
       to: to_email,
-      subject: "Re: #{original_subject} — Not Authorized"
+      subject: "Re: #{original_subject} — Não Autorizado"
     ) do |format|
       format.text do
-        render plain: "Your email address is not authorized to use this service. Contact the administrator."
+        render plain: "Seu endereço de e-mail não está autorizado a usar este serviço. Entre em contato com o administrador."
       end
       format.html do
-        render html: "<p>Your email address is not authorized to use this service. Contact the administrator.</p>".html_safe
+        render html: "<p>Seu endereço de e-mail não está autorizado a usar este serviço. Entre em contato com o administrador.</p>".html_safe
       end
     end
   end

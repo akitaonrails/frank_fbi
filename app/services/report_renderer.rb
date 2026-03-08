@@ -7,10 +7,10 @@ class ReportRenderer
   }.freeze
 
   VERDICT_LABELS = {
-    "legitimate" => "LEGITIMATE",
-    "suspicious_likely_ok" => "SUSPICIOUS (Likely OK)",
-    "suspicious_likely_fraud" => "SUSPICIOUS (Likely Fraud)",
-    "fraudulent" => "FRAUDULENT"
+    "legitimate" => "LEGÍTIMO",
+    "suspicious_likely_ok" => "SUSPEITO (Provavelmente OK)",
+    "suspicious_likely_fraud" => "SUSPEITO (Provável Fraude)",
+    "fraudulent" => "FRAUDULENTO"
   }.freeze
 
   VERDICT_EMOJIS = {
@@ -54,14 +54,14 @@ class ReportRenderer
         #{banner_html}
 
         <div class="section">
-          <h3>Email Analyzed</h3>
-          <p><strong>From:</strong> #{h @email.from_name} &lt;#{h @email.from_address}&gt;</p>
-          <p><strong>Subject:</strong> #{h @email.subject}</p>
-          <p><strong>Date:</strong> #{@email.received_at&.strftime('%B %d, %Y %H:%M %Z')}</p>
+          <h3>E-mail Analisado</h3>
+          <p><strong>De:</strong> #{h @email.from_name} &lt;#{h @email.from_address}&gt;</p>
+          <p><strong>Assunto:</strong> #{h @email.subject}</p>
+          <p><strong>Data:</strong> #{@email.received_at&.strftime('%d/%m/%Y %H:%M %Z')}</p>
         </div>
 
         <div class="section">
-          <h3>Analysis Breakdown</h3>
+          <h3>Detalhamento da Análise</h3>
           #{layers_html}
         </div>
 
@@ -70,8 +70,8 @@ class ReportRenderer
         #{llm_summary_html}
 
         <div class="footer">
-          <p>Frank FBI &mdash; Email Fraud Analysis System</p>
-          <p>This analysis is automated and should be used as guidance, not as a definitive verdict.</p>
+          <p>Frank FBI &mdash; Sistema de Análise de Fraude em E-mails</p>
+          <p>Esta análise é automatizada e deve ser usada como orientação, não como veredito definitivo.</p>
         </div>
       </body>
       </html>
@@ -81,36 +81,36 @@ class ReportRenderer
   def to_text
     lines = []
     emoji = VERDICT_EMOJIS[@email.verdict] || ""
-    lines << "#{emoji} FRANK FBI - EMAIL ANALYSIS REPORT"
+    lines << "#{emoji} FRANK FBI - RELATÓRIO DE ANÁLISE DE E-MAIL"
     lines << "=" * 50
     lines << ""
-    lines << "VERDICT: #{VERDICT_LABELS[@email.verdict] || @email.verdict&.upcase}"
-    lines << "SCORE: #{@email.final_score}/100"
+    lines << "VEREDITO: #{VERDICT_LABELS[@email.verdict] || @email.verdict&.upcase}"
+    lines << "PONTUAÇÃO: #{@email.final_score}/100"
     lines << ""
-    lines << "--- Email Analyzed ---"
-    lines << "From: #{@email.from_name} <#{@email.from_address}>"
-    lines << "Subject: #{@email.subject}"
-    lines << "Date: #{@email.received_at&.strftime('%B %d, %Y %H:%M %Z')}"
+    lines << "--- E-mail Analisado ---"
+    lines << "De: #{@email.from_name} <#{@email.from_address}>"
+    lines << "Assunto: #{@email.subject}"
+    lines << "Data: #{@email.received_at&.strftime('%d/%m/%Y %H:%M %Z')}"
     lines << ""
-    lines << "--- Analysis Breakdown ---"
+    lines << "--- Detalhamento da Análise ---"
 
     @layers.each do |layer|
       lines << ""
-      lines << "#{layer.layer_name.titleize}: #{layer.score}/100 (confidence: #{(layer.confidence * 100).round}%)"
+      lines << "#{layer.layer_name.titleize}: #{layer.score}/100 (confiança: #{(layer.confidence * 100).round}%)"
       lines << "  #{layer.explanation}"
     end
 
     findings = aggregate_key_findings
     if findings.any?
       lines << ""
-      lines << "--- Key Findings ---"
+      lines << "--- Principais Descobertas ---"
       findings.each { |f| lines << "  - #{f}" }
     end
 
     lines << ""
     lines << "-" * 50
-    lines << "Frank FBI - Email Fraud Analysis System"
-    lines << "This analysis is automated and should be used as guidance."
+    lines << "Frank FBI - Sistema de Análise de Fraude em E-mails"
+    lines << "Esta análise é automatizada e deve ser usada como orientação."
     lines.join("\n")
   end
 
@@ -122,7 +122,7 @@ class ReportRenderer
 
   def banner_html
     color = VERDICT_COLORS[@email.verdict] || "#6b7280"
-    label = VERDICT_LABELS[@email.verdict] || "UNKNOWN"
+    label = VERDICT_LABELS[@email.verdict] || "DESCONHECIDO"
 
     <<~HTML
       <div class="banner" style="background: #{color};">
@@ -157,7 +157,7 @@ class ReportRenderer
     items = findings.map { |f| "<li>#{h f}</li>" }.join
     <<~HTML
       <div class="section">
-        <h3>Key Findings</h3>
+        <h3>Principais Descobertas</h3>
         <ul class="findings">#{items}</ul>
       </div>
     HTML
@@ -181,7 +181,7 @@ class ReportRenderer
 
     <<~HTML
       <div class="section">
-        <h3>AI Model Verdicts</h3>
+        <h3>Vereditos dos Modelos de IA</h3>
         #{rows}
       </div>
     HTML

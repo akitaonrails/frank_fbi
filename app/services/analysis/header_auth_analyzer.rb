@@ -61,13 +61,13 @@ module Analysis
       when "pass"
         # Good
       when "fail"
-        @findings << "SPF authentication failed — sender IP not authorized"
+        @findings << "Autenticação SPF falhou — IP do remetente não autorizado"
         @score += 30
       when "softfail"
-        @findings << "SPF softfail — sender IP not explicitly authorized"
+        @findings << "SPF softfail — IP do remetente não explicitamente autorizado"
         @score += 15
       when "none", "missing"
-        @findings << "No SPF record found for sender domain"
+        @findings << "Nenhum registro SPF encontrado para o domínio do remetente"
         @score += 10
       when "neutral"
         @score += 5
@@ -83,10 +83,10 @@ module Analysis
       when "pass"
         # Good
       when "fail"
-        @findings << "DKIM signature verification failed"
+        @findings << "Verificação da assinatura DKIM falhou"
         @score += 25
       when "none", "missing"
-        @findings << "No DKIM signature present"
+        @findings << "Nenhuma assinatura DKIM presente"
         @score += 10
       end
     end
@@ -104,13 +104,13 @@ module Analysis
       when "pass"
         # Good
       when "fail"
-        @findings << "DMARC authentication failed"
+        @findings << "Autenticação DMARC falhou"
         @score += 25
       when "none", "missing"
-        @findings << "No DMARC policy found"
+        @findings << "Nenhuma política DMARC encontrada"
         @score += 10
       when "bestguesspass"
-        @findings << "DMARC best-guess pass (no policy published)"
+        @findings << "DMARC best-guess pass (nenhuma política publicada)"
         @score += 5
       end
     end
@@ -130,7 +130,7 @@ module Analysis
       reply_domain = reply_to.split("@").last
 
       if from_domain != reply_domain
-        @findings << "Reply-To domain (#{reply_domain}) differs from From domain (#{from_domain})"
+        @findings << "Domínio do Reply-To (#{reply_domain}) difere do domínio do From (#{from_domain})"
         @score += 20
         @details[:reply_to_mismatch] = true
       else
@@ -145,7 +145,7 @@ module Analysis
         scl = scl_match[1].to_i
         @details[:scl] = scl
         if scl >= 5
-          @findings << "Microsoft Spam Confidence Level is high (#{scl})"
+          @findings << "Nível de confiança de spam da Microsoft alto (#{scl})"
           @score += [scl * 3, 25].min
         end
       end
@@ -153,7 +153,7 @@ module Analysis
       # X-Spam headers
       spam_status = headers.match(/X-Spam-Status:\s*(Yes|No)/i)
       if spam_status&.captures&.first&.downcase == "yes"
-        @findings << "Flagged as spam by upstream filter"
+        @findings << "Marcado como spam por filtro anterior"
         @score += 15
         @details[:upstream_spam_flag] = true
       end
@@ -167,7 +167,7 @@ module Analysis
       @details[:x_mailer] = mailer_match[1].strip
 
       if SUSPICIOUS_MAILERS.any? { |s| mailer.include?(s) }
-        @findings << "Suspicious mail client: #{mailer_match[1].strip}"
+        @findings << "Cliente de e-mail suspeito: #{mailer_match[1].strip}"
         @score += 15
       end
     end
@@ -197,9 +197,9 @@ module Analysis
 
     def build_explanation
       if @findings.empty?
-        "Email authentication checks all passed. SPF: #{@details[:spf]}, DKIM: #{@details[:dkim]}, DMARC: #{@details[:dmarc]}."
+        "Verificações de autenticação passaram. SPF: #{@details[:spf]}, DKIM: #{@details[:dkim]}, DMARC: #{@details[:dmarc]}."
       else
-        "Found #{@findings.size} issue(s): #{@findings.join('; ')}."
+        "Encontrado(s) #{@findings.size} problema(s): #{@findings.join('; ')}."
       end
     end
   end

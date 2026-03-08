@@ -8,49 +8,49 @@ module Analysis
 
       def build
         <<~PROMPT
-          You are an expert email fraud analyst. Analyze the following email and its preliminary analysis results to determine if it is fraudulent, suspicious, or legitimate.
+          Você é um analista especialista em fraude de e-mail. Analise o e-mail a seguir e os resultados preliminares da análise para determinar se é fraudulento, suspeito ou legítimo.
 
-          ## Email Metadata
-          - **From**: #{@email.from_name} <#{@email.from_address}>
-          - **Reply-To**: #{@email.reply_to_address || 'same as From'}
-          - **Subject**: #{@email.subject}
-          - **Sender Domain**: #{@email.sender_domain}
-          - **Date**: #{@email.received_at}
+          ## Metadados do E-mail
+          - **De**: #{@email.from_name} <#{@email.from_address}>
+          - **Reply-To**: #{@email.reply_to_address || 'mesmo que De'}
+          - **Assunto**: #{@email.subject}
+          - **Domínio do Remetente**: #{@email.sender_domain}
+          - **Data**: #{@email.received_at}
 
-          ## Email Body (text)
+          ## Corpo do E-mail (texto)
           ```
           #{truncate_text(@email.body_text, 2000)}
           ```
 
-          ## Extracted URLs (#{(@email.extracted_urls || []).size} total)
+          ## URLs Extraídas (#{(@email.extracted_urls || []).size} no total)
           #{format_urls}
 
-          ## Attachments
+          ## Anexos
           #{format_attachments}
 
-          ## Preliminary Analysis Results
+          ## Resultados da Análise Preliminar
 
           #{format_layer_results}
 
-          ## Your Task
-          Based on ALL the information above, provide your fraud analysis as a JSON object with exactly these fields:
-          - **score**: integer 0-100 (0 = certainly legitimate, 100 = certainly fraudulent)
-          - **verdict**: one of "legitimate", "suspicious_likely_ok", "suspicious_likely_fraud", "fraudulent"
-          - **confidence**: float 0.0-1.0 (how confident you are in your verdict)
-          - **reasoning**: a short, direct conclusion justifying your verdict (1-3 sentences, no filler)
-          - **key_findings**: array of strings, the top 3-5 most important findings that support your verdict
+          ## Sua Tarefa
+          Com base em TODAS as informações acima, forneça sua análise de fraude como um objeto JSON com exatamente estes campos:
+          - **score**: inteiro 0-100 (0 = certamente legítimo, 100 = certamente fraudulento)
+          - **verdict**: um de "legitimate", "suspicious_likely_ok", "suspicious_likely_fraud", "fraudulent"
+          - **confidence**: float 0.0-1.0 (quão confiante você está no seu veredito)
+          - **reasoning**: uma conclusão curta e direta justificando seu veredito (1-3 frases, sem enrolação)
+          - **key_findings**: array de strings, as 3-5 descobertas mais importantes que sustentam seu veredito
 
-          Respond ONLY with the JSON object, no other text.
+          Responda em português brasileiro. Responda APENAS com o objeto JSON, nenhum outro texto.
         PROMPT
       end
 
       private
 
       def truncate_text(text, max_length)
-        return "No text content available" if text.blank?
+        return "Nenhum conteúdo de texto disponível" if text.blank?
 
         if text.length > max_length
-          text[0...max_length] + "\n... [truncated]"
+          text[0...max_length] + "\n... [truncado]"
         else
           text
         end
@@ -58,14 +58,14 @@ module Analysis
 
       def format_urls
         urls = (@email.extracted_urls || []).first(15)
-        return "No URLs found" if urls.empty?
+        return "Nenhuma URL encontrada" if urls.empty?
 
         urls.map { |u| "- #{u}" }.join("\n")
       end
 
       def format_attachments
         attachments = @email.attachments_info || []
-        return "No attachments" if attachments.empty?
+        return "Sem anexos" if attachments.empty?
 
         attachments.map { |a| "- #{a['filename']} (#{a['content_type']}, #{a['size']} bytes)" }.join("\n")
       end
@@ -73,7 +73,7 @@ module Analysis
       def format_layer_results
         @layer_results.map do |layer|
           <<~LAYER
-            ### #{layer.layer_name.titleize} (Score: #{layer.score}/100, Confidence: #{layer.confidence})
+            ### #{layer.layer_name.titleize} (Pontuação: #{layer.score}/100, Confiança: #{layer.confidence})
             #{layer.explanation}
           LAYER
         end.join("\n")

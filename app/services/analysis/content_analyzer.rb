@@ -58,6 +58,67 @@ module Analysis
       /\bfailure\s+to\s+(comply|respond|verify)\b/i
     ].freeze
 
+    # --- PT-BR patterns ---
+
+    WHATSAPP_PATTERNS = [
+      /\bhttps?:\/\/wa\.me\//i,
+      /\bhttps?:\/\/wa\.link\//i,
+      /\bhttps?:\/\/chat\.whatsapp\.com\//i,
+      /\bhttps?:\/\/api\.whatsapp\.com\//i
+    ].freeze
+
+    BROKEN_UNSUBSCRIBE_PATTERNS = [
+      /%%unsubscribelink%%/i,
+      /%25%25unsubscribe/i,
+      /\{\{unsubscribe\}\}/i,
+      /\{unsubscribe_url\}/i,
+      /%%email%%/i,
+      /%25%25email%25%25/i
+    ].freeze
+
+    URGENCY_PATTERNS_PTBR = [
+      /\b(urgente|imediatamente|agora\s+mesmo)\b/i,
+      /\b(n[ãa]o\s+perca|[úu]ltima\s+chance|prazo\s+limitado)\b/i,
+      /\b(vagas?\s+limitadas?|aja\s+agora|corra|aproveite\s+j[áa])\b/i,
+      /\b(oferta\s+(exclusiva|imperd[íi]vel)|tempo\s+limitado)\b/i,
+      /\b(antes\s+que\s+acabe|restam\s+poucas?\s+vagas?)\b/i
+    ].freeze
+
+    FINANCIAL_PATTERNS_PTBR = [
+      /\b(taxa\s+do\s+mercado|cons[óo]rcio|cr[ée]dito\s+contemplado)\b/i,
+      /\b(investimento|rendimento|transfer[êe]ncia\s+banc[áa]ria)\b/i,
+      /\b(empr[ée]stimo|carta\s+contemplada|aporte)\b/i,
+      /\b(compra\s+de\s+cr[ée]dito|menor\s+taxa|taxa\s+zero)\b/i,
+      /\b(sem\s+juros|parcelas?\s+fixas?|antecipa[çc][ãa]o)\b/i,
+      /\b(pix|boleto|dep[óo]sito\s+banc[áa]rio)\b/i
+    ].freeze
+
+    PII_REQUEST_PATTERNS_PTBR = [
+      /\b(CPF|RG|CNPJ)\b/,
+      /\b(dados?\s+pessoais?|dados?\s+banc[áa]rios?)\b/i,
+      /\b(n[úu]mero\s+do\s+cart[ãa]o|senha|c[óo]digo\s+de\s+seguran[çc]a)\b/i,
+      /\b(comprovante\s+de\s+resid[êe]ncia|certid[ãa]o)\b/i,
+      /\b(chave\s+pix|conta\s+banc[áa]ria)\b/i
+    ].freeze
+
+    AUTHORITY_IMPERSONATION_PTBR = [
+      /\b(Pol[íi]cia\s+Federal|Pol[íi]cia\s+Civil)\b/i,
+      /\b(Receita\s+Federal|Banco\s+Central)\b/i,
+      /\b(Minist[ée]rio\s+(P[úu]blico|da\s+\w+))\b/i,
+      /\b(Tribunal\s+de\s+Justi[çc]a|Procuradoria)\b/i,
+      /\b(INSS|Detran|Serasa|SPC)\b/,
+      /\b(Caixa\s+Econ[ôo]mica|Banco\s+do\s+Brasil)\b/i
+    ].freeze
+
+    PHISHING_PHRASES_PTBR = [
+      /\bclique\s+aqui\s+para\b/i,
+      /\bsua\s+conta\s+foi\s+(bloqueada|suspensa|comprometida)/i,
+      /\bconfirme\s+seus\s+dados\b/i,
+      /\batualize\s+seu\s+cadastro\b/i,
+      /\bverifique\s+sua\s+identidade\b/i,
+      /\bacesse\s+o\s+link\s+(abaixo|a\s+seguir)\b/i
+    ].freeze
+
     def initialize(email)
       @email = email
       @findings = []
@@ -71,6 +132,8 @@ module Analysis
       analyze_urls
       analyze_url_mismatches
       detect_url_shorteners
+      detect_whatsapp_links
+      detect_broken_unsubscribe
       analyze_patterns(text)
       analyze_attachments
       check_grammar_flags(text)
@@ -105,7 +168,7 @@ module Analysis
       @details[:url_domains] = domains
 
       if urls.size > 10
-        @findings << "Contains an unusually high number of URLs (#{urls.size})"
+        @findings << "Contém um número incomum de URLs (#{urls.size})"
         @score += 5
       end
     end
@@ -131,7 +194,7 @@ module Analysis
       end
 
       if mismatches.any?
-        @findings << "Found #{mismatches.size} URL display/href mismatch(es) — classic phishing technique"
+        @findings << "Encontrada(s) #{mismatches.size} divergência(s) entre texto e link — técnica clássica de phishing"
         @score += mismatches.size * 15
         @details[:url_mismatches] = mismatches.first(5)
       end
@@ -145,18 +208,54 @@ module Analysis
       end
 
       if shortened.any?
-        @findings << "Contains #{shortened.size} shortened URL(s) that hide the real destination"
+        @findings << "Contém #{shortened.size} URL(s) encurtada(s) que ocultam o destino real"
         @score += shortened.size * 8
         @details[:shortened_urls] = shortened
       end
     end
 
+    def detect_whatsapp_links
+      text = combined_text
+      html = @email.body_html.to_s
+      full_content = "#{text} #{html}"
+
+      matches = WHATSAPP_PATTERNS.count { |p| full_content.match?(p) }
+      @details[:whatsapp_matches] = matches
+
+      if matches > 0
+        @findings << "Contém #{matches} link(s) do WhatsApp — desvio de canais comerciais normais"
+        @score += [matches * 10, 20].min
+      end
+    end
+
+    def detect_broken_unsubscribe
+      html = @email.body_html.to_s
+      text = combined_text
+      full_content = "#{text} #{html}"
+
+      matches = BROKEN_UNSUBSCRIBE_PATTERNS.count { |p| full_content.match?(p) }
+      @details[:broken_unsubscribe_matches] = matches
+
+      if matches > 0
+        @findings << "Contém #{matches} variável(is) de template não resolvida(s) — indica e-mail em massa mal configurado"
+        @score += [matches * 8, 15].min
+      end
+    end
+
     def analyze_patterns(text)
-      check_pattern_group(text, URGENCY_PATTERNS, "urgency", "Urgency/pressure language detected", 8)
-      check_pattern_group(text, FINANCIAL_PATTERNS, "financial", "Financial fraud indicators detected", 12)
-      check_pattern_group(text, PII_REQUEST_PATTERNS, "pii_request", "Requests for personal/sensitive information", 15)
-      check_pattern_group(text, AUTHORITY_IMPERSONATION, "authority", "Impersonation of authority/government detected", 12)
-      check_pattern_group(text, PHISHING_PHRASES, "phishing", "Phishing language patterns detected", 10)
+      # English patterns
+      check_pattern_group(text, URGENCY_PATTERNS, "urgency", "Linguagem de urgência/pressão detectada", 8)
+      check_pattern_group(text, FINANCIAL_PATTERNS, "financial", "Indicadores de fraude financeira detectados", 12)
+      check_pattern_group(text, PII_REQUEST_PATTERNS, "pii_request", "Solicitação de informações pessoais/sensíveis", 15)
+      check_pattern_group(text, AUTHORITY_IMPERSONATION, "authority", "Impersonação de autoridade/governo detectada", 12)
+      check_pattern_group(text, PHISHING_PHRASES, "phishing", "Padrões de linguagem de phishing detectados", 10)
+
+      # PT-BR patterns
+      check_pattern_group(text, URGENCY_PATTERNS_PTBR, "urgency_ptbr", "Linguagem de urgência/pressão em português detectada", 8)
+      check_pattern_group(text, FINANCIAL_PATTERNS_PTBR, "financial_ptbr", "Indicadores de fraude financeira em português detectados", 12)
+      check_pattern_group(text, PII_REQUEST_PATTERNS_PTBR, "pii_request_ptbr", "Solicitação de dados pessoais/sensíveis em português", 15)
+      check_pattern_group(text, AUTHORITY_IMPERSONATION_PTBR, "authority_ptbr", "Impersonação de autoridade brasileira detectada", 12)
+      check_pattern_group(text, PHISHING_PHRASES_PTBR, "phishing_ptbr", "Padrões de phishing em português detectados", 10)
     end
 
     def check_pattern_group(text, patterns, key, finding_message, score_per_match)
@@ -164,7 +263,7 @@ module Analysis
       @details[:"#{key}_matches"] = matches
 
       if matches > 0
-        @findings << "#{finding_message} (#{matches} pattern(s))"
+        @findings << "#{finding_message} (#{matches} padrão(ões))"
         @score += [matches * score_per_match, 30].min
       end
     end
@@ -180,7 +279,7 @@ module Analysis
 
       if dangerous.any?
         names = dangerous.map { |a| a["filename"] }
-        @findings << "Dangerous attachment type(s): #{names.join(', ')}"
+        @findings << "Tipo(s) de anexo perigoso(s): #{names.join(', ')}"
         @score += 25
         @details[:dangerous_attachments] = names
       end
@@ -190,7 +289,7 @@ module Analysis
         att["filename"].to_s.match?(/\.\w+\.\w+$/)
       end
       if double_ext.any?
-        @findings << "Attachment(s) with double extension (possible disguise)"
+        @findings << "Anexo(s) com extensão dupla (possível disfarce)"
         @score += 15
       end
     end
@@ -199,14 +298,14 @@ module Analysis
       # Check for ALL CAPS subject
       subject = @email.subject.to_s
       if subject.length > 10 && subject == subject.upcase && subject.match?(/[A-Z]/)
-        @findings << "Subject line is entirely in ALL CAPS"
+        @findings << "Linha de assunto inteiramente em MAIÚSCULAS"
         @score += 8
         @details[:all_caps_subject] = true
       end
 
       # Check for excessive exclamation/question marks
       if subject.count("!") >= 3 || text.scan(/!{2,}/).any?
-        @findings << "Excessive exclamation marks in email"
+        @findings << "Excesso de pontos de exclamação no e-mail"
         @score += 5
         @details[:excessive_punctuation] = true
       end
@@ -229,9 +328,9 @@ module Analysis
 
     def build_explanation
       if @findings.empty?
-        "No suspicious content patterns detected. #{@details[:url_count]} URL(s) found, #{@details[:attachment_count]} attachment(s)."
+        "Nenhum padrão de conteúdo suspeito detectado. #{@details[:url_count]} URL(s) encontrada(s), #{@details[:attachment_count]} anexo(s)."
       else
-        "Found #{@findings.size} concern(s): #{@findings.join('; ')}."
+        "Encontrado(s) #{@findings.size} problema(s): #{@findings.join('; ')}."
       end
     end
   end

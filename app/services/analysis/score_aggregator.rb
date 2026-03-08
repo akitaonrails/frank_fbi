@@ -62,7 +62,7 @@ module Analysis
     end
 
     def build_verdict_explanation(layers, score, verdict)
-      lines = ["Final Score: #{score}/100 — #{verdict.humanize}"]
+      lines = ["Pontuação Final: #{score}/100 — #{verdict.humanize}"]
       lines << ""
 
       layers.order(:layer_name).each do |layer|

@@ -92,10 +92,10 @@ module Analysis
 
     def build_explanation(verdict, score)
       providers = @verdicts.map(&:provider).join(", ")
-      agreement = @verdicts.map(&:verdict).uniq.size == 1 ? "unanimous" : "majority"
+      agreement = @verdicts.map(&:verdict).uniq.size == 1 ? "unânime" : "majoritário"
 
-      "#{agreement.capitalize} #{verdict.humanize.downcase} verdict from #{@verdicts.size} AI models (#{providers}). " \
-        "Consensus score: #{score}/100. " \
+      "Veredito #{verdict.humanize.downcase} #{agreement} de #{@verdicts.size} modelos de IA (#{providers}). " \
+        "Pontuação de consenso: #{score}/100. " \
         "#{summarize_reasoning}"
     end
 

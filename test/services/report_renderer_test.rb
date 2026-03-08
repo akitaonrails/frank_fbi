@@ -14,7 +14,7 @@ class ReportRendererTest < ActiveSupport::TestCase
     html = renderer.to_html
 
     assert_includes html, "85/100"
-    assert_includes html, "FRAUDULENT"
+    assert_includes html, "FRAUDULENTO"
     assert_includes html, "SCAM EMAIL"
     assert_includes html, "Header Auth"
   end
@@ -24,7 +24,7 @@ class ReportRendererTest < ActiveSupport::TestCase
     text = renderer.to_text
 
     assert_includes text, "85/100"
-    assert_includes text, "FRAUDULENT"
+    assert_includes text, "FRAUDULENTO"
     assert_includes text, "SCAM EMAIL"
   end
 

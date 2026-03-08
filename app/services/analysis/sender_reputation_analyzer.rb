@@ -54,10 +54,10 @@ module Analysis
       @details[:local_fraud_ratio] = known.fraud_ratio
 
       if known.fraud_ratio > 0.7 && known.times_seen >= 3
-        @findings << "Domain has high fraud ratio in our database (#{(known.fraud_ratio * 100).round}%)"
+        @findings << "Domínio com alta taxa de fraude em nosso banco de dados (#{(known.fraud_ratio * 100).round}%)"
         @score += 25
       elsif known.fraud_ratio > 0.4
-        @findings << "Domain has moderate fraud ratio (#{(known.fraud_ratio * 100).round}%)"
+        @findings << "Domínio com taxa moderada de fraude (#{(known.fraud_ratio * 100).round}%)"
         @score += 10
       end
     end
@@ -72,10 +72,10 @@ module Analysis
 
       if age
         if age < 30
-          @findings << "Domain registered less than 30 days ago (#{age} days)"
+          @findings << "Domínio registrado há menos de 30 dias (#{age} dias)"
           @score += 30
         elsif age < 90
-          @findings << "Domain is relatively new (#{age} days old)"
+          @findings << "Domínio relativamente novo (#{age} dias)"
           @score += 15
         elsif age < 365
           @score += 5
@@ -94,7 +94,7 @@ module Analysis
 
       if listed.any?
         names = listed.values.map { |v| v[:blacklist_name] }
-        @findings << "Listed on #{listed.size} blacklist(s): #{names.join(', ')}"
+        @findings << "Listado em #{listed.size} lista(s) negra(s): #{names.join(', ')}"
         @score += [listed.size * 15, 40].min
       end
     end
@@ -116,7 +116,7 @@ module Analysis
       @details[:sender_fraud_ratio] = sender.fraud_ratio
 
       if sender.fraud_ratio > 0.8 && sender.emails_analyzed >= 2
-        @findings << "Sender has very high fraud ratio (#{(sender.fraud_ratio * 100).round}%)"
+        @findings << "Remetente com taxa de fraude muito alta (#{(sender.fraud_ratio * 100).round}%)"
         @score += 20
       end
     end
@@ -143,10 +143,10 @@ module Analysis
 
     def build_explanation
       if @findings.empty?
-        age_text = @details[:domain_age_days] ? "#{@details[:domain_age_days]} days old" : "age unknown"
-        "Sender domain #{@email.sender_domain} appears normal (#{age_text})."
+        age_text = @details[:domain_age_days] ? "#{@details[:domain_age_days]} dias" : "idade desconhecida"
+        "Domínio do remetente #{@email.sender_domain} parece normal (#{age_text})."
       else
-        "Found #{@findings.size} concern(s): #{@findings.join('; ')}."
+        "Encontrado(s) #{@findings.size} problema(s): #{@findings.join('; ')}."
       end
     end
 
@@ -171,7 +171,7 @@ module Analysis
         weight: WEIGHT,
         confidence: 0.3,
         details: { error: "No sender domain found" },
-        explanation: "Could not determine sender domain for reputation analysis.",
+        explanation: "Não foi possível determinar o domínio do remetente para análise de reputação.",
         status: "completed"
       )
       layer

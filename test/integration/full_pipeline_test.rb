@@ -24,7 +24,7 @@ class FullPipelineTest < ActiveSupport::TestCase
     header_layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
     content_layer = Analysis::ContentAnalyzer.new(email).analyze
 
-    combined = (header_layer.score * 0.20 + content_layer.score * 0.25) / 0.45
+    combined = (header_layer.score * 0.15 + content_layer.score * 0.20) / 0.35
     assert combined < 50, "Legitimate email combined score should be < 50, got #{combined}"
   end
 
@@ -37,7 +37,7 @@ class FullPipelineTest < ActiveSupport::TestCase
     # Stub remaining layers
     email.analysis_layers.find_or_create_by!(layer_name: "sender_reputation") do |l|
       l.score = 40
-      l.weight = 0.20
+      l.weight = 0.15
       l.confidence = 0.6
       l.explanation = "Domain has no prior history"
       l.status = "completed"
@@ -48,6 +48,14 @@ class FullPipelineTest < ActiveSupport::TestCase
       l.weight = 0.15
       l.confidence = 0.3
       l.explanation = "No URLs to scan"
+      l.status = "completed"
+    end
+
+    email.analysis_layers.find_or_create_by!(layer_name: "entity_verification") do |l|
+      l.score = 80
+      l.weight = 0.15
+      l.confidence = 0.7
+      l.explanation = "Sender claims FBI affiliation but no verifiable presence"
       l.status = "completed"
     end
 
@@ -74,7 +82,7 @@ class FullPipelineTest < ActiveSupport::TestCase
     Analysis::ContentAnalyzer.new(email).analyze
 
     # Stub remaining layers
-    %w[sender_reputation external_api llm_analysis].each do |name|
+    %w[sender_reputation external_api entity_verification llm_analysis].each do |name|
       email.analysis_layers.find_or_create_by!(layer_name: name) do |l|
         l.score = 75
         l.weight = AnalysisLayer.default_weight(name)
@@ -92,6 +100,6 @@ class FullPipelineTest < ActiveSupport::TestCase
 
     assert html.include?("/100")
     assert text.include?("FRANK FBI")
-    assert text.include?("VERDICT:")
+    assert text.include?("VEREDITO:")
   end
 end

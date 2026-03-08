@@ -225,7 +225,7 @@ class Analysis::ExternalApiAnalyzerTest < ActiveSupport::TestCase
 
     layer = Analysis::ExternalApiAnalyzer.new(email).analyze
 
-    assert_includes layer.explanation, "threat(s)"
+    assert_includes layer.explanation, "ameaça(s)"
   end
 
   test "explanation when no threats detected mentions scanned counts" do
@@ -234,7 +234,7 @@ class Analysis::ExternalApiAnalyzerTest < ActiveSupport::TestCase
 
     layer = Analysis::ExternalApiAnalyzer.new(email).analyze
 
-    assert_includes layer.explanation, "no threats detected"
+    assert_includes layer.explanation, "nenhuma ameaça detectada"
   end
 
   test "no URLs and no attachments gives clean explanation" do
@@ -242,7 +242,7 @@ class Analysis::ExternalApiAnalyzerTest < ActiveSupport::TestCase
 
     layer = Analysis::ExternalApiAnalyzer.new(email).analyze
 
-    assert_includes layer.explanation, "No URLs or attachments"
+    assert_includes layer.explanation, "Nenhuma URL ou anexo"
   end
 
   # --- Score cap ---

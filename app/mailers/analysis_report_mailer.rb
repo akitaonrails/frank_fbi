@@ -21,10 +21,10 @@ class AnalysisReportMailer < ApplicationMailer
   def report_subject
     verdict_label = case @email.verdict
     when "legitimate" then "[OK]"
-    when "suspicious_likely_ok" then "[LIKELY OK]"
-    when "suspicious_likely_fraud" then "[SUSPICIOUS]"
-    when "fraudulent" then "[FRAUD]"
-    else "[ANALYZED]"
+    when "suspicious_likely_ok" then "[PROVAVELMENTE OK]"
+    when "suspicious_likely_fraud" then "[SUSPEITO]"
+    when "fraudulent" then "[FRAUDE]"
+    else "[ANALISADO]"
     end
 
     "Re: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"

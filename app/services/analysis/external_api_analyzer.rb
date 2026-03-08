@@ -55,7 +55,7 @@ module Analysis
       end
 
       if malicious_count > 0
-        @findings << "#{malicious_count} URL(s) flagged as malicious by URLhaus"
+        @findings << "#{malicious_count} URL(s) marcada(s) como maliciosa(s) pelo URLhaus"
         @score += [malicious_count * 20, 50].min
       end
 
@@ -79,7 +79,7 @@ module Analysis
       end
 
       if malicious_count > 0
-        @findings << "#{malicious_count} URL(s) flagged by VirusTotal"
+        @findings << "#{malicious_count} URL(s) marcada(s) pelo VirusTotal"
         @score += [malicious_count * 15, 40].min
       end
 
@@ -95,7 +95,7 @@ module Analysis
 
       @details[:domain_urlhaus] = result
       if result[:malicious]
-        @findings << "Sender domain #{@email.sender_domain} is listed in URLhaus malware database"
+        @findings << "Domínio do remetente #{@email.sender_domain} listado no banco de dados de malware do URLhaus"
         @score += 25
       end
     end
@@ -111,12 +111,12 @@ module Analysis
         if whois
           age = whois[:domain_age_days]
           if age && age < 30
-            @findings << "URL domain #{domain} is only #{age} days old"
+            @findings << "Domínio da URL #{domain} tem apenas #{age} dias"
             @score += 20
             domain_result[:young] = true
             domain_result[:age_days] = age
           elsif age && age < 90
-            @findings << "URL domain #{domain} is only #{age} days old"
+            @findings << "Domínio da URL #{domain} tem apenas #{age} dias"
             @score += 10
             domain_result[:young] = true
             domain_result[:age_days] = age
@@ -129,7 +129,7 @@ module Analysis
           hits = bl_results.values.count { |r| r[:listed] }
           if hits > 0
             bl_score = [hits * 15, 30].min
-            @findings << "URL domain #{domain} listed on #{hits} blacklist(s)"
+            @findings << "Domínio da URL #{domain} listado em #{hits} lista(s) negra(s)"
             @score += bl_score
             domain_result[:blacklisted] = true
             domain_result[:blacklist_hits] = hits
@@ -170,7 +170,7 @@ module Analysis
       end
 
       if malicious_count > 0
-        @findings << "#{malicious_count} attachment(s) flagged as malicious by VirusTotal"
+        @findings << "#{malicious_count} anexo(s) marcado(s) como malicioso(s) pelo VirusTotal"
         @score += [malicious_count * 25, 50].min
       end
 
@@ -204,17 +204,17 @@ module Analysis
         parts = []
         urls_count = (@email.extracted_urls || []).size
         scanned = [@details[:urlhaus].size, @details[:virustotal].size].max
-        parts << "Scanned #{scanned} of #{urls_count} URL(s)" if urls_count > 0
-        parts << "checked #{@details[:url_domains].size} URL domain(s)" if @details[:url_domains].any?
-        parts << "scanned #{@details[:attachments].size} attachment(s)" if @details[:attachments].any?
+        parts << "Verificou #{scanned} de #{urls_count} URL(s)" if urls_count > 0
+        parts << "checou #{@details[:url_domains].size} domínio(s)" if @details[:url_domains].any?
+        parts << "verificou #{@details[:attachments].size} anexo(s)" if @details[:attachments].any?
 
         if parts.empty?
-          "No URLs or attachments to scan against threat databases."
+          "Nenhuma URL ou anexo para verificar em bases de ameaças."
         else
-          "#{parts.join(', ')} — no threats detected."
+          "#{parts.join(', ')} — nenhuma ameaça detectada."
         end
       else
-        "Found #{@findings.size} threat(s): #{@findings.join('; ')}."
+        "Encontrada(s) #{@findings.size} ameaça(s): #{@findings.join('; ')}."
       end
     end
 
