@@ -20,6 +20,15 @@ class ReportRenderer
     "fraudulent" => "\u{1F6D1}"
   }.freeze
 
+  LAYER_LABELS = {
+    "content_analysis" => "Análise de Conteúdo",
+    "external_api" => "Verificação de URLs e Anexos",
+    "header_auth" => "Autenticação do E-mail",
+    "sender_reputation" => "Reputação do Remetente",
+    "entity_verification" => "Verificação de Identidade",
+    "llm_analysis" => "Análise por IA"
+  }.freeze
+
   def initialize(email)
     @email = email
     @layers = email.analysis_layers.order(:layer_name)
@@ -47,6 +56,12 @@ class ReportRenderer
           .score-fill { height: 100%; border-radius: 3px; }
           .findings { padding-left: 20px; margin: 8px 0; }
           .findings li { font-size: 13px; color: #374151; margin-bottom: 4px; }
+          .verification-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+          .badge-ok { background: #dcfce7; color: #166534; }
+          .badge-fail { background: #fef2f2; color: #991b1b; }
+          .badge-unknown { background: #f3f4f6; color: #6b7280; }
+          .tech-details { font-size: 12px; color: #6b7280; }
+          .tech-details summary { cursor: pointer; font-weight: 600; color: #4b5563; font-size: 13px; }
           .footer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
         </style>
       </head>
@@ -60,14 +75,15 @@ class ReportRenderer
           <p><strong>Data:</strong> #{@email.received_at&.strftime('%d/%m/%Y %H:%M %Z')}</p>
         </div>
 
-        <div class="section">
-          <h3>Detalhamento da Análise</h3>
-          #{layers_html}
-        </div>
+        #{llm_summary_html}
 
         #{key_findings_html}
 
-        #{llm_summary_html}
+        #{entity_verification_html}
+
+        #{user_facing_layers_html}
+
+        #{technical_details_html}
 
         <div class="footer">
           <p>Frank FBI &mdash; Sistema de Análise de Fraude em E-mails</p>
@@ -91,20 +107,70 @@ class ReportRenderer
     lines << "De: #{@email.from_name} <#{@email.from_address}>"
     lines << "Assunto: #{@email.subject}"
     lines << "Data: #{@email.received_at&.strftime('%d/%m/%Y %H:%M %Z')}"
-    lines << ""
-    lines << "--- Detalhamento da Análise ---"
 
-    @layers.each do |layer|
+    # AI verdicts first
+    if @llm_verdicts.any?
       lines << ""
-      lines << "#{layer.layer_name.titleize}: #{layer.score}/100 (confiança: #{(layer.confidence * 100).round}%)"
-      lines << "  #{layer.explanation}"
+      lines << "--- Opinião da IA ---"
+      @llm_verdicts.each do |v|
+        lines << "  #{v.provider.capitalize}: #{v.score}/100 — #{v.reasoning}"
+      end
     end
 
+    # Key findings
     findings = aggregate_key_findings
     if findings.any?
       lines << ""
       lines << "--- Principais Descobertas ---"
       findings.each { |f| lines << "  - #{f}" }
+    end
+
+    # Entity verification
+    ev_layer = find_layer("entity_verification")
+    if ev_layer
+      lines << ""
+      lines << "--- Verificação de Identidade ---"
+      lines << "  Pontuação: #{ev_layer.score}/100"
+      details = ev_layer.details || {}
+      sender_v = details["sender_verified"]
+      domain_v = details["domain_verified"]
+      lines << "  Remetente verificado: #{verification_text(sender_v)}"
+      lines << "  Domínio verificado: #{verification_text(domain_v)}"
+      mismatches = details["entity_mismatches"] || []
+      if mismatches.any?
+        lines << "  Divergências:"
+        mismatches.each { |m| lines << "    - #{m}" }
+      end
+      ev_findings = details["key_findings"] || []
+      if ev_findings.any?
+        lines << "  Descobertas:"
+        ev_findings.each { |f| lines << "    - #{f}" }
+      end
+      summary = details["search_summary"]
+      lines << "  Pesquisa: #{summary}" if summary.present?
+    end
+
+    # Content and external API (user-facing)
+    %w[content_analysis external_api].each do |name|
+      layer = find_layer(name)
+      next unless layer
+      lines << ""
+      lines << "--- #{layer_label(name)} ---"
+      lines << "  #{layer.score}/100 (confiança: #{(layer.confidence * 100).round}%)"
+      lines << "  #{layer.explanation}"
+    end
+
+    # Technical details at the bottom
+    lines << ""
+    lines << "--- Detalhes Técnicos ---"
+    %w[header_auth sender_reputation].each do |name|
+      layer = find_layer(name)
+      next unless layer
+      lines << "  #{layer_label(name)}: #{layer.score}/100 — #{layer.explanation}"
+    end
+    llm_layer = find_layer("llm_analysis")
+    if llm_layer
+      lines << "  #{layer_label('llm_analysis')}: #{llm_layer.score}/100 — #{llm_layer.explanation}"
     end
 
     lines << ""
@@ -120,6 +186,33 @@ class ReportRenderer
     ERB::Util.html_escape(text.to_s)
   end
 
+  def find_layer(name)
+    @layers.find { |l| l.layer_name == name }
+  end
+
+  def layer_label(name)
+    LAYER_LABELS[name] || name.titleize
+  end
+
+  def verification_text(value)
+    case value
+    when true then "Sim"
+    when false then "Não"
+    else "Indeterminado"
+    end
+  end
+
+  def verification_badge(value, label_ok, label_fail)
+    case value
+    when true
+      "<span class=\"verification-badge badge-ok\">#{h label_ok}</span>"
+    when false
+      "<span class=\"verification-badge badge-fail\">#{h label_fail}</span>"
+    else
+      "<span class=\"verification-badge badge-unknown\">Indeterminado</span>"
+    end
+  end
+
   def banner_html
     color = VERDICT_COLORS[@email.verdict] || "#6b7280"
     label = VERDICT_LABELS[@email.verdict] || "DESCONHECIDO"
@@ -128,37 +221,6 @@ class ReportRenderer
       <div class="banner" style="background: #{color};">
         <div class="score-big">#{@email.final_score}/100</div>
         <div class="verdict-label">#{label}</div>
-      </div>
-    HTML
-  end
-
-  def layers_html
-    @layers.map do |layer|
-      color = score_color(layer.score)
-      <<~HTML
-        <div class="layer">
-          <div class="layer-header">
-            <span>#{h layer.layer_name.titleize}</span>
-            <span class="layer-score" style="color: #{color};">#{layer.score}/100</span>
-          </div>
-          <div class="score-bar">
-            <div class="score-fill" style="width: #{layer.score}%; background: #{color};"></div>
-          </div>
-          <div class="layer-explanation">#{h layer.explanation}</div>
-        </div>
-      HTML
-    end.join
-  end
-
-  def key_findings_html
-    findings = aggregate_key_findings
-    return "" if findings.empty?
-
-    items = findings.map { |f| "<li>#{h f}</li>" }.join
-    <<~HTML
-      <div class="section">
-        <h3>Principais Descobertas</h3>
-        <ul class="findings">#{items}</ul>
       </div>
     HTML
   end
@@ -181,8 +243,132 @@ class ReportRenderer
 
     <<~HTML
       <div class="section">
-        <h3>Vereditos dos Modelos de IA</h3>
+        <h3>Opinião da IA</h3>
         #{rows}
+      </div>
+    HTML
+  end
+
+  def key_findings_html
+    findings = aggregate_key_findings
+    return "" if findings.empty?
+
+    items = findings.map { |f| "<li>#{h f}</li>" }.join
+    <<~HTML
+      <div class="section">
+        <h3>Principais Descobertas</h3>
+        <ul class="findings">#{items}</ul>
+      </div>
+    HTML
+  end
+
+  def entity_verification_html
+    ev_layer = find_layer("entity_verification")
+    return "" unless ev_layer
+
+    details = ev_layer.details || {}
+    sender_v = details["sender_verified"]
+    domain_v = details["domain_verified"]
+    mismatches = details["entity_mismatches"] || []
+    ev_findings = details["key_findings"] || []
+    search_summary = details["search_summary"]
+    color = score_color(ev_layer.score)
+
+    mismatch_html = ""
+    if mismatches.any?
+      items = mismatches.map { |m| "<li>#{h m}</li>" }.join
+      mismatch_html = "<p style=\"font-size:13px;color:#4b5563;margin:4px 0 0;\"><strong>Divergências encontradas:</strong></p><ul class=\"findings\">#{items}</ul>"
+    end
+
+    findings_html = ""
+    if ev_findings.any?
+      items = ev_findings.map { |f| "<li>#{h f}</li>" }.join
+      findings_html = "<ul class=\"findings\">#{items}</ul>"
+    end
+
+    summary_html = ""
+    if search_summary.present?
+      summary_html = "<p style=\"font-size:12px;color:#6b7280;margin-top:8px;\"><em>#{h search_summary}</em></p>"
+    end
+
+    <<~HTML
+      <div class="section">
+        <h3>Verificação de Identidade</h3>
+        <div class="layer">
+          <div class="layer-header">
+            <span>Verificação de Identidade</span>
+            <span class="layer-score" style="color: #{color};">#{ev_layer.score}/100</span>
+          </div>
+          <div class="score-bar">
+            <div class="score-fill" style="width: #{ev_layer.score}%; background: #{color};"></div>
+          </div>
+          <p style="margin:8px 0 4px; font-size:13px;">
+            Remetente: #{verification_badge(sender_v, "Verificado", "Não verificado")}
+            &nbsp;&nbsp;
+            Domínio: #{verification_badge(domain_v, "Verificado", "Não verificado")}
+          </p>
+          <div class="layer-explanation">#{h ev_layer.explanation}</div>
+          #{mismatch_html}
+          #{findings_html}
+          #{summary_html}
+        </div>
+      </div>
+    HTML
+  end
+
+  def user_facing_layers_html
+    user_layers = %w[content_analysis external_api]
+    layers = user_layers.filter_map { |name| find_layer(name) }
+    return "" if layers.empty?
+
+    rows = layers.map do |layer|
+      color = score_color(layer.score)
+      <<~HTML
+        <div class="layer">
+          <div class="layer-header">
+            <span>#{h layer_label(layer.layer_name)}</span>
+            <span class="layer-score" style="color: #{color};">#{layer.score}/100</span>
+          </div>
+          <div class="score-bar">
+            <div class="score-fill" style="width: #{layer.score}%; background: #{color};"></div>
+          </div>
+          <div class="layer-explanation">#{h layer.explanation}</div>
+        </div>
+      HTML
+    end.join
+
+    <<~HTML
+      <div class="section">
+        <h3>Análise Detalhada</h3>
+        #{rows}
+      </div>
+    HTML
+  end
+
+  def technical_details_html
+    tech_layers = %w[header_auth sender_reputation llm_analysis]
+    layers = tech_layers.filter_map { |name| find_layer(name) }
+    return "" if layers.empty?
+
+    rows = layers.map do |layer|
+      color = score_color(layer.score)
+      <<~HTML
+        <div class="layer">
+          <div class="layer-header">
+            <span>#{h layer_label(layer.layer_name)}</span>
+            <span class="layer-score" style="color: #{color};">#{layer.score}/100</span>
+          </div>
+          <div class="layer-explanation">#{h layer.explanation}</div>
+        </div>
+      HTML
+    end.join
+
+    <<~HTML
+      <div class="section">
+        <details class="tech-details">
+          <summary>Detalhes Técnicos</summary>
+          #{rows}
+        </details>
       </div>
     HTML
   end
@@ -195,12 +381,21 @@ class ReportRenderer
       findings.concat(v.key_findings || [])
     end
 
-    # From layers with high scores
-    @layers.select { |l| l.score.to_i > 40 }.each do |layer|
+    # From entity verification
+    ev_layer = find_layer("entity_verification")
+    if ev_layer&.details
+      ev_findings = ev_layer.details["key_findings"] || []
+      findings.concat(ev_findings)
+    end
+
+    # From layers with high scores (content, external_api)
+    %w[content_analysis external_api].each do |name|
+      layer = find_layer(name)
+      next unless layer && layer.score.to_i > 40
       findings << layer.explanation if layer.explanation.present?
     end
 
-    findings.uniq.first(7)
+    findings.uniq.first(10)
   end
 
   def score_color(score)

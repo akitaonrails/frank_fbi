@@ -16,7 +16,7 @@ class ReportRendererTest < ActiveSupport::TestCase
     assert_includes html, "85/100"
     assert_includes html, "FRAUDULENTO"
     assert_includes html, "SCAM EMAIL"
-    assert_includes html, "Header Auth"
+    assert_includes html, "Autenticação do E-mail"
   end
 
   test "generates text report" do
