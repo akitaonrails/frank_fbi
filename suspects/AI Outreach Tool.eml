@@ -1,0 +1,200 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a05:6500:420a:b0:2f5:3caa:a8ca with SMTP id by10csp224195lqb;
+        Fri, 13 Feb 2026 07:06:00 -0800 (PST)
+X-Forwarded-Encrypted: i=4; AJvYcCWU9gZtOiVCj0UohmOXQaBkGshpFbdFV3etqPFSw6mcGlnIz40J4eyFtTPHQdFWMnWqkneW8wedU8A3qQ==@codeminer42.com
+X-Received: by 2002:a05:6122:828a:b0:566:eb31:4715 with SMTP id 71dfb90a1353d-567681c3cf3mr812538e0c.8.1770995160363;
+        Fri, 13 Feb 2026 07:06:00 -0800 (PST)
+ARC-Seal: i=3; a=rsa-sha256; t=1770995160; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=adJPCVXDQUJHZjHMAueVQ96ZZbdfF2rP8gnBVc/SO1BnimVLEyp+JGvS38VMFvDb9u
+         M6lSe0ZrQ3gHUjPiPJgt1WtPqhSwShzEyiTfizaLzh9iGEkgQQ+XwVWyyJ3Ie7CCn2VO
+         1KQf/p+CxjnlXBKDcbr57mJnzmr81JcR67y/TFSyFapUGLZswRJY8oVSh7P7ml/EyUg5
+         DmEk1JpvMX4z4f3OM3WsAGF6mROo63CamGeSvVUJLXluJ8KBnIDipDluc6rOdjPvVh2D
+         4sw2b7Gr1VU3OblTAxkH268b9rHmVt2LH2dsIhJLhSqCM+CVNiEv+OYcW3CDFLib09GQ
+         enkg==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:mime-version:date:content-transfer-encoding
+         :subject:to:from:message-id:sender:dkim-signature;
+        bh=V3GHdqGD63FUAUZL3Zd4SucLJCI2U6ylCHIvPbjeb2g=;
+        fh=QSpVI018Vv27FRuv3fvxEP5ToI4oDXjsLQS9p9pGxwg=;
+        b=SJLjsNTXApIPK1XKu3Yyyefvma8/95iq8Bs4P6yYLn0LUOkxgrLi/enJs9d8ws3gSS
+         dNUWyHsYUh5DFb4eXnGh6BWFCkoXTPvlBuUa6tKTh/51kon3j/KwuxnabrVlkzPX80od
+         hkcIzWh0fSOcJU1xtqKJwj0wbipv2vDO9f+g0RHrEL00ILG9B3t2P8MyMHGk1FVCbnYV
+         zfBK0KlC+MuXNXTyeOFKaqMyE+w0kRyNjg8NvOSRLbEo49et6/k1Yf8Wf0NYbysXFsbx
+         ooizQlbdPwErmDZva7rxGhie9feRsmTiBArZqfAsnSaqGFgMrYv9eMidatBpCbTfbUkz
+         iNtg==;
+        dara=google.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=MsFmrXig;
+       arc=pass (i=2 spf=pass spfdomain=revgrowth.site dkim=pass dkdomain=revgrowth.site dmarc=pass fromdomain=revgrowth.site);
+       spf=pass (google.com: domain of contact+bncbc6mf7vg6ijbbv73xtgamgqejcgybya@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBC6MF7VG6IJBBV73XTGAMGQEJCGYBYA@codeminer42.com;
+       dmarc=fail (p=NONE sp=NONE dis=NONE arc=pass) header.from=revgrowth.site;
+       dara=fail header.i=@codeminer42.com
+Return-Path: <contact+bncBC6MF7VG6IJBBV73XTGAMGQEJCGYBYA@codeminer42.com>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id a1e0cc1a2514c-94d26caf595sor220155241.8.2026.02.13.07.06.00
+        for <fabio.akita@codeminer42.com>
+        (Google Transport Security);
+        Fri, 13 Feb 2026 07:06:00 -0800 (PST)
+Received-SPF: pass (google.com: domain of contact+bncbc6mf7vg6ijbbv73xtgamgqejcgybya@codeminer42.com designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=MsFmrXig;
+       arc=pass (i=2 spf=pass spfdomain=revgrowth.site dkim=pass dkdomain=revgrowth.site dmarc=pass fromdomain=revgrowth.site);
+       spf=pass (google.com: domain of contact+bncbc6mf7vg6ijbbv73xtgamgqejcgybya@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBC6MF7VG6IJBBV73XTGAMGQEJCGYBYA@codeminer42.com;
+       dmarc=fail (p=NONE sp=NONE dis=NONE arc=pass) header.from=revgrowth.site;
+       dara=fail header.i=@codeminer42.com
+ARC-Seal: i=2; a=rsa-sha256; t=1770995160; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=lGEN8L3WpSSsRdN315ps7Brr4fshxmmLnx2+xmstU3UFhlEuJmpByWloV6A5R0njb1
+         6JbAyyGmlRttzJVo8VfKpUiErEQJTgPT3HRqnAaFBhchh8odGR9UWAlahiLd6WRqOvPL
+         Hl4Ffv8oi1q6472K5taKLi2jUEwc0cBiVRH76aMff6aydTHLDeoS2lULZ25k2hCfcRkv
+         emLQxU+Ew94/QxOqGPBmcCNLPaVE+wMNFekZl3jnQqCIiWcXRpJOnS+Pslk03kl75evY
+         XNnu0BaJXEXFsds5rgp2254r2xZOQtnZhJjlB8sqXphlfUc4H+zGuXqDn+I8xvCz85Ac
+         axNg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:mime-version:date:content-transfer-encoding
+         :subject:to:from:message-id:sender:dkim-signature;
+        bh=V3GHdqGD63FUAUZL3Zd4SucLJCI2U6ylCHIvPbjeb2g=;
+        fh=QSpVI018Vv27FRuv3fvxEP5ToI4oDXjsLQS9p9pGxwg=;
+        b=Y2F/Hh0rnPMm8A9fMnAlKjnQ1mBUDkxxspqnYVLldaZCeKxSQ+52B/iQhvSomh81wq
+         TtyF258oDrTAs4ACEcP/gRaSJUeBk6EaqDC0d2b4E3kfHMD+MR4yMmUy9J7f6yD311+g
+         FzhwmYv8DHVU5W9IVxBgI4LkWKMcbqyA6FrjuEGs4WpsGg7RJOXLd7KXyr1Adtetn7yi
+         /vItd/YBcpxzdTZNYoowqno69TVWT64At/ZglQQPZiBbY7yMtZk98CVx8CbcxRM7sP4c
+         mHIaxzujPF9jjSIoCTdxM77XH70EJLCFziOkF8TsGsVezMdFh4jYBEJ54D1sAAv4Xj0L
+         UraQ==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@revgrowth.site header.s=google header.b=S33duWBv;
+       spf=pass (google.com: domain of camila@revgrowth.site designates 209.85.220.41 as permitted sender) smtp.mailfrom=camila@revgrowth.site;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=revgrowth.site;
+       dara=neutral header.i=@codeminer42.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeminer42.com; s=google; t=1770995160; x=1771599960; darn=codeminer42.com;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:x-original-authentication-results
+         :x-original-sender:mime-version:date:content-transfer-encoding
+         :subject:to:from:message-id:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V3GHdqGD63FUAUZL3Zd4SucLJCI2U6ylCHIvPbjeb2g=;
+        b=MsFmrXigFhfP1i0as6Mxsvq7HAah1Qunaw6VrCWOKR6bFXFinlKn155eSovMjuhZ0g
+         +HdPYWkFjq0DdR8xbbnZPsYJIPShv+GVqysmX/TFj3l61agm+d1PK5wzKnLJSXqUCba9
+         e78Dwieun1XX0nmJI8msbPC/OTrLDgRDqFVaBEIdI7wqndpk8u54c+r9FeA65//2pbVB
+         3o6GUgiWT5E3Bmp6uQl0FSCoj9/Ao5qQvL3YQKEGn6AJ9aLcq4ODIZE7S/NuiypjSgj+
+         Mq6XMikDjz+soQe3+G6VM+Z3O9dhugN+azSho0Mf3eFrUIJlt5589hVUtaPi/AdCoqVc
+         IPqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770995160; x=1771599960;
+        h=list-unsubscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender:mime-version
+         :date:content-transfer-encoding:subject:to:from:message-id:x-gm-gg
+         :x-beenthere:x-gm-message-state:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V3GHdqGD63FUAUZL3Zd4SucLJCI2U6ylCHIvPbjeb2g=;
+        b=JGoRd9Q8497Ja3LYZnZjIvqj1wlYW7y6nyJw9FJ2nT38C8IWcd26JES62E1GvxwW0i
+         EEPiYGls1oCrEh397deGeGc7sq9LXwwkbbCy2rQauN7FLQZbUQwanW0ANOfei06y5u1S
+         ox7PryCGZphWUpSs+0oR5PJwzkPSgbncdOv0eZWZn4xNE2gPk2NqVP7dkxRWZcmOq7vi
+         3qOchZbGBmXh5ST0efHN9UIJT/jbt3pYhbkT/7Y9w3x+g1Xw5IAcC3WkEsQPU73Z6I4l
+         8s8qnRjTdt/tNioem0xcPndcx6TXpJrGfSD1O6+sD5MR+J+Rrf9byH7UTGLRF24H8pI5
+         +k1g==
+Sender: contact@codeminer42.com
+X-Forwarded-Encrypted: i=2; AJvYcCW11QQ4rSuHqdAPNlvpf43pTLHVbhUWkT1IlrxGTizOnz9Hfa4pLIf3kPKcZL9ru/Mm7TOxWN64xEsdgg==@codeminer42.com
+X-Gm-Message-State: AOJu0Yw37zwuuJDByoG2WgiPySpceUr70027hu+eHQsiO0Kl5BqWk/7J
+	s5bjV/taH4LtjFf1+XlbbKwhD+6/aCe3+EZnLlqCi1JjGHWvRpGBm0TpfsI374IrTBB8FA==
+X-Received: by 2002:a05:6102:f14:b0:5f7:293f:c3ae with SMTP id ada2fe7eead31-5fe16f59b4fmr961428137.34.1770995159730;
+        Fri, 13 Feb 2026 07:05:59 -0800 (PST)
+X-BeenThere: contact@codeminer42.com; h="AV1CL+HAa6nblljpc9/y2XWgV39/7EH3WIiciZQtGu9vYJrkAA=="
+Received: by 2002:a05:6214:250e:b0:897:292:2df1 with SMTP id
+ 6a1803df08f44-89729e157e0ls35575436d6.1.-pod-prod-03-us; Fri, 13 Feb 2026
+ 07:05:57 -0800 (PST)
+X-Received: by 2002:ad4:5c6a:0:b0:888:3d3b:c9f8 with SMTP id 6a1803df08f44-897349171dbmr39544566d6.32.1770995157373;
+        Fri, 13 Feb 2026 07:05:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770995157; cv=none;
+        d=google.com; s=arc-20240605;
+        b=V3VpRcIX6taUQoM6Q0Dq+oCbngyi2YRYf8o6eSbO+kppekATV/9ddmPQjD8FW7/ABy
+         5ylvpPk0/O01Zlz4ZRRHK8Qh4tmoCGl5LE8O9y70uSyCTm0BtFhEl3VbfUj6oNBIjZbe
+         n1trpANSjMcyeOjLhqDPw2QFY+J0sEi54jOuQF9cO+fkjoFM6bRknR/NT/mN4nqeFuox
+         /yRsDfc2ZN5GXmBeX6avhOKQk9RwXevYZGAGWKjW+n1PzaYp1UFWATffxe8Z37we11Gl
+         bQKSLB9PJ4AzrNyuhfv+f7AppkDf6h3FNnNM7oXIbjYLy5+evpl6Dn7AXB0NMUJzJTaL
+         tZSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:date:content-transfer-encoding:subject:to:from
+         :message-id:dkim-signature;
+        bh=V3GHdqGD63FUAUZL3Zd4SucLJCI2U6ylCHIvPbjeb2g=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=SIYyfmRDgXv/ahrZF9PVKNpD88Wj5I1EmOqsL9uypMHtIoxjHNGlD3BRaty99tk/5Z
+         xs9lUQVYbl9THSqdV8x1x73DKD7+A/5Xp3lzztWmsKAG1UJAimx5IS0rRz9kjIkkLfDo
+         V7ViTNrM9+aq3DHU2M2Q77GAWkwEAsddSf/TruAwyVUa6ShqZ461s0jewqxODThu72wC
+         gVtbq7Dv0GJ6grahbWxHyzCO/EPBaspfHLwi3gd2zlBnN7USVWZh0/wnKF6hLjGseCqP
+         t3YnOqlGX9HjcuwyXDtKYD0hCmnKrrZK9F8fbw0b+tRLo0OWbQ3SjQJFvY1wbzKyvxbL
+         S1rw==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@revgrowth.site header.s=google header.b=S33duWBv;
+       spf=pass (google.com: domain of camila@revgrowth.site designates 209.85.220.41 as permitted sender) smtp.mailfrom=camila@revgrowth.site;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=revgrowth.site;
+       dara=neutral header.i=@codeminer42.com
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id d75a77b69052e-506a49cba2csor14026791cf.8.2026.02.13.07.05.57
+        for <contact@codeminer42.com>
+        (Google Transport Security);
+        Fri, 13 Feb 2026 07:05:57 -0800 (PST)
+Received-SPF: pass (google.com: domain of camila@revgrowth.site designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+X-Gm-Gg: AZuq6aKIvBVatxfwA5C4JA2TpT4smM7LwlEoq7oS5ipcONBhMLmL+m7cc6nANY1jSxe
+	nuN9eDcvydNzwTE+FginUJdQrSUD0Aq1dxeVF8Bnw3ocyWhLZPKPmRgC96uX6XE9pO7LFsrwEQw
+	wGcCE+kCPOdJB3FOBtBEzj6vxjl1Qb44Hy3Xmfhc751/n2fqyfpUjEltAew2Hs1jnhirPIC/v0v
+	QaQlhDGzpmT5HbkV0JSoBatlsDLIp+FUwFFqS6T8HaJxm8uIYSU77cAauB907/CzSlGk9Te1Wvp
+	fH8yk4vM4vB+iIVXiKVa6dw6ccQbaXyGJikpOa0ARCbD5mz5/E4vo3YsnrhUEQjzw/ggioRJe+Z
+	d+/fE5wXOnb9Ymib8SRkaZj3wcYV7PyyEUmFrdJxNtcQHF65rcb4YQFXowv1BcFShJut1AM/AWO
+	k7towAFXF3i1maocecMg/ljeMIyurZPK3fIuUVZ15WRppsrCN7ptU+y1tmDzZiwHB3zvpFhvWts
+	2zv2TZ5dKv8vSybggRcWNYGV2T2UzdSHWhXA/bgeU4Twd16M7PtioT4XA==
+X-Received: by 2002:ac8:57cd:0:b0:506:6ec8:835 with SMTP id d75a77b69052e-506a6aefc5fmr28719951cf.54.1770995156319;
+        Fri, 13 Feb 2026 07:05:56 -0800 (PST)
+Received: from 019c5789-7fad-7b4d-b98e-e2c476af0408.local (ec2-3-149-4-250.us-east-2.compute.amazonaws.com. [3.149.4.250])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50684ba1ef0sm65905471cf.27.2026.02.13.07.05.55
+        for <contact@codeminer42.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Feb 2026 07:05:55 -0800 (PST)
+Message-ID: <019c5789-7fad-7b4d-b98e-e2c476af0408@revgrowth.site>
+From: Camila Rodriguez <camila@revgrowth.site>
+To: contact@codeminer42.com
+Subject: AI Outreach Tool
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Feb 2026 15:05:54 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+X-Original-Sender: camila@revgrowth.site
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@revgrowth.site header.s=google header.b=S33duWBv;       spf=pass
+ (google.com: domain of camila@revgrowth.site designates 209.85.220.41 as
+ permitted sender) smtp.mailfrom=camila@revgrowth.site;       dmarc=pass
+ (p=NONE sp=NONE dis=NONE) header.from=revgrowth.site;       dara=neutral header.i=@codeminer42.com
+Precedence: list
+Mailing-list: list contact@codeminer42.com; contact contact+owners@codeminer42.com
+List-ID: <contact.codeminer42.com>
+X-Spam-Checked-In-Group: contact@codeminer42.com
+X-Google-Group-Id: 256526988213
+List-Post: <https://groups.google.com/a/codeminer42.com/group/contact/post>, <mailto:contact@codeminer42.com>
+List-Help: <https://support.google.com/a/codeminer42.com/bin/topic.py?topic=25838>,
+ <mailto:contact+help@codeminer42.com>
+List-Archive: <https://groups.google.com/a/codeminer42.com/group/contact/>
+List-Unsubscribe: <mailto:googlegroups-manage+256526988213+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/codeminer42.com/group/contact/subscribe>
+
+Hello Fabio,
+
+Noticed you've been helping Innovative customers in the tech =
+industry with web development.
+
+We can queue upto nine enquiries every =
+month for you by spotting tech companies seeking to outsource development =
+but facing project delays. Those CTOs tend to respond fast when the topic =
+is improving project timelines.
+
+If staying consistent on meetings is key, =
+I can run you through the approach.
+
+Best regards,
+Camila

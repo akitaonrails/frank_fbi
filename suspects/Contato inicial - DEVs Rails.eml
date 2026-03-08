@@ -1,0 +1,248 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a05:6500:2351:b0:2f4:af8e:ba7b with SMTP id x17csp355668lqw;
+        Wed, 11 Feb 2026 14:09:33 -0800 (PST)
+X-Forwarded-Encrypted: i=5; AJvYcCWQAuOJz9PtpWe/tWOdHVT/vj6oalE0vJQej40kvDczGyhqenWzaF6lUSJbxthovU+v7O2aWrRPTOXA4w==@codeminer42.com
+X-Received: by 2002:a05:6830:6107:b0:7c7:69d9:d8d3 with SMTP id 46e09a7af769-7d4b3fad52fmr189226a34.12.1770847773177;
+        Wed, 11 Feb 2026 14:09:33 -0800 (PST)
+ARC-Seal: i=4; a=rsa-sha256; t=1770847773; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=EIUESmZr8L7n38KYyCQx9Sksnc+EV53gb8SVWVTaQuTlFLpRWPuY8pWZtLVZPxNwyA
+         JImsaNKxumTBnkHFH9nOFFSn/v6DdqFAdIsZDsvIkSu27268ExTjCtsnabprh1/QutVr
+         qNvjzjzQdWDsQd8pYilo9URVV2tvKm4oGfxxbCXXNkw+IFrrOR5o1jW9NWtt54A8OQzD
+         QWmyATMdjy4+jBd2eLysTDh5W0lqDOTnx4tg1DteTXVeNMtY7p215n/2yttEwzvLZJ6a
+         dK77uyQgT/KlJFvEnN4fquldBhIF3hLbm7UyF3CqlWR/PF6/cc9KpnpRSbTL1YAyvWlj
+         JMaA==
+ARC-Message-Signature: i=4; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:to:subject:message-id:date:from
+         :mime-version:sender:dkim-signature;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        fh=Uoc8ctKxwhhGIVA9wB8gaXnyfhUpxmOpYD2aV/5BUNw=;
+        b=f/Oj2Bv3j0XzBsoz+5blJoUGnOFgHdrnDvTVfrAWd+e8CplJqjha8cp8j8vhotzSTa
+         VI/x1QEUKZ+3qbUOUKFte5kcP8aeWp1rCS3Re9i9gykTYrOjXRSRumJXpCOHG8Raqm2T
+         /moN5ETisQt6pN1s0LNSoPfenMd+3tym1zay7dPkgKP2o5mgmiMI1LhQhwAfgo5GNVD6
+         qeKA4viQdHrhg4n2RcAJ5yBEVZq8DdkI2xZ+jFA2DBH6r4UMcyYfes17rYXVU+DT/jYD
+         7yFXSBq8dVnpTXjdf5XqJQAhZUWH0EvDvx1HvS5Vk3czfSY1XHCVsrw5aLa2xhAkb2ij
+         qvAg==;
+        dara=google.com
+ARC-Authentication-Results: i=4; mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=gEhju2Zp;
+       arc=pass (i=3 spf=pass spfdomain=tramitacaointeligente.com.br dkim=pass dkdomain=tramitacaointeligente-com-br.20230601.gappssmtp.com dmarc=pass fromdomain=tramitacaointeligente.com.br);
+       spf=pass (google.com: domain of contact+bncbdr6dnunv4crbhh4wpgamgqe3g74tvi@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBDR6DNUNV4CRBHH4WPGAMGQE3G74TVI@codeminer42.com;
+       dmarc=fail (p=NONE sp=NONE dis=NONE arc=pass) header.from=tramitacaointeligente.com.br;
+       dara=neutral header.i=@codeminer42.com
+Return-Path: <contact+bncBDR6DNUNV4CRBHH4WPGAMGQE3G74TVI@codeminer42.com>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id 46e09a7af769-7d4a76e6325sor1665841a34.11.2026.02.11.14.09.32
+        for <fabio.akita@codeminer42.com>
+        (Google Transport Security);
+        Wed, 11 Feb 2026 14:09:33 -0800 (PST)
+Received-SPF: pass (google.com: domain of contact+bncbdr6dnunv4crbhh4wpgamgqe3g74tvi@codeminer42.com designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=gEhju2Zp;
+       arc=pass (i=3 spf=pass spfdomain=tramitacaointeligente.com.br dkim=pass dkdomain=tramitacaointeligente-com-br.20230601.gappssmtp.com dmarc=pass fromdomain=tramitacaointeligente.com.br);
+       spf=pass (google.com: domain of contact+bncbdr6dnunv4crbhh4wpgamgqe3g74tvi@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBDR6DNUNV4CRBHH4WPGAMGQE3G74TVI@codeminer42.com;
+       dmarc=fail (p=NONE sp=NONE dis=NONE arc=pass) header.from=tramitacaointeligente.com.br;
+       dara=neutral header.i=@codeminer42.com
+ARC-Seal: i=3; a=rsa-sha256; t=1770847772; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=NJh1vsNGgPEXwjCAZS9TpUTAHX72OxO7IQsDsX4hdiOVhciPtuoDz5z9r2tuDJpybD
+         rF67qG9LP7M+Hbnky3Fn6lQ5ym1urCwgxma9sSSS2XNIQSoRxHZyMIyg57Fe87pd7wWB
+         tQmfkOXXsvvHTMt3YStNIDaiQZmKo0UmJrLhJxr4MFvFsHn8HkqYfCOp/yRB1jG9lS8U
+         YiLQK3GYtXEnkaO/+q9v0+yR48imvILjAxJgwePMfD4jS/RsrDqOUH65EoKAM7AH5Tlf
+         wjVEEVmJ1ZuRvRrEEQxOsQvWsW/5KgwdTTDO07Go3JB/UZI5SxFEX1rcRJYZWdOanHwv
+         si8Q==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:to:subject:message-id:date:from
+         :mime-version:sender:dkim-signature;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        fh=Uoc8ctKxwhhGIVA9wB8gaXnyfhUpxmOpYD2aV/5BUNw=;
+        b=MTXZIL+8UhBNsQJU6rrR/LN8q9Z63M/rI5aCf43vsiULap/XjONSN1rXNQ88KVy0Vy
+         IV9MVoCLlPdQIsznD6HIg8rXcmB3e/y7XyDsfztQeqlpOSkHxDg4nQAEVdwxjr/O1tUm
+         b5Qk2FKRaEpQeuMwsi40LBjhNy8qfQok1DSJG6q7SuAOlp+pdG0k9XgtP8w3nrMH+P1p
+         lWK6Dmact0BwKd9UtCI7z913miN+zcVQ8g3lnlbf1OuqAdLrA+rlyfdoYgK3PwG21nTn
+         yqmCzS2jja0Fc34LA3WeWWhmBp2iG/qmvq/x+HBQw5QUSKb28kH1ZLfBfd03arAiK99L
+         nIzA==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@tramitacaointeligente-com-br.20230601.gappssmtp.com header.s=20230601 header.b=u+InPBx0;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of contato@tramitacaointeligente.com.br designates 209.85.220.41 as permitted sender) smtp.mailfrom=contato@tramitacaointeligente.com.br;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=tramitacaointeligente.com.br;
+       dara=neutral header.i=@codeminer42.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeminer42.com; s=google; t=1770847772; x=1771452572; darn=codeminer42.com;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:x-original-authentication-results
+         :x-original-sender:to:subject:message-id:date:from:mime-version
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        b=gEhju2ZpVTcLGtjNFXFyDDa97hU5cAfhnDtVjAWeLJyYOmVWoIXCVMa1D9lraqwHE3
+         PWf82iQKxj/Y1ZHEPNidAQz2eatI20G9xeU2TONfvusu0rZs6GZxD1o6sRAdXnrVXd4i
+         HMgzfToxGl/sEHNhXHDf5asImgL4Np9/z9BGqAjyHFPH0HIMb5xFMymd/mFM1/rBy6Jj
+         D7F3W6jrZQ6dpEmApaBk3J7QmpqMqj/SVVRiv46TJ2qpFYv+5tkyIt28UHi5c3Gtzvg3
+         ayF8V+sSjd615Pgp57hrtMG5AICT/72srec6Ll9ZnHUtCMbvAtIN9MqPd2szqQe7WD3x
+         t55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770847772; x=1771452572;
+        h=list-unsubscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender:to:subject
+         :message-id:date:from:mime-version:x-gm-gg:x-beenthere
+         :x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        b=hkh6tEzxS3UeVEg+evQ+++USBitkLeZXZlU64gSn9hASDmJMRO+cbiR6S2j9NuMdd+
+         pfnATc2qbCj7rItA1Vl7LRZKpcXwglLDMkvhMIWKr0cRvbqWEcxL37YlhwVmBG0E+Ait
+         zZ1GcQ2apHYDpd4Rs2A6HMNOOb4Z2OYE8Eb+uNWbORsbr/MFytAX9rmNQv/x+tatdCAj
+         I4V4IX45sNuTLjw+RbtqPu8sdSH00tdj2LCs6nAS5a1QuVsgWK8CqX8BDBnq0z7Qw9/h
+         wfBGgEVIOPNioLf7oB+Kb9kLBDEtDI4L+l5jz+4cMJDfKwOvg55Be2iFXMcNhso9CIi6
+         dCMw==
+Sender: contact@codeminer42.com
+X-Forwarded-Encrypted: i=3; AJvYcCUEfDTgIZoPyErOeb7aP6bro2CifneA/2/5NxdouR5vqa29TCTPIwoBaD4e4ZUqECGYijV5WGMlyH0ABQ==@codeminer42.com
+X-Gm-Message-State: AOJu0YzNu5YMMHlxjW/oxMiYFf8wjuTfQz8xHTsUHWBfS+bbL5cxBE+7
+	3EoFLAvdiVYe6wQiQ4fk4w34p6CLqQVgm/MgE38PeoozTT+Wybvvg8HhEv/gZZ+eaiTl/w==
+X-Received: by 2002:a05:6820:f003:b0:662:f543:5d3e with SMTP id 006d021491bc7-6759c2778e2mr326464eaf.82.1770847772547;
+        Wed, 11 Feb 2026 14:09:32 -0800 (PST)
+X-BeenThere: contact@codeminer42.com; h="AV1CL+FZUsDU1/TESwbuKqjirwxfRLFX1/Z1WKZ7ysr4XB+BPQ=="
+Received: by 2002:a05:6871:7bc6:b0:409:6e30:2d79 with SMTP id
+ 586e51a60fabf-40eca34a61cls33770fac.0.-pod-prod-07-us; Wed, 11 Feb 2026
+ 14:09:32 -0800 (PST)
+X-Received: by 2002:a05:6808:c144:b0:45f:2788:b00a with SMTP id 5614622812f47-4637fc7241bmr136394b6e.33.1770847771834;
+        Wed, 11 Feb 2026 14:09:31 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1770847771; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=PuJ06QuvqOyenBpkc9sqDi4KRwE+nGmYskq9Z935r4jDeTi3+UBLGZfSHzYGXEMr/3
+         2VzR/4aVf6UfmtHdSXKrYCuV741Xp4wCLrio0I2vSIntgFHUKbIFa/xHF8lNfOlNvlO9
+         DkNe3pLdZdqkXUVATzbZ1nYEFZmQ6FT53bxJzWUlSuptFNlU95s9QylfpWCNxrpD3pzj
+         Z8E6w3QStahjla1QDcBYrI8fE2QgIjXHP9jjxeg35dXQSM6HsqNE9YdZPUvkuMEFyzXB
+         bsQshRWgZ/+zv5wuLKFKHj12lQTPJYR6V8hYjCygL9LxMrXKXl2MDJvh7zNbRBh4K/Br
+         brBA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=fMcf3Z6G0U+Ru8C+Jkkhn4CVuuERzl0hXoNqd8pbDJ3NDn5DnBieUzOQl1sug6t6sE
+         V8MytqJWVNI7zI2OcL0mGP1kIehC6J5/yu00qH6V6teyBM6ON8gNZjSDElYgh0KwTbXg
+         VYCS52OKNZ62gE9QPs3gzt2AWfydQ2bS+Yvssk43oNRLAftnsx+m/LQzdpjJIHm1MGbG
+         AzZAyZAJ4Hu8faxqhVdQ1OGIJJwBKOfeMx1ALmDSV5KCyjBIaaWXw+nIU52a9U2z+iZq
+         i/20K1QQEeaQmn/JwfrqjHiUrL/7OJl5kYvbAe2atqrYLHQ/67iHsPjj1hF3FocYC6cR
+         Dy5g==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@tramitacaointeligente-com-br.20230601.gappssmtp.com header.s=20230601 header.b=u+InPBx0;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of contato@tramitacaointeligente.com.br designates 209.85.220.41 as permitted sender) smtp.mailfrom=contato@tramitacaointeligente.com.br;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=tramitacaointeligente.com.br;
+       dara=neutral header.i=@codeminer42.com
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 5614622812f47-4636add2818sor1586593b6e.0.2026.02.11.14.09.31
+        for <contact@codeminer42.com>
+        (Google Transport Security);
+        Wed, 11 Feb 2026 14:09:31 -0800 (PST)
+Received-SPF: pass (google.com: domain of contato@tramitacaointeligente.com.br designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+ARC-Seal: i=1; a=rsa-sha256; t=1770847771; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XdHq+jehEqRE3UJ84rcsC2nexgSmqKipX9zgqbTjjPotHLTZaFEeqJWPrD9SwYGxrs
+         OIlQl2uSNrkyOEPP9Z+HQBMWsqypm+GFtVCBD9alnFWxAqRNoqYWLoLQ0lllsmT5/YWF
+         L7kAb8EKzqsn9Ju+1lHoTOssmAWdzWoPdnHQuZYpJMJQphL57OCngjSR6Ss4yG0Z/spC
+         3/OVd72MN/R3iQ1zuxr0cJUWE+Sc0r01njZo6DtVU6Y3vjtlRb9VS+uzAI+1EsycD9sY
+         0XXlDyEkdO2xuhIDJBLMgNUedMFdIZK9ym0WPz0dkgKmQ6fC0sXAqLbc2Y4UGTzl9FwA
+         Ubfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=79hyD1ImpQev/Wl3zVIpxJNb7LnDVJesFjr8bgldGaY=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=iL5sc63jaAKUnK+dTXwtJv9PK3E70z9sESWG4oSbmRvN2H30zeQJ+TrgxglXPcJM1e
+         gHRaTXHjKCZDVNOGVVrrOVV50aoyI0qcdQPzDuM0ss0KLAsSpz/ddCUf7l2bCJOJIPIh
+         6oYxjv2WxVg6xY0PC87nVC+BxSjkCrBbt1no8pRgqHvZAzuRTJGoaIAxZfoBa482pWAi
+         wHKn25VJ41jSgmFv3ixCUXCxe7+leEi93hdhLPHf3M6QxgeujUgbmuyxqpASWZ+IbyPe
+         9l839lqki8a0z1f24crMquWDV8hAChrn25YDdzDu7t1aZavNDT0qRuT+i3cTUmTFqiTV
+         D69A==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Gm-Gg: AZuq6aKsqefk5SQHqdcMzkZPUU7YrUEXZ92ghofVVZ2rNadApJV9VCBYXwTrXV1rAlm
+	uWX/xk11WYsnGFJm6A+HiIUMVnrEH/T5MI+qM/qSfzb+9YZlXa50iv3qjjSl8s7sziOjgQ6Qw6i
+	JJQw/2iaxyL9d6NFZ8WJpni9+4ij0R3/i27mHI5a9hkzZPgVAc/1JHnLCXEg15ZwDCQ5SXxeD+T
+	u+UHdjSyJayfVFGzFEtJmv553Ek2blSNfUHsGh92e5/FMSdUIY4zagVLuJUyXXiv/2SxRrmyjOW
+	xM5gp4KBImJHsGSbwWv9yap16ClHx1xvbutg
+X-Received: by 2002:a05:6820:6ac1:b0:66f:7eb:dc35 with SMTP id
+ 006d021491bc7-6759ac24908mr385404eaf.48.1770847771042; Wed, 11 Feb 2026
+ 14:09:31 -0800 (PST)
+MIME-Version: 1.0
+From: Felipe Raul <felipe@tramitacaointeligente.com.br>
+Date: Wed, 11 Feb 2026 19:08:54 -0300
+X-Gm-Features: AZwV_Qjx5RH5S2RYHuFyihicZj93yiSusGTNtZpNv0E1zJxSWijJQ1l3lIUtGqU
+Message-ID: <CANhyL_-zrjDHzjOKt0mDJ+noZsbvcKnB=R5BinT4rFTMwOrYTQ@mail.gmail.com>
+Subject: Contato inicial - DEVs Rails
+To: contact@codeminer42.com
+Content-Type: multipart/alternative; boundary="0000000000005831a2064a93a094"
+X-Original-Sender: felipe@tramitacaointeligente.com.br
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@tramitacaointeligente-com-br.20230601.gappssmtp.com
+ header.s=20230601 header.b=u+InPBx0;       arc=pass (i=1);       spf=pass
+ (google.com: domain of contato@tramitacaointeligente.com.br designates
+ 209.85.220.41 as permitted sender) smtp.mailfrom=contato@tramitacaointeligente.com.br;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=tramitacaointeligente.com.br;
+       dara=neutral header.i=@codeminer42.com
+Precedence: list
+Mailing-list: list contact@codeminer42.com; contact contact+owners@codeminer42.com
+List-ID: <contact.codeminer42.com>
+X-Spam-Checked-In-Group: contact@codeminer42.com
+X-Google-Group-Id: 256526988213
+List-Post: <https://groups.google.com/a/codeminer42.com/group/contact/post>, <mailto:contact@codeminer42.com>
+List-Help: <https://support.google.com/a/codeminer42.com/bin/topic.py?topic=25838>,
+ <mailto:contact+help@codeminer42.com>
+List-Archive: <https://groups.google.com/a/codeminer42.com/group/contact/>
+List-Unsubscribe: <mailto:googlegroups-manage+256526988213+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/codeminer42.com/group/contact/subscribe>
+
+--0000000000005831a2064a93a094
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Prezados, boa tarde!
+
+Gostaria de marcar um hor=C3=A1rio para conversar e expor as demandas da no=
+ssa
+empresa de desenvolvedores Rails / fullstack.
+
+Poderiam por gentileza retornar com duas sugest=C3=B5es de hor=C3=A1rio?
+
+Obrigado desde j=C3=A1!
+
+Atenciosamente,
+
+*Felipe Raul*
+* Tramita=C3=A7=C3=A3o Inteligente*
+https://tramitacaointeligente.com.br
+
+--0000000000005831a2064a93a094
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:large">Pre=
+zados, boa tarde!</div><div class=3D"gmail_default" style=3D"font-size:larg=
+e"><br></div><div class=3D"gmail_default" style=3D"font-size:large">Gostari=
+a de marcar um hor=C3=A1rio para conversar e expor as demandas da nossa emp=
+resa de desenvolvedores Rails / fullstack.=C2=A0</div><div class=3D"gmail_d=
+efault" style=3D"font-size:large"><br></div><div class=3D"gmail_default" st=
+yle=3D"font-size:large">Poderiam por gentileza retornar com duas sugest=C3=
+=B5es de hor=C3=A1rio?</div><div class=3D"gmail_default" style=3D"font-size=
+:large"><br></div><div class=3D"gmail_default" style=3D"font-size:large">Ob=
+rigado desde j=C3=A1!</div><div><div dir=3D"ltr" class=3D"gmail_signature" =
+data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div style=3D"color:rgb=
+(34,34,34)"><div style=3D"font-size:large"><br></div></div><div style=3D"co=
+lor:rgb(34,34,34)"><font size=3D"4">Atenciosamente,</font></div><div style=
+=3D"color:rgb(34,34,34)"><font size=3D"4"><br></font></div><div style=3D"co=
+lor:rgb(34,34,34)"><font size=3D"4"><b>F<span class=3D"gmail_default" style=
+=3D"font-size:large">elipe Raul</span></b></font></div><div><font size=3D"4=
+" color=3D"#3d85c6"><b><img src=3D"https://ci3.googleusercontent.com/mail-s=
+ig/AIorK4wQi2wcK5zdIKXLNlmSQ9Dxhb7JJp-bx5DXmRvXNL8wt16F4PG3JuGdRGA4oARrm7D8=
+LL3EzB8u15e5">=C2=A0Tramita=C3=A7=C3=A3o Inteligente</b></font></div><div s=
+tyle=3D"color:rgb(34,34,34)"><a href=3D"https://tramitacaointeligente.com.b=
+r/" target=3D"_blank">https://tramitacaointeligente.com.br</a>=C2=A0</div><=
+/div></div></div></div>
+
+--0000000000005831a2064a93a094--

@@ -1,0 +1,390 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a89:985:0:b0:2f5:3caa:a8ca with SMTP id u5csp211349lqk;
+        Thu, 12 Feb 2026 02:50:44 -0800 (PST)
+X-Forwarded-Encrypted: i=3; AJvYcCW/KJu+pSsLjdozj++PRK1LHuhlPhqs+uVtuLOB8snGHXYurQjUcSsyajwQDbi3HJl2dlnDHwV+sZeFqg==@codeminer42.com
+X-Received: by 2002:a53:c04f:0:20b0:64a:f927:b3b9 with SMTP id 956f58d0204a3-64c08276c9bmr888317d50.90.1770893444033;
+        Thu, 12 Feb 2026 02:50:44 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1770893444; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=TOT/ZzNeRywBknQHn5g5Mk+d+pLI8/cFejp3+b2SS8sQj9hUePhsAVTxR0687ZwT1g
+         0m/8uk+Q42wFbiRLbQZAcI0E22ba5NrqauaF05DqFAW2xgrePnomeLiEIOifABBsdGlX
+         kFcvtEwh2NeBxQNnIjl3uLsdJk5Vv698REJGYbg6nVNT15xDOMaBHDiniEUQgH7RQYzd
+         +CTgUqWZcqnMXk4eetjZ4Pcq7wRlUYFkQ9nL5+iKWU6aD66TGY8bSE/qnjHL18LlA0Dc
+         UouF6NVTu2KJy/+34cSLtsJJlR7A5ZclVKBAI+B9oKAy2wwSm/PWScMJIYxlDrH0Gdsz
+         h3ZQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:message-id:content-transfer-encoding:mime-version:date:subject
+         :from:reply-to;
+        bh=QkQJONIhyetWFUrlGBAHzvFRhSr8HzTE5blIJAxAVQs=;
+        fh=zEMK+f3w3jEJ+rVETDLljm1MjZ16EIk9osNt+OMcE4w=;
+        b=a97wefG61hCV4uAUZqdoIMg2EIeh7IhaLFG3Oq98Jgv7ctxP95KUO610fW7KorY2dp
+         Oj7RBgQ0ScV7Z31UUq/WquLCZ0lgPPVzGPROjD/VAb9J4fJjtoLf/xl8bIfKgfsSuxJl
+         /q5e4ksp1GU8qHxRY4DHMLx592YoQoVPtwoBj4dXZAqEzleqYkBFi9jw8H5rtHubMWr6
+         /2QAAUKHqBiUeaMDIsH98zc478VIs0JynI/BzNlBw6cYWLgUa6YYL2B0Ili7YykSGW+N
+         lSVs7qi4yaGtyweMra24lmFCAsTRmnBVpaEZilVQsikRLnxfPgGUJ+5T76lT4prlc0U3
+         8dHQ==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of bounces+srs=02623=aq@asume.pr.gov designates 2a01:111:f403:d801:: as permitted sender) smtp.mailfrom="bounces+SRS=02623=AQ@asume.pr.gov"
+Return-Path: <bounces+SRS=02623=AQ@asume.pr.gov>
+Received: from BY5PR09CU001.outbound.protection.outlook.com (mail-westusazhn150110000.outbound.protection.outlook.com. [2a01:111:f403:d801::])
+        by mx.google.com with ESMTPS id 956f58d0204a3-64afc859bb2si3771620d50.66.2026.02.12.02.50.43
+        for <fabio.akita@codeminer42.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Feb 2026 02:50:44 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounces+srs=02623=aq@asume.pr.gov designates 2a01:111:f403:d801:: as permitted sender) client-ip=2a01:111:f403:d801::;
+Authentication-Results: mx.google.com;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of bounces+srs=02623=aq@asume.pr.gov designates 2a01:111:f403:d801:: as permitted sender) smtp.mailfrom="bounces+SRS=02623=AQ@asume.pr.gov"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LQ9UeOysVyj0x9bLgVuUz1/ISVyAmyrFdTvtBW36P4mlxofeN+vJ+lOuaassulw2FpEnu37jMr9D8DtsTqieL+q48/qsmcSKvmVoDP7Z7VYsFTzg2Mvv+vWD5bAorhmiSKtR/374KrnvlE8NUT2B5yYnUTp4WsbMNmC4K1OcvcbaYuzsNOYoJKbAH5081mHc+uVhjgsDI22opTSpSS6jOkbkxZhgn6jv5rq/17hkQGH8LAMdnPkNdOpm+FWhFekhHoEBB5Ai0rAhaSYW0Oo46qmmJ5O4QB0GE+dpkjx5kaMwW8/aiSNN3qsmB1flGgkJ3Bg3gwCm6WpABzcKmI0+FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QkQJONIhyetWFUrlGBAHzvFRhSr8HzTE5blIJAxAVQs=;
+ b=u/dJcCnMXiCf9Fx9O5LSM7WXzMTMrGI3XtTuQHKm88avT3eA70cKZlbMzjCAMyAjgLKY/SckXOsZbMTbNm3cixv3DGbvpeETCPyZ//3pBr0A9CUW4A8gdkInl2iO732KW8dCTA+b4NpB+OFE9D89TkqDdZRC1/O9UQaajhgD2ijgjWgSOq4RRlWZcmwVBSXnOY5T4oAFtS7Q8BySz+2axWRmjCW5gFhGPBLg8Oz9APZQ4ZYrzWCYEwMpKq9/MP6EOTrRlycEmSlIxy5vcKPH191+p1bRyKmjhidWHBzHGz8wsGWfwI3dRRtuchwMNcW0HQmRTHk4A/jvAEL4/KKfMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 64.178.212.227) smtp.rcpttodomain=globomail.com smtp.mailfrom=asume.gov;
+ dmarc=none action=none header.from=asume.gov; dkim=none (message not signed);
+ arc=none (0)
+Received: from CYXPR09CA0018.namprd09.prod.outlook.com (2603:10b6:930:d4::6)
+ by DS9PR09MB12157.namprd09.prod.outlook.com (2603:10b6:8:2c9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.19; Thu, 12 Feb
+ 2026 10:50:32 +0000
+Received: from DS4PEPF00000170.namprd09.prod.outlook.com
+ (2603:10b6:930:d4:cafe::8a) by CYXPR09CA0018.outlook.office365.com
+ (2603:10b6:930:d4::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.12 via Frontend Transport; Thu,
+ 12 Feb 2026 10:50:29 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 64.178.212.227)
+ smtp.mailfrom=asume.gov; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=asume.gov;
+Received-SPF: None (protection.outlook.com: asume.gov does not designate
+ permitted sender hosts)
+Received: from mail.asume.pr.gov (64.178.212.227) by
+ DS4PEPF00000170.mail.protection.outlook.com (10.167.18.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9611.8 via Frontend Transport; Thu, 12 Feb 2026 10:50:31 +0000
+Received: from ASM-SMTP-RELAY.asume.gov (10.3.3.64) by
+ ASM-SMTP-RELAY.asume.gov (10.3.3.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Thu, 12 Feb 2026 06:50:31 -0400
+Received: from User (185.169.4.18) by ASM-SMTP-RELAY.asume.gov (10.3.3.170)
+ with Microsoft SMTP Server id 15.2.2562.35 via Frontend Transport; Thu, 12
+ Feb 2026 06:48:08 -0400
+Reply-To: <lawyergeraddave00@hotmail.com>
+From: FBI <info@asume.gov>
+Subject: YOUR ATM CARD COMPENSATION PAYMENT !!!!  
+Date: Thu, 12 Feb 2026 02:50:30 -0800
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <3934b3c7-1e48-460d-8b33-f4e5a9629af0@ASM-SMTP-RELAY.asume.gov>
+To: Undisclosed recipients:;
+Return-Path: info@asume.gov
+X-OrganizationHeadersPreserved: ASM-SMTP-RELAY.asume.gov
+X-EOPAttributedMessage: 0
+X-CrossPremisesHeadersPromoted: DS4PEPF00000170.namprd09.prod.outlook.com
+X-CrossPremisesHeadersFiltered: DS4PEPF00000170.namprd09.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PEPF00000170:EE_|DS9PR09MB12157:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8549a958-b291-4de5-b5e7-08de6a248b38
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Forefront-Antispam-Report:
+	CIP:64.178.212.227;CTRY:PR;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:mail.asume.pr.gov;PTR:InfoDomainNonexistent;CAT:OSPM;SFS:(13230040)(35950700016)(82310400026)(32650700017)(69100299015)(3109299003)(61400799027)(7416014)(156008)(8096899003)(4076899003)(54012099003)(27013499003)(3613699012)(88210200001);DIR:OUT;SFP:1501;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35950700016|82310400026|32650700017|69100299015|3109299003|61400799027|7416014|156008|8096899003|4076899003|54012099003|27013499003|3613699012|88210200001;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bm1lOHR5VVhWaTcwUWMwam9pZml4a0xqVjIxL2QzUWQ2ajJjRmpzUno5d1l2?=
+ =?utf-8?B?ay9peGg5R0ZEOFhFdWJUM05jdEl4WTk1MHFQOXoyWmtDK2F5aTQ2NllTTEs2?=
+ =?utf-8?B?ZVg2MFpkQnBsTWZWeE05eUZCK0J6a3FPNlMrWml6UjVjT05tVTJyVlA3VTh1?=
+ =?utf-8?B?c3NFRkUyVXZjWHN5M1Faek5FaGgwZ2pPODZ6VmlBMERGcHNNVWNGNEZ1ZWdh?=
+ =?utf-8?B?ekhXMWlhVkR2WUhxd2s5QnZ3eXpGK01OaW1YT0dFTTJ1R1VJZHBWNDRSRTdz?=
+ =?utf-8?B?eHE3M2tyS1FNeFRYVUdaY2FNSk82akVrYW8yZlUvbzh0TEs4ZXZmc2VjSEFv?=
+ =?utf-8?B?c2tKNXhJWDRDMFhHYkZmSHRBaFRRT3NqdUhpd3d3cjJUL1htMVphL0JlM0lz?=
+ =?utf-8?B?Yktyb2doNkpDWlZ5TEpaUEE4UUpoZ3hZTTJ0Y0E5SmUyZ3h0N2d4U2V3VjBF?=
+ =?utf-8?B?cDRDa0Zwb1hCMUxhcXdXQWdtSWZpZ0h5SW5RcE1pYXlMbW9CRzFlUEp5SXEr?=
+ =?utf-8?B?dEZ4QmwyV0M1L3ROSm1vSGQ1TnRUY0JMSnhGbDdWV0UwSyttS2o1VC9Fc1RP?=
+ =?utf-8?B?R3g5TUVtQk0xQXlLNlJ6bVAwZ2xvY0p4R21Hci9GZkN2TlZmazJKSU9VSGJP?=
+ =?utf-8?B?U3hVK1JXVHpKU1Ywam1obmhCNUNzUmltOGVVc3dvRVcyc0pnemswNnJXaHFi?=
+ =?utf-8?B?blQvcWx4OFlWY2dYVkVPSk5wVm85L3lJb0pmbW04M1YweEtvK1FjdU42eEFH?=
+ =?utf-8?B?S0xrYS9XT2k1aC9rTUJNdDZCZEJzTnF2azVTUlRoVTJYSW5qKzVhOHcvdWd1?=
+ =?utf-8?B?akFiUm4wTkpmSGRMV3pUYUtDZHljbjlKb1gwc0x6USt4Z0N3WGFtMXU1aXNx?=
+ =?utf-8?B?emJCMGFVbFJ2NzRxVFZLY20zZWpaZ2dhZ2dYU3grL0tyR1ByZ0I5RFJGbktv?=
+ =?utf-8?B?cHN1SVQ4Q0UzYTRCdk9rTys2M3dWd1duUFJZMzRST0pyU21oKzV2NVVVN3pK?=
+ =?utf-8?B?U1pQWnNzbWNMQnI3VGgrRXVsOXlJWGZoSHp1OUNyRS9PZkgwTkV6SFlnWTRV?=
+ =?utf-8?B?S3YweVNGUXVyZ3JoSGNBV0ZQUDhWK0hueHVEWDh3OUxlL0RheHN2QldxMUJx?=
+ =?utf-8?B?QnFhTWhhbGlaNVBlcDBQdXhPREx1Q2F5SkI1d1Bnc2h4QzBQTU1UMXhNeHFa?=
+ =?utf-8?B?Sk9YMmtOU0ZWaGNMQ1hGeWx1Y2FoMlowbVJTVHV5UXZsUU1hWGE1clFYeXYz?=
+ =?utf-8?B?TEFkcm52UHczT3RSa1ZaRUs5NGRYNVNqWjFDaFBxYzFzSEZiRVdqTnNSdkJU?=
+ =?utf-8?B?NEYwZXV4WE9xRE5oWlhaZEEzVUVHNTRCUFAyL055YWY5WnJ2ZHd1aTdWdTh3?=
+ =?utf-8?B?bWQ0MkVnNTBNZGdsMkpwNmVmRG5wZTQvdEVZZS9PR1kwc1lKSzg2Z2RBMzMy?=
+ =?utf-8?B?ZWgxelpnRi9xNnJFN1NrN0RuQU4rUTNhVFFHU1lPZTg5b3Jkb1c3YmJabTR3?=
+ =?utf-8?B?dEltL0w5V3F0YXRrdWk3dVNnODlLN3Y1SzVMRC95K2NrVWRMNG5YUFMzR0J5?=
+ =?utf-8?B?TjEwaFpIQW1rZWZhRlJiNFFzdUFWcVhhRTgyankrckQ0U0JCVXE2NUlnWjFN?=
+ =?utf-8?B?RTlmT2VESEZCRW91N1laV0FneXRFN2VsVDJlZ1VjMnlmOVdqR25FUXI4SWhl?=
+ =?utf-8?B?RFQ0QmtHT05yYWNnMEJlN2tkZjFPdmhuZDhMTzF1TWkxOWpzVnZFTFp1MzBE?=
+ =?utf-8?B?NFpHQ2JsQ0tRVUlER0twSW83NWRyMVFwM3AzMk1rMm5vTG4rWEVnM09ON3NQ?=
+ =?utf-8?B?Y1lyd2ExZUE1UW9oSzVwK01mTm80QmpvU2J1K0xBQm0wZnF6ZTQvTnpYMU9w?=
+ =?utf-8?B?ais5bEwzbXJUSUYyaDMwY1J5UnZLOW1kWnNUUTVSQTBWa0Fxakl4U3dnTWYz?=
+ =?utf-8?B?ZTJVU1JIeG9BUnlzMEZPZHdPWjZDS25MUUtadnM2bUdMQVFjMFZaMUUya09F?=
+ =?utf-8?B?YVM0OFlZSXJ4S1RTaDc5bU43OTkrNHRqOXc2SXBha2NRKzJIdVBlREJLaHlz?=
+ =?utf-8?B?QTJNcmRRSTVvNEpreVhBWWtVNlJLdkZmSEpHdDZxQWlLL3kxeXd6SE9CVmlq?=
+ =?utf-8?B?RFBGOG9WMUhNNVpWZmluenJuRFBVK1BqMlZCUEVra00xbEVNL3lxWTA5M0ZS?=
+ =?utf-8?B?TlpqaFYvN1ZOUmxWQUcwbkkvSmVWVE5RVzlwODMrbFE5MThtcjdvSEd2TGN6?=
+ =?utf-8?B?eTlaZG5ONVBzY3Z2ZHkyU0JvSTg3cllyWE1kMVNNT1JxMnl6UlZvOTh1ZjNC?=
+ =?utf-8?B?S0VGZlBhT2x2S0ZSV0hkdzJQdjZ5RGhVSi9hRnFZTjRyMEtmcTkrM2Nxdmtk?=
+ =?utf-8?B?WnF1RzhNTmw3cVcrQ3JBbkdxSWdSOVl2Q014WkpnaFRWLzZnbVViYThtNU1z?=
+ =?utf-8?B?RXUrcVFudVZhek1VaGtkVzJlU0ZEVW5WUjBZaHZ4V2haaVFEckkrOXBiMnZn?=
+ =?utf-8?B?R1MvRHZrSTZGRTZ4aUJIN2VFNUMwZzNvVXhER1YxZ0h0dmtTZEViSHFld0d0?=
+ =?utf-8?B?dG9rOHRGbStYcmJkZFZyK251anRhSjFCQ0E0ODdoY0JNODJuY0tYR0Z4WC93?=
+ =?utf-8?B?QVI4bGdkK2hjTGM4MkVaTlZNOVVkY3FTZTdXUHlkNllEOFIrTXg3ZkV6T29h?=
+ =?utf-8?B?SXVsWmI1WkhSdnAwTUowUTkva2U1dUxTT01ITWxpWGlOYW5sOEllalllT3Uy?=
+ =?utf-8?B?SmY1ZitFMzVPOEp3MjdEREMrRHVhdDBpaHBQMGVZY3VUSmVjWXhoQVBmY1gz?=
+ =?utf-8?Q?JlhX94KBiENvnryXBN4Eg=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	ZYzmlFwB6SLu7uDGnMxuX6vjuwnRJcbGj+nzcgZe7h11deYCQTTNeNx8Wk1GPptiQvhLmSER81W2vcPtCHG4F/Xq907vR4eOb/NWXMigwiGIUoqX1LQLRRT0G9wfrc8fKlQ1r+qecsCn42okYOjTpNYGAYRmy0pJE670ddKTtmTYhSfpWvshgMfLJfGEs74XQWXal2xE0GstMRLsRkbid1bLEdP+DoH+L9tMu9pcCZGugAOqDEGz+RCCRcyL8VvwbVbUgiDfztdXAfnefGpq2E/t9yXFfs+edqwQKhrNcU1vuSr4/DMeN4/pDmHgclD/VAqkypJ0gE+Fr3rEtFidQcatLoOFsqiEEJsVd+Frf7bK69qkF7P/6tIHNxz7TUn+eKgf6xV6MSUwcMqPzxIg8tlz6eHYgInU/zbtjHoIknhN2s8qcAF0lTa0eyoRkYoD+18AhLbM5X7x4bx6ibzuK/s2HZsTAEH88W7fjB0Anwrb66BWrItD0Opc7hZVZ0v8KI6tSgzyjQBXfNZeZ6Gx0H00HT3rY4H7RySs9wdM0WtNzyB2IeocifF8xo/dmGb6FvajU/i3OkZtnfpWHJqBJA==
+X-OriginatorOrg: asume.pr.gov
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2026 10:50:31.8990
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8549a958-b291-4de5-b5e7-08de6a248b38
+X-MS-Exchange-CrossTenant-Id: dd8f0dae-1d9f-414c-9a8f-13645b7f9388
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=dd8f0dae-1d9f-414c-9a8f-13645b7f9388;Ip=[64.178.212.227];Helo=[mail.asume.pr.gov]
+X-MS-Exchange-CrossTenant-AuthSource: ASM-SMTP-RELAY.asume.gov
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS9PR09MB12157
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+<title></title>
+</head>
+<body bgcolor=3D"#FFFFFF" leftmargin=3D"5" topmargin=3D"5" rightmargin=3D"5=
+" bottommargin=3D"5">
+<font size=3D"2" color=3D"#000000" face=3D"Arial">
+<div><font size=3D"4">?Federal Bureau of Investigation (FBI)</font></div>
+<div><font size=3D"4">Anti-Terrorist And Monitory Crime Division.</font></d=
+iv>
+<div><font size=3D"4">Federal Bureau Of Investigation.</font></div>
+<div><font size=3D"4">J.Edgar.Hoover Building Washington Dc</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Attention Beneficiary.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">I am Mr. KASH PASTEL, The new Director FBI&nbsp; nomi=
+nated by President Donald Trump to replace the previous director after the =
+dismissal of James Comey due to internal logical protocols guiding internat=
+ional and local transactions, my tenure
+ represent peace, equity and justice and rule of law shall prevail, my duty=
+ is to ensure global maximum security and to protect fundamental human righ=
+ts. FBI has increased their priorities because of the recent terrorist glob=
+al threat, And Records here show
+ that you are among one of the individuals and organizations who are yet to=
+ receive their overdue payment from overseas which includes those of Lotter=
+y/Gambling,Contract and Inheritance. Through our Fraud Monitory Unit we hav=
+e noticed that you have been transacting
+ with some impostors and fraudsters who have been impersonating the likes o=
+f Mr.Lamido Sanusi/ Godwin Emefiele of the Central Bank Of Nigeria,Rev. Obi=
+nna,Senator. David Mark, Iburahim Lamode of EFCC, Mr. Patrick Aziza, Bode W=
+illiams,Percy Jones,
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">The Cyber Crime Division of the FBI in conjunction wi=
+th: Agencia Federal de Investigation (AFI) USA , Economic and Financial Cri=
+mes Commission (EFCC) and Metropolitan Police [Scotland Yard] England gathe=
+red information from the Internet
+ Crime Complaint Center (ICCC) formerly known as the Internet Fraud Complai=
+nt Center (IFCC) of how some people have lost outrageous sums of money to t=
+hese impostors. As a result of this we hereby advise you to stop communicat=
+ion with anyone not referred to
+ you by us as we have investigated these bodies and have found out that the=
+y were impostors and have hence directed beneficiaries to rightful claim ce=
+nter&nbsp; in African.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Your payment totaling $10.5,000,000.00(Ten Million fi=
+ve Hundred Thousand Dollars). will be released to you via a custom pin base=
+d ATM card with a maximum withdrawal limit of $15,000 a day which is powere=
+d by Visa Card and can be used anywhere
+ in the world where you see a Visa Card Logo on the Automatic Teller Machin=
+e (ATM).</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">We guarantee 100% receipt of your payment, because we=
+ have perfected everything in regards to the release of your $10.5 Million =
+USD to be 100% risk free and free from any hitches as it's our duty to prot=
+ect you. (This is as a result of the
+ mandate from US Government to make sure all debts owed to people which inc=
+ludes Inheritance, Contract, Lottery, Compensation etc are been cleared for=
+ the betterment of the current economic status of the nation and its citize=
+ns as he has always believed &quot;Our
+ Time for Change has come&quot; because &quot;Change can happen.</font></di=
+v>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">To redeem your fund you are hereby advised to contact=
+ the Advocate assigned to be in-charge of the delivery of your ATM Card fro=
+m ATM Card Center via email for the requirement to proceed and procure your=
+ Approval of Payment Warrant and Endorsement
+ of your Funds Release Order on your behalf which will cost you $455 taken =
+care of by the Federal Government so all you will ever need to pay is $455.=
+00USD only.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">ATM CARD COMPENSATION PAYMENT AWARD AUTHORITY WEST AF=
+RICA</font></div>
+<div><font size=3D"4">Agent Lawyer Advocate Gerad Dave</font></div>
+<div><font size=3D"4">Email: lawyergeraddave00@hotmail.com</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Do contact agent advocate LAWYER GERAD DAVE the advoc=
+ate assigned for the delivery of your ATM Card by the ATM Card Center via h=
+is contact details above and furnish him with your details as listed Below =
+for the shipment of your ATM CARD,
+ and also email him with the above email address to festering up the delive=
+ry of your ATM Card to you in your home Address:</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">A) Your full Name. . . . . .</font></div>
+<div><font size=3D"4">B) Your Address In Full. . . . . .</font></div>
+<div><font size=3D"4">C) Your country. . . . . . . . . .</font></div>
+<div><font size=3D"4">D) Your city. . . . . . .</font></div>
+<div><font size=3D"4">E) Age. . . . . . . . . .</font></div>
+<div><font size=3D"4">F) Your Cell Phone. . . . . . . .</font></div>
+<div><font size=3D"4">G) Nationality:. . . . . . . . .</font></div>
+<div><font size=3D"4">H) Occupation. . . . . . . . .</font></div>
+<div><font size=3D"4">I) Sex. . . . . . . .</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">On contacting him with your details your files would =
+be updated and he will be sending you the payment information in which you =
+will use in making payment of the $455.00USD via Money Gram/Western Union M=
+oney Transfer for the procurement
+ of your Approval of Payment Warrant and Endorsement of your fund Release O=
+rder. After which the delivery of your ATM card will be effected to your de=
+signated home address without any further delay, extra fee or any authority=
+ raising eyebrow, Upon receipt of
+ payment the advocate will ensure that the delivery officer approves that y=
+our package is sent within 48 working hours.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Because we are so sure of everything we are giving yo=
+u a 100% money back guarantee if you do not receive your ATM CARD Shipment =
+Confirmation within the next 48hrs after you have made the payment for ship=
+ping,Once again we are so sure of
+ you receiving your payment at no any other cost as we have taking it upon =
+our duty to monitor everything in other to cub cyber crime that is perpetra=
+ted by those impostors.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Thanks and proceed now and get in Contact with the Sp=
+ecial Agent MR.GERAD DAVE for the shipment of your ATM Card.</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Regards,</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">MR. KASH PASTEL,</font></div>
+<div><font size=3D"4">DIRECTOR FEDERAL BUREAU OF INVESTIGATION</font></div>
+<div><font size=3D"4">UNITED STATES DEPARTMENT OF JUSTICE</font></div>
+<div><font size=3D"4">WASHINGTON, D.C. 20535</font></div>
+<div><font size=3D"4">C-C -. Homeland Security Council</font></div>
+<div><font size=3D"4">C-C. CIA</font></div>
+<div><font size=3D"4">C-C- International Police Unit</font></div>
+<div><font size=3D"4">TELEPHONE: (202) 324-50</font></div>
+<div><font size=3D"4">FAX: (202) 666-528</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">&nbsp;</font></div>
+<div><font size=3D"4">Note: Disregard any email you get from any impostors =
+or offices claiming to be in possession of your funds or ATM card, you are =
+hereby advice only to be in contact with Agent Lawyer Advocate GERAD DAVE t=
+he advocate assigned to you for the
+ delivery of your ATM Card by the ATM card center who is the rightful perso=
+n to deal with in regards to your payment worth $10.5 Million USD and forwa=
+rd any emails you get from impostors to this office via the above fax numbe=
+r so we could act upon it immediately.
+ Help stop cyber crime.</font></div>
+</font></div>
+</font>
+<title></title>
+<hr size=3D"2" width=3D"100%">
+<table width=3D"100%" border=3D"0">
+<tbody>
+<tr>
+<th width=3D"50%" align=3D"left"><img alt=3D"" src=3D"https://mail.asume.pr=
+.gov/logo/logo_email.jpg" height=3D"73" width=3D"215">
+</th>
+<th width=3D"50%" align=3D"right"><img alt=3D"" src=3D"https://mail.asume.p=
+r.gov/logo/Logo_ASUME_NoBackground_small.jpg" height=3D"82" width=3D"172">
+</th>
+<th></th>
+</tr>
+</tbody>
+</table>
+<br>
+<br>
+<b>Aviso de confidencialidad:</b><br>
+<div align=3D"justify">Este correo electr=C3=B3nico, y cualquier documento =
+adjunto, contiene informaci=C3=B3n propietaria, confidencial y/o privilegia=
+da, perteneciente a la Administraci=C3=B3n para el Sustento de Menores (ASU=
+ME).&nbsp; Se advierte que cualquier divulgaci=C3=B3n, distribuci=C3=B3n,
+ copia o acci=C3=B3n relacionada al contenido de esta comunicaci=C3=B3n que=
+ sea realizada sin la autorizaci=C3=B3n del remitente est=C3=A1 prohibida p=
+or ley.&nbsp; De usted no ser el destinatario intencionado o de haber recib=
+ido este mensaje por error, se le solicita que proceda a
+ su eliminaci=C3=B3n, as=C3=AD como a la de cualquier documento adjunto al =
+mismo, y que de forma inmediata nos lo notifique mediante correo electr=C3=
+=B3nico remitido a nuestra atenci=C3=B3n o llamando a nuestras oficinas al =
+(787) 767-1500, &nbsp; La ASUME ha tomado las precauciones
+ necesarias para asegurar que el env=C3=ADo del presente correo electr=C3=
+=B3nico se encuentre libre de virus y/o contenido malicioso.&nbsp; No obsta=
+nte, no podemos asegurar que as=C3=AD sea, por lo cual no nos hacemos respo=
+nsables de cualquier da=C3=B1o atribuible al caso.<br>
+</div>
+<br>
+<b>Confidentiality Note:</b><br>
+<div align=3D"justify">This e-mail, along with any other document attached =
+herein, contains proprietary, confidential and/or privileged information be=
+longing to the Child Support Enforcement Administration of Puerto Rico (bet=
+ter known as ASUME).&nbsp; You are hereby
+ warned that any dissemination, disclosure, distribution, reproduction or t=
+he taking of any action in reference to the contents of this communication,=
+ without the consent of the sender, is strictly forbidden by law.&nbsp; If =
+you are not the intended recipient or
+ have received the current message by mistake, you are required to proceed =
+with its immediate destruction and/or elimination, and notify the sender at=
+ once through the shown e-mail address or call our offices at (787) 767-150=
+0, &nbsp; ASUME has taken all precautionary
+ measures to ensure the remittance of e-mail communications are free of vir=
+uses and/or any other malicious content.&nbsp; However, we cannot assure th=
+at this could be the case, for which we disclaim any responsibility over an=
+y damage attributable thereto.<br>
+</div>
+</body>
+</html>

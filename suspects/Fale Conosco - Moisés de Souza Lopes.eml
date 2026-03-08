@@ -1,0 +1,243 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a05:6500:c045:b0:2f6:ba91:416a with SMTP id g5csp571570lqi;
+        Fri, 6 Mar 2026 05:39:02 -0800 (PST)
+X-Forwarded-Encrypted: i=4; AJvYcCWTURnW2MegAv/eiWh09R+Uz1BlwUWq4wvu1cgNVjxzIqrbA8pDZl3j6k0MBUTf+WOHtkmM6/hRdZb8tQ==@codeminer42.com
+X-Received: by 2002:a05:6214:300f:b0:899:f0b1:7335 with SMTP id 6a1803df08f44-89a30aa0ca0mr26948296d6.35.1772804342661;
+        Fri, 06 Mar 2026 05:39:02 -0800 (PST)
+ARC-Seal: i=3; a=rsa-sha256; t=1772804342; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=D+4cldlaE3tbLTPV2K5RfP5WKD6GngcMHXT9yozuGTqL/L1wl0FsjWS66UGWD72bvW
+         Ortw56PWuvSbj4lSixRzQ7khn/lkW0xoqGHHYV6TxHzDzm5K4knbHoWjbTN2AVAzYaF6
+         TSIVL9+m+NgpLpBoDv9joGiF1tZDYFt4IE0jhId+3f5lc2w1J6rhMX7iwzMPeSQJSnwM
+         O7byCredjXRUhSbQ5Dsq3S/xcK5amDpphnhk7NH/3sOB0reoYs9/MQNpdNr0XUHs61Da
+         qIMUmeH87TSBf4a17r1exKplAy3QpjCCSvPbzsq8NaEoVzMcSK/H+isIOCEv0Q3n6EDj
+         AbvQ==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:content-transfer-encoding:mime-version
+         :subject:message-id:to:reply-to:from:date:sender;
+        bh=q//B+ff314fvN9Gw2z0+CYb6J/EMEtuN4UyEpcTNiXY=;
+        fh=C/Lehzs4M8Af9EOdpQg/aVliydusreDwjN41w+Km89A=;
+        b=LNagyBmKqLiCRuYupilsD5bI0kju+z/7D+z3OEoGYOhvDZODxVKrMWtfb7Pw1CO82r
+         ESnaRFYpSob7iZc8KvQMT2laWFsOwwdtvpf9/ki2I4floMzqQxzuOGGYYXSHK+dyJLVs
+         d4BTbypM+KIISs/8a2bMgy6Tc9rOGaE7h6ip1T2ucp3hi7e60kL9BiP7RhCMYNwxet2N
+         xd51CdyBOphP/Jw/UVnLGb4tUvsE5OoaA4qqBjULaYvPXganiXShav8PcmXfzPh6O3e5
+         tTF1kTc5WS/S3j21NVbgBmHR3xF0wfQIfE7tqB3K0LXOst+2HdcLe6mLK5bFNaVu09U7
+         Pkkg==;
+        dara=google.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       arc=pass (i=2 spf=pass spfdomain=mailgun.codeminer42.com dkim=pass dkdomain=mailgun.codeminer42.com dmarc=pass fromdomain=codeminer42.com);
+       spf=pass (google.com: domain of contact+bncbaabb5vrvpgqmgqegt37riy@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBAABB5VRVPGQMGQEGT37RIY@codeminer42.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com;
+       dara=fail header.i=@codeminer42.com
+Return-Path: <contact+bncBAABB5VRVPGQMGQEGT37RIY@codeminer42.com>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id 6a1803df08f44-89a31423ed7sor13369226d6.4.2026.03.06.05.39.02
+        for <fabio.akita@codeminer42.com>
+        (Google Transport Security);
+        Fri, 06 Mar 2026 05:39:02 -0800 (PST)
+Received-SPF: pass (google.com: domain of contact+bncbaabb5vrvpgqmgqegt37riy@codeminer42.com designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       arc=pass (i=2 spf=pass spfdomain=mailgun.codeminer42.com dkim=pass dkdomain=mailgun.codeminer42.com dmarc=pass fromdomain=codeminer42.com);
+       spf=pass (google.com: domain of contact+bncbaabb5vrvpgqmgqegt37riy@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBAABB5VRVPGQMGQEGT37RIY@codeminer42.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com;
+       dara=fail header.i=@codeminer42.com
+ARC-Seal: i=2; a=rsa-sha256; t=1772804342; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=Kpj5lGD0Qb8RsDFeHtbBdihHcihUHIWGy1/R4tX6IfedH5uITkdyQxoHGoQF8rPT0P
+         w0is+QNa3lZiJeTeUKShugXPn/bkBiOrtLrIaPcIHv/u4FAm50ZxPjVyXqYrHscOo74T
+         HFhM+YTFBBgPBrFqE5wa8sm7Ge4cjGaZDrRbo/WuP9sBgTckbiojO5qJfj6LZc5IXByX
+         6D3z0ExgyUBmMRMfu8zWSS6x3XC9KJSMVN7r9T4NBmYueA/hexo4L6RVRiWf8oxc0fDm
+         TXtZn//Mu4Xs0H452eiXw/1dT/32SsYydXdp/fyTy/JXuYKrZrwclvXfskS/kOIH0g7G
+         sTmw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:content-transfer-encoding:mime-version
+         :subject:message-id:to:reply-to:from:date:sender;
+        bh=q//B+ff314fvN9Gw2z0+CYb6J/EMEtuN4UyEpcTNiXY=;
+        fh=C/Lehzs4M8Af9EOdpQg/aVliydusreDwjN41w+Km89A=;
+        b=BKdvmdWvfds+DhhlOWUX/FAtJyp8Kd6DJYNjOouuUrHBhLGO2CpAz9bHATrBQnOlRb
+         wuJXElgoAxxS7rOQCTpro1DdsVRyWSfca6vUAeUbOspIo6dktxCWja7VIr8Q2nkbCWrf
+         u9i4W/QVr5dZCs19hhkcaZVWkIwzkcpGnIpHTXu3rnmsJrsMrbQXk8hwoZVgWvnUoL9j
+         Vfx4ruI4GruVbR+ckznpChmvkHL1LRiSzaKuaAznHdfb3ZX5SOQyZz7F4qQzMHLI0EH2
+         Ri85igb3juAt8U7PPqPbqpaaApQeGjwnyHQfGbWStArjAPzR6fx93OqrIOiEsODFlPIW
+         /ZJQ==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@mailgun.codeminer42.com header.s=k1 header.b=ggA46jjc;
+       spf=pass (google.com: domain of bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com designates 143.55.232.41 as permitted sender) smtp.mailfrom="bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772804342; x=1773409142;
+        h=list-unsubscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender
+         :content-transfer-encoding:mime-version:subject:message-id:to
+         :reply-to:from:date:sender:x-beenthere:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q//B+ff314fvN9Gw2z0+CYb6J/EMEtuN4UyEpcTNiXY=;
+        b=Tz2D5q0vrU2aMZJTbnGmDNYk+Rk0jYX52PrtabEy5O96JfGXPi9LO0avqDDcPXwfaA
+         pANvEamqQ25qrdS01FK6CL+dzOPtoS9UzfiMU13pLzt72pnbji/QcU+75Sv235WyNVIv
+         Vq7zaqNaaWXW49DuxkYYpwNbQxFLt4jLRSgKPx6GTjVAxrp34ycaqu8d8zD0I9PzIbqE
+         XvRqAuJNNBQic+qHIZLZPylNlQrBJd6V7vpwVXXydp2QB6OliUSNELVRF5kRZe3oEZHb
+         z9jYpO67a8+JL7CpRPYDGq0j2R8Uwppqt1VqhC0k9Q+OXDAKUYaKxG3BYn97MOn0skiG
+         dO2g==
+X-Forwarded-Encrypted: i=2; AJvYcCUwo1/JQVwdf0z6lKHIvJDoEHjv/Ub7qYul+Xcb8vBw3Kl4avWpIUawNXaQZT73osz1lgoB56pEAZxaaQ==@codeminer42.com
+X-Gm-Message-State: AOJu0Yy2VKb7nmX8sQm3OlA53onlmubhDtpc828Zik/t3xQx/yEoOJlB
+	yBIBJSCragHFcYcUpmgUpWygB+78V5EJP/VuBXzr/v1fCo0JjtJn8IvRbMntAd7UYOjuDg==
+X-Received: by 2002:a05:6214:daf:b0:899:d6d2:4b96 with SMTP id 6a1803df08f44-89a30aa3b00mr27356396d6.34.1772804342207;
+        Fri, 06 Mar 2026 05:39:02 -0800 (PST)
+X-BeenThere: contact@codeminer42.com; h="AV1CL+Gj7zVES/7oXj3psx51SORIOzVzKs811wIceu7RNiaRow=="
+Received: by 2002:a05:6214:519e:b0:899:d6d0:4029 with SMTP id
+ 6a1803df08f44-89a222b2093ls44351246d6.0.-pod-prod-09-us; Fri, 06 Mar 2026
+ 05:39:01 -0800 (PST)
+X-Received: by 2002:ad4:5c85:0:b0:89a:c64:c97 with SMTP id 6a1803df08f44-89a30aa0cabmr28534556d6.36.1772804341557;
+        Fri, 06 Mar 2026 05:39:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772804341; cv=none;
+        d=google.com; s=arc-20240605;
+        b=I8vuj3QQlLdkQCAtm0vXqXH/9sNiHAYE/BqRJx+D+Im4AJSRRJlW1VNfpMEXRqeZS4
+         jctkQkMKnMEHhpFuSfRzSVT0wbVDkU+p0ZscpQoeFwOAjvXT5W1J01zEIWMh/7YXfbri
+         jH/5mWQn3BJpbt+jgTae4jX+2H5RRdwimEVMWcfzc5j7SQdfW4+NeYNKaTKbqd7FzD0K
+         wyM1Vyn1B0xwtl/2C43WoQQniSCI5C8Px3EGDlEiDPXBTikJ7SQUgOJrBtbcVk+fnS1S
+         n+Lkx/fMHndD8s4wLVH6sDvpvHzkpZARFbaJ63v++7JtU7QZpjz++ykmJV5IfaoMQGIR
+         oNpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:mime-version:subject:message-id:to
+         :reply-to:from:date:sender:dkim-signature;
+        bh=q//B+ff314fvN9Gw2z0+CYb6J/EMEtuN4UyEpcTNiXY=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=V7TIdfm2IhF6qKZAGJIM1lhNNOXSBneufpRGLpPunzs0SHQpaxTDcw64yqueInEH7b
+         vJYmk3eQTCJwQuEZEKvOmqUL+Ko8sz8JbOpDZPPXQRi/GCQulhI/0YCTAE9N3bFYwKy8
+         jKObC7LOy2em8HPLv+i09cpmn9mr3qs+uwdYWsxVHatFd0ZWHlvAY3R5VQGD1k9ExpFe
+         aA6752VbkHN+gw/GaC7SHACGCBptEWW3tPr/JJOpuYQoZaYGq0nt6djIygid0xVcfvYE
+         G64KDRGQa+62Co7a34UOjGMcF6HzQDy02Iis80ELD/CWpTDYcZ4fA7GxQy4wLUErRwM+
+         YQdQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@mailgun.codeminer42.com header.s=k1 header.b=ggA46jjc;
+       spf=pass (google.com: domain of bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com designates 143.55.232.41 as permitted sender) smtp.mailfrom="bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com
+Received: from v541.v5f06b487.use4.send.mailgun.net (v541.v5f06b487.use4.send.mailgun.net. [143.55.232.41])
+        by mx.google.com with UTF8SMTPS id 6a1803df08f44-89a317e20adsi13510786d6.632.2026.03.06.05.38.59
+        for <contact@codeminer42.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2026 05:39:01 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com designates 143.55.232.41 as permitted sender) client-ip=143.55.232.41;
+X-Mailgun-Sid: WyIxZGNiOSIsImNvbnRhY3RAY29kZW1pbmVyNDIuY29tIiwiMDI4OGI3Il0=
+Received: from https://www.codeminer42.com (ec2-18-215-144-62.compute-1.amazonaws.com
+ [18.215.144.62]) by
+ 4799f015e54ade7b781c4249b8d71a786352c3f254cc5467eab2c467626e0c89 with SMTP id
+ 69aad8f125ddaa5fc56b116f (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
+ Fri, 06 Mar 2026 13:38:57 GMT
+X-Mailgun-Sending-Ip: 143.55.232.41
+Sender: no-reply=codeminer42.com@mailgun.codeminer42.com
+Date: Fri, 06 Mar 2026 13:38:56 +0000
+From: no-reply@codeminer42.com
+Reply-To: moisesdesouzalopes7@gmail.com
+To: contact@codeminer42.com
+Message-ID: <69aad8f056bd7_ff7e0-494@dada2303-e6ca-4203-b635-949ce42e001c.mail>
+Subject: =?UTF-8?Q?Fale_Conosco_-_Mois=C3=A9s_de_Souza_Lopes?=
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: no-reply@codeminer42.com
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@mailgun.codeminer42.com header.s=k1 header.b=ggA46jjc;
+       spf=pass (google.com: domain of bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com
+ designates 143.55.232.41 as permitted sender) smtp.mailfrom="bounce+0a1d3c.0288b7-contact=codeminer42.com@mailgun.codeminer42.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com
+Precedence: list
+Mailing-list: list contact@codeminer42.com; contact contact+owners@codeminer42.com
+List-ID: <contact.codeminer42.com>
+X-Spam-Checked-In-Group: contact@codeminer42.com
+X-Google-Group-Id: 256526988213
+List-Post: <https://groups.google.com/a/codeminer42.com/group/contact/post>, <mailto:contact@codeminer42.com>
+List-Help: <https://support.google.com/a/codeminer42.com/bin/topic.py?topic=25838>,
+ <mailto:contact+help@codeminer42.com>
+List-Archive: <https://groups.google.com/a/codeminer42.com/group/contact/>
+List-Unsubscribe: <mailto:googlegroups-manage+256526988213+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/codeminer42.com/group/contact/subscribe>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <h3>Mensagem de Mois=C3=A9s de Souza Lopes</h3>
+
+<p>
+  <b>Nome:</b> Mois=C3=A9s de Souza Lopes
+</p>
+<p>
+  <b>Email:</b> moisesdesouzalopes7@gmail.com
+</p>
+
+  <p>
+    <b>Telefone:</b> +55 (27) 99711-8841
+  </p>
+
+<p>
+  <b>Empresa:</b> Barbearia classe a =
+
+</p>
+
+<p>
+  <b>Como nos conheceu:</b> Pesquisas =
+
+</p>
+
+<p>
+  <b>Or=C3=A7amento:</b> Ainda n=C3=A3o definido
+</p>
+
+
+<p>
+  <b>Mensagem:</b> <p>Agendamento de barbearia,  marcar ov=C3=A1rio do at=
+endimento,  pre=C3=A7o.                  </p>
+</p>
+
+
+<br>
+<h4>Navigation Info</h4>
+<p>
+  <b>Aceitou os cookies?:</b> true
+</p>
+<p>
+  <b>Regi=C3=A3o do site (br ou global):</b> br
+</p>
+<p>
+  <b>Pa=C3=ADs:</b> Brazil
+</p>
+<p>
+  <b>Estado:</b> Espirito Santo (ES)
+</p>
+
+
+<br>
+<h4>Traffic Info</h4>
+<p>
+  <b>UTM Medium:</b> cpc
+</p>
+<p>
+  <b>UTM Source:</b> google
+</p>
+<p>
+  <b>UTM Type:</b> utm
+</p>
+<p>
+  <b>UTM Campaign:</b> google_cpc
+</p>
+<p>
+  <b>GCLID:</b> GCL.1772804155.Cj0KCQiAk6rNBhCxARIsAN5mQLtD8zQJ0at1g_1d6r=
+JdkJJTx1A8bD1uK7LlHiFewPGEczOTSqdGVl4aAu-UEALw_wcB
+</p>
+
+  </body>
+</html>

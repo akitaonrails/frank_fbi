@@ -1,0 +1,236 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a05:6500:804d:b0:2f6:8aae:b1b9 with SMTP id 13csp269862lqc;
+        Fri, 27 Feb 2026 03:00:30 -0800 (PST)
+X-Forwarded-Encrypted: i=5; AJvYcCW83wmHor6Y7+j2oQ3Sc5iX6FHEUf3gxCze8RhQJQ7V3yP/WRagxyBPTcVNl/6kpehS/IYxtAdJNsYXmA==@codeminer42.com
+X-Received: by 2002:a05:7301:3f07:b0:2ba:8cc1:7456 with SMTP id 5a478bee46e88-2bde1cbced3mr1231431eec.19.1772190030373;
+        Fri, 27 Feb 2026 03:00:30 -0800 (PST)
+ARC-Seal: i=4; a=rsa-sha256; t=1772190030; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=i2XcNxDzg4CwL2BAcmBbZw/u9/vMojPKs2Cwq0B9pMiKOe8Uft2+Q9e/bL1CdjX7NH
+         4WgeSxzhZZ1yitUlfzBuWYItH/fuiATi+D8bSMAq4OIXvHGvfaHAyb10i5dR5uxsEpCX
+         XkzazsNDWbOIEHHsPdFsSfkmT8Vod7hTiTX8bS9d1UNI/a7wed47gdLxaFbhpIILvZwc
+         lttEmEiXVMCe+KWCJBPUBcxUXrtES5CY/XCADcKPNKdTgUM7AVvcTd9v5Ykg6wLDvBmh
+         lvR9rvlGpXmHaHIxVdL1ullITfFBZnx9vqFcFRAeSp/YiDcA0bPxq78TVdYO89YJuaJ9
+         NNJw==
+ARC-Message-Signature: i=4; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-archive:list-help:list-post:list-id:mailing-list:precedence
+         :reply-to:to:subject:message-id:date:mime-version
+         :list-unsubscribe-post:list-unsubscribe:from:dkim-signature;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        fh=om0POZaYvJ7lj/TLs0QW4sf/wwGIuZvN5natcib4h6A=;
+        b=Wyg4cCuKfAaj3rGaeqUOpz+fL5WKWPf1rI4J4DU5bZFxzGsTVk6/VR/+nKmghOlI8K
+         emrX5CtNQ4zr4flgGwscIpeuTQ08vlG8MVJVeB5YfWfzIFVvmBh7yJb2kSPPZbSdzLb9
+         2JVdBZP12Hl2awdztqZRko8uY5Mu9ntp3KFOi/2PC1E2wafAzWS2Q3v4Daq6YcSkoXg4
+         OZ10ADYOU5Ycy7Jc9DWZuLMRuhPSEHj73WsHowlTImGEAlelkuNgDE8OG+hNrnqK8+JD
+         hK3/MMQ43Jq2bpcrZv2vWTJ3N6HV+sHnCHI4EIA+cA+Bx/jPCrKSOJ58T+9uvbp67uPT
+         BSAQ==;
+        dara=google.com
+ARC-Authentication-Results: i=4; mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=qmOl8JCf;
+       arc=pass (i=3 spf=pass spfdomain=tricespro.com dkim=pass dkdomain=tricespro.com dmarc=pass fromdomain=tricespro.com);
+       spf=pass (google.com: domain of contact+bncbczofcmtxmerbthsqxgqmgqeeydv2qa@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBCZOFCMTXMERBTHSQXGQMGQEEYDV2QA@codeminer42.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com;
+       dara=neutral header.i=@codeminer42.com
+Return-Path: <contact+bncBCZOFCMTXMERBTHSQXGQMGQEEYDV2QA@codeminer42.com>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id 5a478bee46e88-2bdd1cec454sor1399854eec.12.2026.02.27.03.00.29
+        for <fabio.akita@codeminer42.com>
+        (Google Transport Security);
+        Fri, 27 Feb 2026 03:00:30 -0800 (PST)
+Received-SPF: pass (google.com: domain of contact+bncbczofcmtxmerbthsqxgqmgqeeydv2qa@codeminer42.com designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=qmOl8JCf;
+       arc=pass (i=3 spf=pass spfdomain=tricespro.com dkim=pass dkdomain=tricespro.com dmarc=pass fromdomain=tricespro.com);
+       spf=pass (google.com: domain of contact+bncbczofcmtxmerbthsqxgqmgqeeydv2qa@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBCZOFCMTXMERBTHSQXGQMGQEEYDV2QA@codeminer42.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com;
+       dara=neutral header.i=@codeminer42.com
+ARC-Seal: i=3; a=rsa-sha256; t=1772190029; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=TXi8O+kCFh+wp1zpXi0day2q0X682GJe6ZtBeZp+lIkzCkOd2T+jE7Dau/kyMoaKL9
+         gBl582TU240HM9Lwcne1NzchWgUxdFScfkHn0+rDx5mATf3Ia95sOxV+JcqjPRG8L0O3
+         HmFej23P1ztL9cmGuCYSlAPI0W9CvGSsK4pfMExtofhfxnSke6iaBD0NmVCcadbCqq2r
+         qVGyutaTjtcffgYOdfdXGcM4Qyk1ONAPu86Bv5nflyp/0bKaqGFKrp3EvcwWMLRHQ4VB
+         2OPEWmHSC0UsyXFbT9kwPfMU9oUD0jV7IN811RzuEitIDq5a5ga4mFBzoCM3hOMoACKn
+         8bCw==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-archive:list-help:list-post:list-id:mailing-list:precedence
+         :reply-to:to:subject:message-id:date:mime-version
+         :list-unsubscribe-post:list-unsubscribe:from:dkim-signature;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        fh=om0POZaYvJ7lj/TLs0QW4sf/wwGIuZvN5natcib4h6A=;
+        b=PuGcACto6349Qsja0QIWQs16rH75aYb8tRXT03yCCdShp9anmh1lzXOJ7Ri6NbNP8m
+         45uCHrdMDrab/Crui3ZAZE23qRdin9nqXzh4cfiDea+VxEs+oyXsDtD2H5d1jDdSjj2F
+         oNPfKoAzCXl4ksEu2CpbNJS0m51hfuOt9O0a2HgPGqJ4gKBlDGSbhJKw0Ms9ZNO1vumq
+         vBIH9nRSte0vzRuETvtzf2wgqPSZ9+zCMeOsOzIYv5n8HHfkD7X77P1Fe4citdHDH1Ei
+         rDXO/fe4Hf1AJM5FzrSGHKxxZBLE2iX4v48onut9QJBhGRL9eGYKJ41YvSiGjyh7vE3E
+         7O6g==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@tricespro.com header.s=google header.b=lVVWv8Kx;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of andre.a@tricespro.com designates 209.85.220.65 as permitted sender) smtp.mailfrom=andre.a@tricespro.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tricespro.com;
+       dara=neutral header.i=@codeminer42.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeminer42.com; s=google; t=1772190029; x=1772794829; darn=codeminer42.com;
+        h=list-archive:list-help:list-post:list-id:mailing-list:precedence
+         :reply-to:x-original-authentication-results:x-original-sender:to
+         :subject:message-id:date:mime-version:list-unsubscribe-post
+         :list-unsubscribe:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        b=qmOl8JCf70E8+Hil55YgVwnBTPx4h8A9crlCWk71HYxhRWwauIdh7dRszDpW85xS2S
+         w7RMKXLAtCj1B3vtmxrHufuuyTGJh3+YGEafaR4w5BB2Ilh3yRH3H5+oOKz1TWvDL0sZ
+         CSWT+i5X6X/HNmBgkJ3kWTbChMRugK1QFR+px+FVLKZIZeChQqPOONyl2FWORoANNH6M
+         pwdk/fljgHyC8ZX0W7y7oiLkNrl2o9i/ACgkLdMTY1mUu+faAq6XXzGElaeeYIvmhY7y
+         QjX9ZujQ9VZd7eMVwPEz3x9SsxLRRsZWBmkZ8bfbpmrZL2TswWz9CsVYynkNCK01QGFT
+         I7uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772190029; x=1772794829;
+        h=list-archive:list-help:list-post:x-spam-checked-in-group:list-id
+         :mailing-list:precedence:reply-to:x-original-authentication-results
+         :x-original-sender:to:subject:message-id:date:mime-version
+         :list-unsubscribe-post:list-unsubscribe:from:x-gm-gg:x-beenthere
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        b=gBDz0b995TJnq0D+HAOn6fMe8SA5f63is7r4JkQn7zNTXZQZaWC3SaoGBq0W1p/8mI
+         /C1gNtxoYPxSbwNdVBLJP7FUAKhpMWwk6QIQoS+NLT2pqZZ7A0dj+7MLh5hj9mzt/Pne
+         NRuxXzVGypCDvApkB2pWpVZ5rQWgBZRUjxBt4weOR2U3oFydz/o/Mr+5pQRVlt+TVDqu
+         00ZeOe3fSkraVX5hXYQqDajvoa6jaH4G7C+LiGgqWfZ5BeBwK0NcLC4hziOr+/ihLfEs
+         j4lOTadS5liXeuyq0vMYFiHvYZ4Js2GIlelMIZ8q7Ds20yGcpadEnotvMDSyA5x8nzhO
+         /mVA==
+X-Forwarded-Encrypted: i=3; AJvYcCXqzhEXPdkKYrXpNDVjeQOMSafg96uRBCWvdEO9OqLMw1t+qqa3E0zKcHabRj/b6DLTI6SR818dPJzOBQ==@codeminer42.com
+X-Gm-Message-State: AOJu0YwF9M+jAoZkt7jaIhDkJDkTuoCaohrlc45IaCj3MPRHDiXE55sP
+	O3K+N+dQ2e8zUJs45LSKxPswckJRui48/CaUdkCKQ6/G9JEyj8GdToHOw0TGzIPBn6gYx+RvPM+
+	vDQ==
+X-Received: by 2002:a05:7022:b8f:b0:11b:b882:3ed5 with SMTP id a92af1059eb24-1278fd2e0c0mr1088181c88.37.1772190029119;
+        Fri, 27 Feb 2026 03:00:29 -0800 (PST)
+X-BeenThere: contact@codeminer42.com; h="AV1CL+Gsvx/9TKzA8L5/yIlatJqB4j/lMCR8Dh7EYwuVoHjh7A=="
+Received: by 2002:a05:7022:2392:b0:123:3796:dc9c with SMTP id
+ a92af1059eb24-1278255fe44ls1969658c88.0.-pod-prod-05-us; Fri, 27 Feb 2026
+ 03:00:27 -0800 (PST)
+X-Received: by 2002:a05:7300:2307:b0:2b7:2d5e:3f49 with SMTP id 5a478bee46e88-2bde1babdddmr1131790eec.10.1772190027432;
+        Fri, 27 Feb 2026 03:00:27 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1772190027; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=W+fS806zpfMfvp2jsLkwhHL11AlUtNoNKapOTwp00MQSnLKZzxfNTLHCTFvj51wCXD
+         BMtRjJQAgdlpclePs1igUKWmBcpC+4MMDLmE0JM8zlGjJPZ4ZwUQa0DLYQgnVUFeAkmy
+         XWs/FZi2jDhcbJnXs9Dcs9LhiCGUxBaUH8MMfDaDrQKaqd44oovvCUg7zEsFk58TkETv
+         SIdc9blAOdywhS5+k87TfB4SQsJZE63mbr4Ygxk/PlQRjrQmDGY7xBGXcTEYG07LE+Nb
+         eI7OWK3EUxKtm8U2R81SUX5GhFIwpDAde+NY31I7GhG6l+/tr5Q4AM6KgPChd4D4c79R
+         as2A==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:mime-version:list-unsubscribe-post
+         :list-unsubscribe:from:dkim-signature;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=R1y9ObRoeSdsNk5bFFERer6T+QBiuhBafAbEE5EYGM3AYctJj3EKoMnxr7pHgRb40X
+         juHR6ZHwjVe3i5xGFDq3kTfyc9pjc/dEp+ccUngTZuu8G1SrIUnH9ePfRqNFJonQhD8s
+         KZr9aIa7c5FwKgN0ok5med8XQSXaFUkhsM9cPy969yLews+p1dW1Wyuk4T46Cu9znk+0
+         yRvTS32YPz+E/5zuVLH/hRxA81JanriEW4/Sr5XPMle5hGXwvvYTadURhqb2jRPiTN7/
+         jTUNlv93wG9b/W7Kw6H0z9xtXoAvRhDlN5t6Pei1KxUBLSJHt+GBL4eVM034vYGYw5x9
+         jvmg==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@tricespro.com header.s=google header.b=lVVWv8Kx;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of andre.a@tricespro.com designates 209.85.220.65 as permitted sender) smtp.mailfrom=andre.a@tricespro.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tricespro.com;
+       dara=neutral header.i=@codeminer42.com
+Received: from mail-sor-f65.google.com (mail-sor-f65.google.com. [209.85.220.65])
+        by mx.google.com with SMTPS id 5a478bee46e88-2bdd1cec454sor1399819eec.12.2026.02.27.03.00.27
+        for <contact@codeminer42.com>
+        (Google Transport Security);
+        Fri, 27 Feb 2026 03:00:27 -0800 (PST)
+Received-SPF: pass (google.com: domain of andre.a@tricespro.com designates 209.85.220.65 as permitted sender) client-ip=209.85.220.65;
+ARC-Seal: i=1; a=rsa-sha256; t=1772190027; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DF+UUhsnKKH0AUM7qRBAhT024UXkixnM0WilJFtB3eFYtP7bM3uhlq++Gj4lDqS8sA
+         0yVqqfIJ/HjDLAvh9oTjc31i6OtOqe5n39D7w8g7bMPo6NqIpQNkgHR5uzDSFdet0eF+
+         TEhR/ogUlQMi/fYperG09YrIDpuo3ywWw9YLlYP6eJ+f7NmDgBdUgfgMcg5m1Mcy6Ep9
+         ThxZCFS8vk5XZUuBibevbnbfztZ5z2XBmVJQmgk39EqiGsHP4sGsbe37Cmy5Da2H87nZ
+         e3hAbLCPYH+QDVinVRKyd3efwTjZrunzDx9gL+W2OWeVPFWNZ07HTcAewmcJrka3sprX
+         selA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:mime-version:list-unsubscribe-post
+         :list-unsubscribe:from:dkim-signature;
+        bh=G835IQP8wWEWuOaptLL6VjflW4AOx6UhhFpLl1Jiu3U=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=ilo24sJdnQpZCQuCHcz6hDemqcyoIxlG26R9KBuDTkdphgx0fDbKzh5xYKZDy/0Qum
+         CGHDYH2hL+KiQwyvNdo0k/2un/4q6abEvF2rsRn3VQN9WtQfUI4mk02H7MDRrt0vxJal
+         puIESvA+jsUTlXj34dZ0vjFJ7lnYgNP3sSQSQWylt7Vgq9bC+Oggl736wk5NBDz/r3w9
+         VOKGWfyCJyzhHvXl2DxZUBad0/7AzIT2xGMI8cWvTuxu0LFg3yYNUgFwIFQKMccwDy4H
+         i41lsutiKIrop+jYevJGWak07CGZ2csn1Yw/RPXZTMHv8A7k8/8u1YFYG8Dz2RlIkab8
+         7TVw==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Gm-Gg: ATEYQzyM3rpxwBFoBCSfPuJ+8QgMI7z94DaVm1H3M1iFm8QEC6AUssrJ3UgbWwnObzE
+	ozuXWFgkFQYE/dy7+V8eD24f/dV+E7JtBBsh8VEe5wV21HRpv6WarME0nFySvz1quklXylHEZYv
+	gkkNsmU/KXJJxd9pxqfRd8YX0IzStQyzc5Rmw0RuJGqC1yUS/FYwrPcgD5SPr7CbWXQOSDhB/F7
+	lBTDzH/yDWpUw3aMMmr/tpcn3cOCtn1auK2v3VtO0MBzCTh3G5WKTqNNsUgoTcLjjPsBFoq7aY0
+	GUBVul22
+X-Received: by 2002:a05:693c:2c97:b0:2b6:aeb8:3d8c with SMTP id
+ 5a478bee46e88-2bde1d337bamr1107407eec.32.1772190026582; Fri, 27 Feb 2026
+ 03:00:26 -0800 (PST)
+Received: from 621928524132 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 27 Feb 2026 06:00:25 -0500
+Received: from 621928524132 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 27 Feb 2026 06:00:25 -0500
+From: "andre.a via Contact" <contact@codeminer42.com>
+List-Unsubscribe: <mailto:googlegroups-manage+256526988213+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/codeminer42.com/group/contact/subscribe>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+MIME-Version: 1.0
+Date: Fri, 27 Feb 2026 06:00:25 -0500
+X-Gm-Features: AaiRm50FtgMUG095lpuIjlR_iWbXtsPhqKvIp4APCmvxgqbkWDRc-CrovMOB94c
+Message-ID: <CAD5J_dqpOcdPqfcD6SME2PQHO3OFuJJbpQw5ZUvRYJo3frvbOQ@mail.gmail.com>
+Subject: Contato com Romulo
+To: contact@codeminer42.com
+Content-Type: multipart/alternative; boundary="000000000000025ab4064bcc2596"
+X-Original-Sender: andre.a@tricespro.com
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@tricespro.com header.s=google header.b=lVVWv8Kx;       arc=pass
+ (i=1);       spf=pass (google.com: domain of andre.a@tricespro.com designates
+ 209.85.220.65 as permitted sender) smtp.mailfrom=andre.a@tricespro.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tricespro.com;
+       dara=neutral header.i=@codeminer42.com
+X-Original-From: andre.a@tricespro.com
+Reply-To: andre.a@tricespro.com
+Precedence: list
+Mailing-list: list contact@codeminer42.com; contact contact+owners@codeminer42.com
+List-ID: <contact.codeminer42.com>
+X-Spam-Checked-In-Group: contact@codeminer42.com
+X-Google-Group-Id: 256526988213
+List-Post: <https://groups.google.com/a/codeminer42.com/group/contact/post>, <mailto:contact@codeminer42.com>
+List-Help: <https://support.google.com/a/codeminer42.com/bin/topic.py?topic=25838>,
+ <mailto:contact+help@codeminer42.com>
+List-Archive: <https://groups.google.com/a/codeminer42.com/group/contact/>
+
+--000000000000025ab4064bcc2596
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ol=C3=A1 Romulo
+
+N=C3=A3o tenho seu contato de Whatsapp, vou deixar o meu aqui para falarmos=
+.
+Tenho uma d=C3=BAvida sobre a Frd Associados Servicos De Informatica Ltda..
+
+Abs
+
+Andr=C3=A9
+
+Whatsapp: 11 5632-5959
+
+--000000000000025ab4064bcc2596
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head></head><body><p>Ol=C3=A1 Romulo</p><p>N=C3=A3o tenho seu contat=
+o de Whatsapp, vou deixar o meu aqui para falarmos. Tenho uma d=C3=BAvida s=
+obre a Frd Associados Servicos De Informatica Ltda..</p><p>Abs</p><p>Andr=
+=C3=A9</p><p>Whatsapp: 11 5632-5959 </p><img src=3D"https://app.triceleads.=
+com/api/email/track/open/79bf7b65-feb8-4ec4-8539-188e176a4f86" alt=3D"" wid=
+th=3D"1" height=3D"1" style=3D"display:none!important;max-height:0;max-widt=
+h:0;"></body></html>
+
+--000000000000025ab4064bcc2596--

@@ -1,0 +1,334 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a89:207:0:b0:2f6:8aae:b1b9 with SMTP id t7csp3235517lqk;
+        Wed, 4 Mar 2026 07:32:25 -0800 (PST)
+X-Forwarded-Encrypted: i=5; AJvYcCUWc54UMY5hNLuJO7ek6aCuKlowcNwyvb0Wt2iws0z29IlmPwOOsvG5GthSGlxocEV1ZDJHvEsesOI2bA==@codeminer42.com
+X-Received: by 2002:a17:902:ce02:b0:2ad:de85:16ff with SMTP id d9443c01a7336-2ae6aa366d1mr19346615ad.23.1772638345444;
+        Wed, 04 Mar 2026 07:32:25 -0800 (PST)
+ARC-Seal: i=4; a=rsa-sha256; t=1772638345; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=CwGNBHa3osVCmglysuXOclrqdsspEixV5zuSMQlgMLeJuu61h23I4R31Lxu7JaRjid
+         xsfr0X7CLUZr8qv0t8FCPxMFyKNiDyyea8fwSfnsBabQjPD1O8LEXji4AvDsziY9d75p
+         rCqiF4UJxYiOPhiei18stynpuP3cWeLUTDvAc7CVm96ESscpgll880k0tw98xymKP/4W
+         wSpnTt+VakjcmJ/RiBWzyWWincQYNZcWXcYFn24b9re9N+8OglwO9KZzKwImlg/ietxL
+         R9rNY3EdP2vnjQlKPH13PT9/yEVnKXlsQSCscdDSvP4QJrlBA/d+fppJ0VjYjrjGG0Bn
+         A1Pw==
+ARC-Message-Signature: i=4; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:sender:dkim-signature;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        fh=b32d25HOsGiYkloQjS8abrXa66uvlggsfWtixHXCGJo=;
+        b=ZmoAq7fBJUkjs9KQGfWvrGsMfQ3KWSi9UeOHbhr1Us0ifzkawtRtOu6OFev01vCoSM
+         wrjWhdKqDkjJTu11rngD/doxZd1YAIO29WiFANZ4SjgSh9LdabsIadWZrTJTjtdc5A48
+         xfGOdM4zBW1YGy3DnIr2BUEuQDHX4ahcqJZ5gw2hG5CgsAU5en+NPe1VEvNsXcB3bhCi
+         8SCW9EcSvIuK358SdBFW/XFtY61b3HJ979R7UR8+jRLzWNtU60rS5w58F1QaWRMcWJE9
+         yF09LAMZkvo3ntPl53Y0NuNXNJJPbLwQHi6Gd6YfYNwTmtxD6LynZ5DL6hd2u9zzsrkX
+         VNKw==;
+        dara=google.com
+ARC-Authentication-Results: i=4; mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=qTL6A4RP;
+       arc=pass (i=3 spf=pass spfdomain=gmail.com dkim=pass dkdomain=gmail.com dmarc=pass fromdomain=gmail.com);
+       spf=pass (google.com: domain of contact+bncbdp2pk7v3mdrbcfbuhgqmgqell5dipq@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBDP2PK7V3MDRBCFBUHGQMGQELL5DIPQ@codeminer42.com;
+       dmarc=fail (p=NONE sp=QUARANTINE dis=NONE arc=pass) header.from=gmail.com;
+       dara=neutral header.i=@codeminer42.com
+Return-Path: <contact+bncBDP2PK7V3MDRBCFBUHGQMGQELL5DIPQ@codeminer42.com>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id d9443c01a7336-2ae5a553fe7sor30731885ad.10.2026.03.04.07.32.25
+        for <fabio.akita@codeminer42.com>
+        (Google Transport Security);
+        Wed, 04 Mar 2026 07:32:25 -0800 (PST)
+Received-SPF: pass (google.com: domain of contact+bncbdp2pk7v3mdrbcfbuhgqmgqell5dipq@codeminer42.com designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@codeminer42.com header.s=google header.b=qTL6A4RP;
+       arc=pass (i=3 spf=pass spfdomain=gmail.com dkim=pass dkdomain=gmail.com dmarc=pass fromdomain=gmail.com);
+       spf=pass (google.com: domain of contact+bncbdp2pk7v3mdrbcfbuhgqmgqell5dipq@codeminer42.com designates 209.85.220.69 as permitted sender) smtp.mailfrom=contact+bncBDP2PK7V3MDRBCFBUHGQMGQELL5DIPQ@codeminer42.com;
+       dmarc=fail (p=NONE sp=QUARANTINE dis=NONE arc=pass) header.from=gmail.com;
+       dara=neutral header.i=@codeminer42.com
+ARC-Seal: i=3; a=rsa-sha256; t=1772638345; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=fzb3665PHccIiKKmW5V+cptUpzeEqdqgwKMRLCUDzshVJq7y8ooEMPj/UjiylT3FFX
+         4K83q0mPiKA8ZCIpnPaVmheaLb+i5OybI/TUSFke9Bxmj2JlGVPsb4XRCGc0zoR7p0mc
+         lq9ggmpQg9FCOgWeC5iGbSLYb31W1upKNCQoaSZdgpDotZmLRZ34RCqOiHMVdWJht7nD
+         Xm/KVND20Bik5hgBgKb+i1vTs1S/VZPrOesIhIXTqS0LAiITlnRsup7HFL2WLk69Tyre
+         ll6Vwunncch3vH7BxI6mOnk19Dz8O0Luyq1TsJzb9UtfQSlVTd4wBIKNbDX5t39BjB0h
+         bdgg==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:sender:dkim-signature;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        fh=b32d25HOsGiYkloQjS8abrXa66uvlggsfWtixHXCGJo=;
+        b=QPB5eNSiCvldtFO468exFRM5ysqEfODkvlaF3IQyCgejZ/ekkY8pnQa6C/jbDRorR6
+         pITfOCcTHEvYgir2QMXUA3jP3cFRFR6jScZSWt3KjBcOjkDRzsCs3qoplcAlm5Oh5Hcs
+         YfeQqjVFfP12XxH0oIUHq5s53QfLR2k4FfKrnpHpn/chAfuK3nJsgW6eftjQ7JC0OQ55
+         WsTAHA8hMg8kLgxhzCo4VzHeMhJKpunbGRTGqTu4nAwCqHVd3Dmd84Wvn9Q6U/tpE4n7
+         ZHEJra4hfPGhzwuvNo+fCZODttFrs9HoaAzGzGewC5pr0XYQLTF5wVHacFN2w4kuhwmp
+         bagg==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=TkxEONVY;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of emersonlucenaoficial@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=emersonlucenaoficial@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=neutral header.i=@codeminer42.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeminer42.com; s=google; t=1772638345; x=1773243145; darn=codeminer42.com;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:x-original-authentication-results
+         :x-original-sender:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        b=qTL6A4RP6tAPTipHfKkTO5UJwXvInW9FbBtCzWZzsJFaRDFu7kvstqmGQ1MudJHrOZ
+         GetITKhMGocUoByZpy4aHrw4WntsWmWH5jAWMgR5N14wTNkPC8/9EVamcAai3i1pkHip
+         LNBq28VaVOESJ5UP5QQGsa/uq9iYpNNceq8t09Zwjl4oFgrt0yvejghb2saJ+OGlPsN3
+         +luSxQjAVmruKNMboMgG7lUrdSxwQfo7Zrj9j03XItouSWP3ygsnJ2tJoMGzqgmI/ZC5
+         cqT5GehvHb7oBrBLB3+ihNFbo43+DqBqgbK+se+wZhDlEgXV7cEGXgv0EqMLqoRjxBuf
+         O1PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772638345; x=1773243145;
+        h=list-unsubscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender:to:subject
+         :message-id:date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-beenthere:x-gm-message-state:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        b=KOhMJkl1zFrU3N+blWR5z6fG48ptRbtSp2WLmJA5t85WXqdLb1ycwPUNNGFU5c46Gd
+         qf0rr49//TXngMN/e8ThAYz7Vc9Jj/h/8/8xvl2exUWQAeSRtHn4vXhXBiraCCGOuz9T
+         8gehhlKEhBi5J54Rn8jJF03ET5/UuHJA7WPohcKeEtN3J06TrNhjUgCC5opRVqr1Z5Zo
+         S8nSkSEP091jpuKPlfj3NQbJP/oLo3yk3xVK3XBTukR75re0i0mDmZ4TzqetMLa9zdH3
+         pERRuB2aobi8qkPLeflImBMuYwvW8kVlWZING8v9mDRy+p8984X8UNNm0jXU8rZqzHxQ
+         +xcQ==
+Sender: contact@codeminer42.com
+X-Forwarded-Encrypted: i=3; AJvYcCUzj+q1fy6N5tM0Y/EaDrS+3u35TXkvIz/2KYSNj3uQTueVgRyiDe+vj5MpDzz8Bm98IVLXTi21jkq9Gw==@codeminer42.com
+X-Gm-Message-State: AOJu0YxO2sKwQv5tUD392h/FO3x4HYNDNl1nKXUCTfUzopg/PPnrlO0a
+	i0Nkmo1ubsSE3aM3Irnn/vvtrUtbt8+uzYsKrXjfIQ+GYDZK1B4PMuxKZ8kZUpjGkEIlLg==
+X-Received: by 2002:a17:90a:d40d:b0:354:c3a4:3a2 with SMTP id 98e67ed59e1d1-359a6a68f99mr1730302a91.29.1772638344567;
+        Wed, 04 Mar 2026 07:32:24 -0800 (PST)
+X-BeenThere: contact@codeminer42.com; h="AV1CL+E/6GjbRD3TAJebYPt70T2iEUZ5ka+Lszj5rrMF//UBhQ=="
+Received: by 2002:a17:90a:ebcb:b0:341:8ac7:48b8 with SMTP id
+ 98e67ed59e1d1-3590f206e02ls5333726a91.0.-pod-prod-09-us; Wed, 04 Mar 2026
+ 07:32:23 -0800 (PST)
+X-Received: by 2002:a17:90b:184d:b0:340:be44:dd11 with SMTP id 98e67ed59e1d1-359a6a51ee1mr1948548a91.27.1772638343122;
+        Wed, 04 Mar 2026 07:32:23 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1772638343; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=I/jFKtAlChZCQvDqWYufXDHQB97R1m2TzbGEzDkPhI+l7/mjb53KRm5vt+U4TJDW5u
+         weKdPnwd5133DpS6ETSsjkom73h/R6yRfHAF7bpZLYC7R7fpteurEvPHNE+DKjElbkFT
+         Tfo1G0bPEVb6+TRjtUUbexTXFTupXBqhe/iLyPSXhozkUjmJVcvjO3ehc3WxBVF8O6Hq
+         +HNdq5ihwN1z6erJykvng5dBsnxY2S30SmKlCfP8wdiDzY8kCdKGSO5OcNeNk6ZI9/fy
+         0Q+bihHnGyU4AEeiZvU2Qr4T4dZ2Ivt0crGJJ0KZp+vMmi9P5Dk7bIz9poT1maG/ZVX1
+         uPUA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=k27fvxE4C9UY+qfSptUbbvINnWMoAaG4Et63AqsGq9K1KbEvpyKwPaYt6UyTSwrrIb
+         /Q9SzpSl/WWM1+68gyFu3S4LByuAFLXnd3aP/FSJQI/FUp9u+EYQX8tWzMPY3M/WB3G9
+         h73UHrOJHghk45cEYbJRoDtu3Q6bDawk5+J+I4G4AUn3HFOouFdf3kCoTecHyCFtbPZU
+         EChKtOpIHyx3T/uDhGRS3R0jToLB4PdC6kGMlGiwh566diS/R3i1+9sKCyts5pFVrtrU
+         0kOLSo8cBChvH6lfPo6fYN0ISKwHPngFl5sqm9sSiZeDq+JtrJa3X0l1t9bV6j4CnmNI
+         367A==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=TkxEONVY;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of emersonlucenaoficial@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=emersonlucenaoficial@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=neutral header.i=@codeminer42.com
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 98e67ed59e1d1-359974a4049sor3617612a91.3.2026.03.04.07.32.23
+        for <contact@codeminer42.com>
+        (Google Transport Security);
+        Wed, 04 Mar 2026 07:32:23 -0800 (PST)
+Received-SPF: pass (google.com: domain of emersonlucenaoficial@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+ARC-Seal: i=1; a=rsa-sha256; t=1772638342; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Mrl9wthV+I2SPYfQr2uC4zl1WfJaLi/Skx1+h07xy6O1RnX8LAtOYlLLZ5O+L0ednU
+         CP4xvycwvx6gakRIFB1pqm9eAsXWRyxm9dElwVJmv0ajisxOlhziJzQ9f1ctqkm8/5Se
+         2++1v+X8i/RH6JCXe8zzu9dPmtUXRib2EqGVNyrT8p8vquqfYnSItY7Du4PCs7QJ5Uwk
+         kbAsbu3iWTPbLhE6sboTxeEOce/+ZgKXwuKio1Xhr/rDlUVJWQKh3AJVaAx5vo8K/b1M
+         +EGGLAStyzyoN3v2BQSrAgunGpL4MRSFM1mSXCgPzVj5PlnaFxrlHgy6yQHUwLk7P0B/
+         BpKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=BlJbDGMqZEEjXWIbkOqz7L8nBawb8IUsgHZG+iTyiV4=;
+        fh=ZvB9ImLKBLI3jgSKJPzyBYWJuJJDFqjuM7GEM8AuO7M=;
+        b=X4ldrCVWOHy4L4C8CMQPVHp/EsjpCjScXF+kSH7+csmv3pDumtREzjj7kUMUrz8UaZ
+         mtqj1vHisO6rpZ24SI/4ezDiHGh1XFFYvvAjkKTC3RohMh372tw9ArPuARFSA76lMsEL
+         5AkSq6J//Hr6FWVoEhTdkpxQoTFMjHhxbwHNgIZh7CWvPNZo1ocn00FG4Rd7lNiGKqjR
+         jp1TUCEG9Hr+mbUeUea4GON4Fb9BjXMK7/k4jcSqTGXZHU1Du26U+CcloYa17+9K8MuA
+         PVGWQbuTx7KrLVvc8ZgvItwevk88URzNcNUx/5o7PFGiRERCRY8qMHAz17vYRv5ToeDs
+         yYyA==;
+        darn=codeminer42.com
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Gm-Gg: ATEYQzxRK5NZk9itQbGdLB1ZnYkc/re+4XssAkB21vFgHL4taA+Y8VNe11OSx435Mr7
+	Q+G7C0QUZ0rVXdFRiiyc7pjO0dlWGdIrUiqeUZeqKyYfN3nAyeC+Otpy/nLFCAbGB3Whg+1LxWQ
+	V8RiKl1zrdirImTz6vFwESM0KmyUH8usJACJwUqWLXKliDI/1CSCBzWZBZAnNIbqiKd/0zqnv8r
+	cKDiJMzalSZEHqsqBDRaUyPrGROZmUoNQAy9wMrrzjQrl3zl/3jIR+M4KqUzZnADkInIttl8Y7a
+	uolCfA==
+X-Received: by 2002:a17:90b:2e4e:b0:359:8abc:b348 with SMTP id
+ 98e67ed59e1d1-359a6a3d24bmr2369529a91.18.1772638342474; Wed, 04 Mar 2026
+ 07:32:22 -0800 (PST)
+MIME-Version: 1.0
+References: <CAJAUK4XyMUR=oer7sQ9KxRzGbkKDG9=i==EEDgLvrA2m1DifXA@mail.gmail.com>
+In-Reply-To: <CAJAUK4XyMUR=oer7sQ9KxRzGbkKDG9=i==EEDgLvrA2m1DifXA@mail.gmail.com>
+From: Emerson Lucena <emersonlucenaoficial@gmail.com>
+Date: Wed, 4 Mar 2026 12:32:11 -0300
+X-Gm-Features: AaiRm51Jajw7JL86hGrjlGYOt0Ekdpf4QwkaH78jRPWY0uzkUi38dWp6J5ACCV0
+Message-ID: <CAJAUK4VfkEe+p_=mCoJfgq223tcQLpSAHcrFQ5UjXAmafPEXwg@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_Looploop_=2D_Claude_Code_Plugin_baseado_no_que_voc?=
+	=?UTF-8?Q?=C3=AA_prop=C3=B4s=2E?=
+To: contact@codeminer42.com
+Content-Type: multipart/alternative; boundary="000000000000b7f0af064c3486dd"
+X-Original-Sender: emersonlucenaoficial@gmail.com
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@gmail.com header.s=20230601 header.b=TkxEONVY;       arc=pass
+ (i=1);       spf=pass (google.com: domain of emersonlucenaoficial@gmail.com
+ designates 209.85.220.41 as permitted sender) smtp.mailfrom=emersonlucenaoficial@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=neutral header.i=@codeminer42.com
+Precedence: list
+Mailing-list: list contact@codeminer42.com; contact contact+owners@codeminer42.com
+List-ID: <contact.codeminer42.com>
+X-Spam-Checked-In-Group: contact@codeminer42.com
+X-Google-Group-Id: 256526988213
+List-Post: <https://groups.google.com/a/codeminer42.com/group/contact/post>, <mailto:contact@codeminer42.com>
+List-Help: <https://support.google.com/a/codeminer42.com/bin/topic.py?topic=25838>,
+ <mailto:contact+help@codeminer42.com>
+List-Archive: <https://groups.google.com/a/codeminer42.com/group/contact/>
+List-Unsubscribe: <mailto:googlegroups-manage+256526988213+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/codeminer42.com/group/contact/subscribe>
+
+--000000000000b7f0af064c3486dd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+esquece. eu testei e essa porra =C3=A9 um lixo.
+
+On Tue, Mar 3, 2026 at 10:51=E2=80=AFAM Emerson Lucena <
+emersonlucenaoficial@gmail.com> wrote:
+
+> Fala, F=C3=A1bio, tudo bem? Encontrei esse e-mail pela sua newsletter e q=
+ueria
+> entrar em contato com voc=C3=AA para compartilhar algo que fiz na noite p=
+assada
+> com Claude Code, utilizando alguns princ=C3=ADpios que voc=C3=AA comparti=
+lhou,
+> principalmente na live do mano Deyivin.
+>
+> Eu li o seu blog, e mais especificamente o post *Do Zero =C3=A0 P=C3=B3s-=
+Produ=C3=A7=C3=A3o
+> em 1 Semana - Como usar IA em Projetos de Verdade | Bastidores do The
+> M.Akita Chronicles* onde voc=C3=AA mostrou o qu=C3=A3o fundamental era o =
+uso de TDD.
+>
+> Ent=C3=A3o eu criei o looploop unindo alguns conceitos, visando a cria=C3=
+=A7=C3=A3o de
+> produtos escal=C3=A1veis, e gostaria do seu feedback e quem sabe tocarmos=
+ esse
+> plugin para a comunidade juntos. Seria o meu primeiro "open source".
+>
+> O looploop une os seguintes conceitos:
+>
+> - Cria=C3=A7=C3=A3o de PRDs
+> - XP
+> - TDD (mira em 100% de coverage)
+> - Ralph loops
+> - Team agents
+>
+>
+> o nome looploop faz alus=C3=A3o ao Pingu (*noot noot*) - e tamb=C3=A9m ao=
+ plugin,
+> que trabalha em torno de dois loops principais:
+>
+> - Loop para cria=C3=A7=C3=A3o de testes
+> - Loop para implementa=C3=A7=C3=A3o (usando team agents ou n=C3=A3o - opc=
+ional j=C3=A1 que
+> isso impacta no uso de tokens)
+>
+> Voc=C3=AA encontra todos os detalhes aqui:
+> https://github.com/Emerson1337/looploop
+>
+> Mas em resumo, o plugin traz esse workflow:
+>
+> PRD -> Test Writer (em loop - garantir coverage de edge cases com janelas
+> de contexto) -> Implementer (em loop - otimizar outputs com janelas de
+> contexto limpas) -> resultado com test coverage 100%.
+>
+>
+> O que voc=C3=AA acha?
+>
+> --
+>
+> Emerson Lucena
+> Software Engineer
+>
+> Learn more about me here <https://www.linkedin.com/in/emerson67/>.
+>
+
+
+--=20
+--
+
+Emerson Lucena
+Software Engineer
+
+Learn more about me here <https://www.linkedin.com/in/emerson67/>.
+
+--000000000000b7f0af064c3486dd
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">esquece. eu testei e essa porra =C3=A9 um lixo.</div><br><=
+div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"g=
+mail_attr">On Tue, Mar 3, 2026 at 10:51=E2=80=AFAM Emerson Lucena &lt;<a hr=
+ef=3D"mailto:emersonlucenaoficial@gmail.com">emersonlucenaoficial@gmail.com=
+</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:=
+0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">=
+<div dir=3D"ltr"><div>Fala, F=C3=A1bio, tudo bem? Encontrei esse e-mail pel=
+a sua newsletter e queria entrar em contato com voc=C3=AA para compartilhar=
+ algo que fiz na noite passada com Claude Code, utilizando alguns princ=C3=
+=ADpios que voc=C3=AA compartilhou, principalmente na live do mano Deyivin.=
+<br><br>Eu li o seu blog, e mais especificamente o post=C2=A0<b>Do Zero =C3=
+=A0 P=C3=B3s-Produ=C3=A7=C3=A3o em 1 Semana - Como usar IA em Projetos de V=
+erdade | Bastidores do The M.Akita Chronicles</b>=C2=A0onde voc=C3=AA mostr=
+ou o qu=C3=A3o fundamental era o uso de TDD.<br><br>Ent=C3=A3o eu criei o l=
+ooploop unindo alguns conceitos, visando a cria=C3=A7=C3=A3o de produtos es=
+cal=C3=A1veis, e gostaria do seu feedback e quem sabe tocarmos esse plugin =
+para a comunidade juntos. Seria o meu primeiro &quot;open source&quot;.<br>=
+<br>O looploop=C2=A0une os seguintes conceitos:</div><div><br></div><div>- =
+Cria=C3=A7=C3=A3o de PRDs</div><div>- XP</div><div>- TDD (mira em 100% de c=
+overage)<br>- Ralph loops</div><div>- Team agents</div><div><br></div><div>=
+<br></div><div>o nome looploop faz alus=C3=A3o ao Pingu (<i>noot noot</i>) =
+- e tamb=C3=A9m ao plugin, que trabalha em torno de dois loops principais:<=
+/div><div><br></div><div>- Loop para cria=C3=A7=C3=A3o de testes</div><div>=
+- Loop para implementa=C3=A7=C3=A3o (usando team agents ou n=C3=A3o - opcio=
+nal j=C3=A1 que isso impacta no uso de tokens)</div><div><br></div><div>Voc=
+=C3=AA encontra todos os detalhes aqui:=C2=A0<a href=3D"https://github.com/=
+Emerson1337/looploop" target=3D"_blank">https://github.com/Emerson1337/loop=
+loop</a><br><br>Mas em resumo, o plugin traz esse workflow:</div><div><br><=
+/div><div>PRD -&gt; Test Writer (em loop - garantir coverage de edge cases =
+com janelas de contexto) -&gt; Implementer (em loop - otimizar outputs com =
+janelas de contexto limpas) -&gt; resultado com test coverage 100%.</div><d=
+iv><br></div><div><br></div><div>O que voc=C3=AA acha?=C2=A0</div><br><div =
+dir=3D"ltr" class=3D"gmail_signature"><div dir=3D"ltr"><div><font color=3D"=
+#999999">--</font></div><div><font color=3D"#999999"><br></font></div><div>=
+<font color=3D"#999999">Emerson Lucena</font></div><div><font color=3D"#999=
+999">Software Engineer</font></div><div><font color=3D"#999999"><br></font>=
+</div><div><font color=3D"#999999">Learn more about me <a href=3D"https://w=
+ww.linkedin.com/in/emerson67/" target=3D"_blank">here</a>.</font></div></di=
+v></div></div>
+</blockquote></div><div><br clear=3D"all"></div><div><br></div><span class=
+=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_s=
+ignature"><div dir=3D"ltr"><div><font color=3D"#999999">--</font></div><div=
+><font color=3D"#999999"><br></font></div><div><font color=3D"#999999">Emer=
+son Lucena</font></div><div><font color=3D"#999999">Software Engineer</font=
+></div><div><font color=3D"#999999"><br></font></div><div><font color=3D"#9=
+99999">Learn more about me <a href=3D"https://www.linkedin.com/in/emerson67=
+/" target=3D"_blank">here</a>.</font></div></div></div>
+
+--000000000000b7f0af064c3486dd--

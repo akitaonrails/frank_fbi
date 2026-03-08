@@ -1,0 +1,169 @@
+Delivered-To: fabio.akita@codeminer.com.br
+Received: by 2002:a89:207:0:b0:2f6:8aae:b1b9 with SMTP id t7csp2601732lqk;
+        Tue, 3 Mar 2026 08:36:51 -0800 (PST)
+X-Received: by 2002:a05:6102:e0e:b0:5fd:f1b3:2ba0 with SMTP id ada2fe7eead31-5ff8f98b590mr1235420137.6.1772555811466;
+        Tue, 03 Mar 2026 08:36:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772555811; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DXbHO4YLAyRzalbeerjt0AAee3q4SIje284Swlk7dLSy31gtE4oV2mRZzlmEwxANe5
+         NR8vNy8iqhX3QsEcKrBpeyBgwGRvLMZDWsI3R+HElZ/Gj5DX6wmP3Z//qG6fXN189MPt
+         RA32gJzN30Q3ZANHB4a7I/HbQBMqpx3FlRaDhazEwRay1CF7KzTQlgRLI+1+al3mTT18
+         29EhysMTDtocH//c5cAnEISTIwOGLv5NNcJTqlzX9VNXzJTARifbBvq033A1zupg/xP2
+         KCKPTm/xabvcx/wQxnPMeI37HFwGVPs8vc9uZQTFTtYi/pVts0isIDKmyP5bdIw3e0N6
+         kqVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:date:reply-to:message-id:subject:from:to:mime-version
+         :dkim-signature:dkim-signature;
+        bh=Vs/VrNg8t3zOvKnBCt+bnQT7Rm8JAUQYhYWGm1fq+iw=;
+        fh=aEpoFe4qlxAo57ckTiITgWemBy+HvmMXKqoNvklSkMw=;
+        b=M6cGNUveBhztf9YKN2H3KKIduxpEdA/NwO3H93f0HLvyf/KUcHW7v7vfwHshT7gfuK
+         2jp+puWxCou13o3JOKeuuw83H3Eja7bCRKnqZ18H806b7BDrvivWyBtlwmnUeKjmFbRQ
+         H8FFG3NoZgJsU/qKbht4M8W830Yr4/t0oTZJ14/YrV5ih2Gf/HFy+6+2un3opSR1y5iz
+         LtqDKfG456d9AyEd7hpKfJ2FoQlrLCyVAlLS/fKo8S+22hFCHgMuw5B9AtWohCfGzmn+
+         TIvFHC02sEfk9KDtfj07/X5XFGuxz8nSzfgzUMn19biYS9k08wHHt919Jy/pwAuecPVy
+         AV9w==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@rpmflex.com header.s=255fhlqpakdj4njroba4t7tyrz4p5ebj header.b=oML02ugE;
+       dkim=pass header.i=@amazonses.com header.s=bm3ypaoivbtdzmy3b6w37fzb5voa2uru header.b=gKDGXxXV;
+       spf=pass (google.com: domain of 0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com designates 23.249.215.4 as permitted sender) smtp.mailfrom=0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=rpmflex.com
+Return-Path: <0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com>
+Received: from d215-4.smtp-out.sa-east-1.amazonses.com (d215-4.smtp-out.sa-east-1.amazonses.com. [23.249.215.4])
+        by mx.google.com with ESMTPS id ada2fe7eead31-5ff1ebea294si3642987137.194.2026.03.03.08.36.50
+        for <fabio.akita@codeminer.com.br>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2026 08:36:51 -0800 (PST)
+Received-SPF: pass (google.com: domain of 0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com designates 23.249.215.4 as permitted sender) client-ip=23.249.215.4;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@rpmflex.com header.s=255fhlqpakdj4njroba4t7tyrz4p5ebj header.b=oML02ugE;
+       dkim=pass header.i=@amazonses.com header.s=bm3ypaoivbtdzmy3b6w37fzb5voa2uru header.b=gKDGXxXV;
+       spf=pass (google.com: domain of 0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com designates 23.249.215.4 as permitted sender) smtp.mailfrom=0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@erp.rpmflex.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=rpmflex.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=255fhlqpakdj4njroba4t7tyrz4p5ebj; d=rpmflex.com; t=1772555809;
+	h=MIME-Version:To:From:Subject:Message-ID:Reply-To:Content-Type:Date;
+	bh=Vs/VrNg8t3zOvKnBCt+bnQT7Rm8JAUQYhYWGm1fq+iw=;
+	b=oML02ugE/44BzE89XXWChqrQknZ8Mq5eNWZmNKeamDmQFtEl1vuwnFTZhoK6bNGf
+	+qgP9R8D5E2mpQ7kcn1xGiVX0gnE7ovY5ASFdVCrwd0/53a2MUQLG2w/I8dq7obL3Ky
+	CSnObd1PVZv7NPfNEcNUYExHCDULm3mz7SaWTaDgj/BFRHkYjTxoAR0f661t70EILWF
+	gtXU32JLWcsHLwuEMOoiWBO4AtTDfgQLVczjPgRiDMpat3KmBlNyMvZV6B8agLHQ4MM
+	heyCd+j5BWFPIj7EfJIMZnyjP7Lz3YO70JTK0FLQPsu67CN/jcP9IY/ylctKRW4NZ6q
+	swsWNIxP1g==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bm3ypaoivbtdzmy3b6w37fzb5voa2uru; d=amazonses.com; t=1772555809;
+	h=MIME-Version:To:From:Subject:Message-ID:Reply-To:Content-Type:Date:Feedback-ID;
+	bh=Vs/VrNg8t3zOvKnBCt+bnQT7Rm8JAUQYhYWGm1fq+iw=;
+	b=gKDGXxXVQoG6fOa1GeRv/eUX7uOJWOjNgQcUZPuXLiwuvyZPcyhbeo7FYwEaqaL0
+	4J5FjHCXDB1U2tV9g5sdnyECBYPiGVgraG89co/T6o/6/XxOYg5I/kXY65r0VObCKGQ
+	8kC16f5RMUMfqjJ8NxeEK0ic2JtHy4srhXIdvIFg=
+MIME-Version: 1.0
+To: fabio.akita@codeminer.com.br
+From: Regiane Santos I RPMflex <rsantos@rpmflex.com>
+Subject: Retomando contato
+Message-ID: <0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000@sa-east-1.amazonses.com>
+Reply-To: rsantos@rpmflex.com
+Content-Type: multipart/alternative; boundary="--=:C11D2F7C7FB5BA837CA95D98A97A0A155193F05FAEF3C90FDAFB535F8A10FC45:"
+Date: Tue, 3 Mar 2026 16:36:49 +0000
+Feedback-ID: ::1.sa-east-1.ajMEz9xmWwJeSlVM/ziyyatKFbUlSPz2d9LOkbZiI24=:AmazonSES
+X-SES-Outgoing: 2026.03.03-23.249.215.4
+
+This message generated by Oracle APEX.
+----=:C11D2F7C7FB5BA837CA95D98A97A0A155193F05FAEF3C90FDAFB535F8A10FC45:
+Content-Type: text/plain; charset=utf-8
+
+Retomando contato
+----=:C11D2F7C7FB5BA837CA95D98A97A0A155193F05FAEF3C90FDAFB535F8A10FC45:
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html><head>
+<title>Retomando contato</title>
+<meta name=3D"description" content=3D"Retomando contato" />
+<meta http-equiv=3D"Content-Type" content=3D"text/html;charset=3DUTF-8"/>
+<meta http-equiv=3D"Content-Style-Type" content=3D"text/css;charset=3DUTF-8=
+"/>
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, minimal-ui, initia=
+l-scale=3D1, maximum-scale=3D1, user-scalable=3D0;" />
+<style type=3D"text/css">
+.SensusXTable {
+border:1px solid #dddddd; border-collapse:collapse;
+}
+.SensusXTable th {
+padding-left:5px; padding-right:5px; text-align:center;
+background-color:#00704A; color: #ffffff; border:1px solid #dddddd;
+}
+.SensusXTable td {
+padding-left:5px; padding-right:5px;
+background-color:#FFFFFF; border:1px solid #dddddd;
+}
+.SensusXTable tr:nth-child(even) {
+background-color: #F2F2F2;
+}
+html, body {
+font-family: Arial, Helvetica, sans-serif;
+padding: 5px;
+}
+</style>
+</head>
+<body><left>
+<p>Ol=C3=A1, Fabio.</p>
+<p>Na semana passada enviei um e-mail pedindo um contato para falar sobre g=
+est=C3=A3o integrada de processos e resultados e n=C3=A3o sei se chegou at=
+=C3=A9 voc=C3=AA.</p>
+<p>Posso tratar deste assunto diretamente com voc=C3=AA?</p>
+<p>Se for do seu interesse, =C3=A9 s=C3=B3 me responder que envio uma apres=
+enta=C3=A7=C3=A3o objetiva da plataforma RPMflex.</p>
+<p>Obrigada pela aten=C3=A7=C3=A3o.</p>
+<p>Atenciosamente,</p>
+<p><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" role=3D"presenta=
+tion" style=3D"border-collapse: collapse; table-layout: fixed; width: 580px=
+; min-width: 520px;">
+<tbody>
+<tr>
+<td width=3D"110" style=3D"padding: 0 14px 0 0; vertical-align: middle; bor=
+der-right: 1px solid #bfbfbf;"><img height=3D"98" width=3D"98" alt=3D"RPMfl=
+ex" src=3D"https://d1h0fv4c9g8h1l.cloudfront.net/RPMflex-Symbol-quadrada.pn=
+g" style=3D"display: block; border: 0; outline: none; text-decoration: none=
+;"></td>
+<td width=3D"470" style=3D"padding: 0 0 0 14px; vertical-align: middle; fon=
+t-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #000;"=
+>
+<div style=3D"font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">Regia=
+ne Santos</div>
+<div style=3D"font-size: 13px; line-height: 1.6; margin: 0;">Comercial | RP=
+Mflex<br><a href=3D"http://ccdbgz1e.r.sa-east-1.awstrack.me/L0/tel:%2B55114=
+8584176/1/0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000/AqSA=
+BGX4kONFRH8OZfin7xiIFFA=3D252" style=3D"color: #000; text-decoration: none;=
+">+55 11 4858-4176</a><br><a href=3D"mailto:regiane@rpmflex.com" style=3D"c=
+olor: #000; text-decoration: none;">rsantos@rpmflex.com</a><br><a href=3D"h=
+ttps://ccdbgz1e.r.sa-east-1.awstrack.me/L0/https:%2F%2Frpmflex.com/1/010301=
+9cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000/8CMVY4waGB9invDhsK3c=
+2zMgkAs=3D252" style=3D"color: #000; text-decoration: none;">rpmflex.com</a=
+></div>
+</td>
+</tr>
+</tbody>
+</table></p></left><br><br><center><hr>
+<table border=3D"0" cellpadding=3D"10" cellspacing=3D"0" width=3D"100%">
+=09<tr>
+=09=09<td colspan=3D"2" valign=3D"middle" id=3D"optout" style=3D"border-col=
+lapse:collapse;background-color:#FAFAFA;border-width:0;" >
+=09=09=09<div style=3D"color:#707070;font-family:Arial;line-height:100%;tex=
+t-align:center;" >Descadastrar. N=C3=A3o quero receber e-mails deste remete=
+nte, <a style=3D"style=3D"color:#336699;font-weight:normal;text-decoration:=
+underline;" href=3D"https://ccdbgz1e.r.sa-east-1.awstrack.me/L0/https:%2F%2=
+Fapp.sensusx.com%2Ferp%2Fapp%2Fopt-out%2Funsubscribe%2F4d5455324d7a63324d6a=
+67324d513d3d/1/0103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000=
+/uqIFWE5CEWCnvz8fOdZ8KPW5E-Q=3D252" _type=3D"optout" _label=3D"Opt-out link=
+">clique aqui</a>
+=09=09=09</div>
+=09=09</td>
+=09</tr>
+</table>
+</center><img alt=3D"" src=3D"https://ccdbgz1e.r.sa-east-1.awstrack.me/I0/0=
+103019cb48f33c9-f4e663e1-5685-4122-8f8b-0970134547e3-000000/evy_AsebW8rI8nQ=
+aN77iBIireTg=3D252" style=3D"display: none; width: 1px; height: 1px;">
+</body></html>
+
+----=:C11D2F7C7FB5BA837CA95D98A97A0A155193F05FAEF3C90FDAFB535F8A10FC45:--

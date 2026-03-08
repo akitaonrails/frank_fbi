@@ -1,0 +1,198 @@
+Delivered-To: boss@akitaonrails.com
+Received: by 2002:a05:6022:b217:b0:ee:2339:557b with SMTP id bg23csp3698599lab;
+        Thu, 5 Mar 2026 08:04:33 -0800 (PST)
+X-Received: by 2002:a05:6102:c8e:b0:5ff:1f6e:6274 with SMTP id ada2fe7eead31-5ffddde7bcamr104205137.33.1772726672769;
+        Thu, 05 Mar 2026 08:04:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772726672; cv=none;
+        d=google.com; s=arc-20240605;
+        b=gTKMBaB4zfDdP27XYYNJfwDezXcF86Qxm4vq1SxPYRPci5bdoGJsz76qmcXDPIoEwZ
+         rsDiKPE7YJniPNd05RPK+/KSrseEEz7qTEtCnPNgxg+26oqN/8b4s48SdVizPTN7BMZm
+         bHOMzL6MrPn3L7i5a8kr9RipqU8rrhNTRTkgb4t+HembMpKnisuqvIWabYcCS5t8QVyA
+         4hCZPhojh8GP24qSTbEVZMnhTEaKdCQuPhDNV4Xa0K8DLwvYPMT0PJlgfxeG716Ml8L8
+         2ju9jWiBeo5AGVwJN8PUakaJseD41CsAT8USq6aLlDjSZb+JNz5W8GvU15Ye29+6Acut
+         8rVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=date:mime-version:message-id:subject:to:from:dkim-signature;
+        bh=Cg3id/+Fn/qQzMl6nY/wLk9O26M5RMjgQK2D5r3zP20=;
+        fh=uzI8zvmhbc7iAiyr5NNxlDebfhBPjWVNlmyh0rFsJu4=;
+        b=fwSOZZDcUWFAZk6aK9SV2s0jifIYuNKt8mLBv9/ub29a+7AvodNC4CY/IQ0HTJrwF/
+         bPHiOhJYNciJWkMPhPhGeYW0G2O5Tc1v+vVPviVoroeNeeo39DvdmRCKDMrk6k+2K1ns
+         5TLO277QtAKLGVw1S2kKxtbYtWOnTTufa+UKl8s2OXloreR879ZvEx8zj9KjSxaXRfHy
+         OzgmKjuqMCbXDCGmEx0jskdFgRT88h8+Ox7tMLPn+299l9A3DDePNmegfmpxtBb+Kv7a
+         lM/TSy0KALQWyc6gF4HOMOElx07DS5cmiC2f768PB5U8hwGqPEVjIcICOrZjsFuFEun2
+         TXRA==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@houseofmarketers.co.uk header.s=google header.b=g9Po1Cqy;
+       spf=pass (google.com: domain of ana.h@houseofmarketers.co.uk designates 209.85.220.41 as permitted sender) smtp.mailfrom=ana.h@houseofmarketers.co.uk;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=houseofmarketers.co.uk;
+       dara=neutral header.i=@akitaonrails.com
+Return-Path: <ana.h@houseofmarketers.co.uk>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id af79cd13be357-8cbbf6e9408sor933817385a.11.2026.03.05.08.04.31
+        for <boss@akitaonrails.com>
+        (Google Transport Security);
+        Thu, 05 Mar 2026 08:04:31 -0800 (PST)
+Received-SPF: pass (google.com: domain of ana.h@houseofmarketers.co.uk designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@houseofmarketers.co.uk header.s=google header.b=g9Po1Cqy;
+       spf=pass (google.com: domain of ana.h@houseofmarketers.co.uk designates 209.85.220.41 as permitted sender) smtp.mailfrom=ana.h@houseofmarketers.co.uk;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=houseofmarketers.co.uk;
+       dara=neutral header.i=@akitaonrails.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=houseofmarketers.co.uk; s=google; t=1772726671; x=1773331471; darn=akitaonrails.com;
+        h=date:mime-version:message-id:subject:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Cg3id/+Fn/qQzMl6nY/wLk9O26M5RMjgQK2D5r3zP20=;
+        b=g9Po1CqyQj//p9ube/mbm7MAGWi5v0EsQZknel+ZKH2QOxwritMF9+QjBE9CMHHtcC
+         1RoFr2ogVM8N7gwxHXFFCdiH6CnAS/VaUk/xvPgyylumHb0XNm0jiMOX/Lbukxw64fkM
+         omD4rzFdujk+ksX2hrghvrRYIhVfski+nbs0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772726671; x=1773331471;
+        h=date:mime-version:message-id:subject:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg3id/+Fn/qQzMl6nY/wLk9O26M5RMjgQK2D5r3zP20=;
+        b=g7E8HiAP6GXpA9fcAVlsLIY+sKBM+hNjFrWQHdk+M9R5hpeUpRdDHjnSvicTiGRrjX
+         Fwrl75hPzhtOOSYfWRXAbOucyb6190groXtk0DJ5kBXU/1o3ksmvYrz/Ol4lRVIciEYk
+         H2/NBTFPiE1XXfQdxNuSQU3Q3t+r88DnZ6M5t9exITmgk/89hkKXEd3hGVjMD4I9bFBQ
+         qOBs1YQ6lB7Y8WNdiNc8BrH2sTs7M+NhUisjhIDWXLUzBpBhZTx1dKT+Jp8hd+VCVc0P
+         Y+2UvG9c84RRo4FHadeoJdzy3IbxR2wBu9j84ou4UBiUniOMP3CMIkDp5YjOTfvYDUcu
+         G8AQ==
+X-Gm-Message-State: AOJu0YwWhJZUoRNdSaZC0BgElXnYwBuohudoDMM4Ewr1mZBqaBCTdgzl
+	QymPIdQ6rZtadCuku7ocwX3lw0TCtKkDcFjYkJB28pi1ByIP2XJUDXlSqLok+6kL62D5CMvQlTu
+	1vD/QF3zngg==
+X-Gm-Gg: ATEYQzw19vxhp1HKxr0IYsxBgF0+cHcoQgTFYLM342RjLe4J6DXF6R4o5O09PyntmuF
+	qk1aSfntfB+sSA6OLA9Y5SsMc0jn99UL1W30/i6V8O63LVdwTEqhB+mA9HK5KA4fyRK4WHp+x9T
+	1ZcblqhsS4xpP4tMnHc62elrPGbzZPIc8lTFYZTQpzC6AuuXcGslqn8GJacX4vmAN7ul67tK+so
+	g8H1979b9TFiHnNo7eM/6Im+YnNrBGceIHYhA88ZIUHyrtxZYIm9WSWuOPoSR5DoYg/oKWhsfTU
+	m/tCnoUZ3sp/AqP9yCUm37x1yIBDybArQBydkKXb69WRlMK20Dh3aUWhqYcOzFEqkl0vzGSquUE
+	UO2IN00S0Y+H/CwrVPAH0+Z6TR88wdLdSd8aiOHxSl9EJtySoAxumQW+3fi8Jf0tVubXtm2CmDV
+	iIAMzYHF2BpnKD9eaOVUzlNuOLJTJEOO7h9If8IXUujvN3xGVgFIPDxshQrqZiPJiTF3t4dZrNn
+	ZVtKWGB1HlA93Se025jP4eXjHgia4kFbzmcgcczzSwui9D8Y1g=
+X-Received: by 2002:a05:620a:470c:b0:8cb:4ba9:cce6 with SMTP id af79cd13be357-8cd6b01e470mr41876985a.66.1772726670479;
+        Thu, 05 Mar 2026 08:04:30 -0800 (PST)
+Return-Path: <ana.h@houseofmarketers.co.uk>
+Received: from ec2-13-217-186-252.compute-1.amazonaws.com (ec2-13-217-186-252.compute-1.amazonaws.com. [13.217.186.252])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf65921bsm1880148185a.1.2026.03.05.08.04.29
+        for <boss@akitaonrails.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 08:04:29 -0800 (PST)
+From: Ana HoM <ana.h@houseofmarketers.co.uk>
+To: boss@akitaonrails.com
+Subject: =?utf-8?Q?=C2=A0x?= MANUS AI PAID Campaing {March}
+Message-ID: <ebfa3e7cccabcdc689e29b2b024f78bb@houseofmarketers.co.uk>
+MIME-Version: 1.0
+Date: Thu, 05 Mar 2026 16:04:29 +0000
+Content-Type: multipart/alternative; boundary=1ZfaYenM
+
+--1ZfaYenM
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hey=C2=A0,
+
+Hope you=E2=80=99re doing well!
+
+We=E2=80=99re currentl=
+y scouting creators for an upcoming MANUS TRAE campaign and came across you=
+r content. We=E2=80=99re looking to collaborate with creators in the tech a=
+nd productivity space=E2=80=94including tech evangelists, desk setup / dev-=
+aesthetic creators, indie hackers, and productivity-focused builders.
+
+=
+We=E2=80=99d love to know if you=E2=80=99d be interested and to get your ra=
+tes for the following platforms:
+
+X (Twitter): Static image post
+
+I=
+nstagram: Reel / short-form video
+
+TikTok: Short-form video
+
+YouTub=
+e Shorts: Short-form video
+
+YouTube: 10-minute dedicated long-form vide=
+o
+
+The campaign is expected to start going live from 18 March.
+
+If =
+possible, please also share your media kit.
+
+Looking forward to hearing=
+ from you.
+
+Best,
+
+
+--1ZfaYenM
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=3D"UTF-8">
+<title></tit=
+le>
+</head>
+<body><div class=3D"shadow-markup block-preview__markup-con=
+tent" style=3D"line-height: initial; white-space: normal; overflow-wrap: an=
+ywhere; background-color: #ffffff; box-sizing: border-box; margin: 0px; pad=
+ding: 20px; transform: translateZ(0px); flex: 1 1 auto; overflow-y: auto; u=
+ser-select: text; color: #192435; font-family: Roboto, sans-serif; font-siz=
+e: 13px; font-style: normal; font-variant-ligatures: normal; font-variant-c=
+aps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-ali=
+gn: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing:=
+ 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; t=
+ext-decoration-style: initial; text-decoration-color: initial;" data-v-68ae=
+0f1e=3D"" data-v-3c48d38b=3D"">
+<p data-start=3D"1443" data-end=3D"1464">=
+Hey<span>=C2=A0</span><span></span>,</p>
+<p data-start=3D"2120" data-end=
+=3D"2134"><br></p>
+<p data-start=3D"13" data-end=3D"38">Hope you=E2=80=
+=99re doing well!</p>
+<p data-start=3D"40" data-end=3D"342">We=E2=80=
+=99re currently scouting creators for an upcoming MANUS TRAE campaign and c=
+ame across your content. We=E2=80=99re looking to collaborate with creators=
+ in the tech and productivity space=E2=80=94including tech evangelists, des=
+k setup / dev-aesthetic creators, indie hackers, and productivity-focused b=
+uilders.</p>
+<p data-start=3D"344" data-end=3D"441">We=E2=80=99d love to =
+know if you=E2=80=99d be interested and to get your rates for the following=
+ platforms:</p>
+<ul data-start=3D"442" data-end=3D"650">
+<li data-start=
+=3D"442" data-end=3D"480"><p data-start=3D"444" data-end=3D"480">X (Twitter=
+): Static image post</p></li>
+<li data-start=3D"481" data-end=3D"523"><p =
+data-start=3D"483" data-end=3D"523">Instagram: Reel / short-form video</p><=
+/li>
+<li data-start=3D"524" data-end=3D"556"><p data-start=3D"526" data-e=
+nd=3D"556">TikTok: Short-form video</p></li>
+<li data-start=3D"557" data-=
+end=3D"597"><p data-start=3D"559" data-end=3D"597">YouTube Shorts: Short-fo=
+rm video</p></li>
+<li data-start=3D"598" data-end=3D"650"><p data-start=
+=3D"600" data-end=3D"650">YouTube: 10-minute dedicated long-form video</p><=
+/li>
+</ul>
+<p data-start=3D"652" data-end=3D"717">The campaign is expec=
+ted to start going live from 18 March.</p>
+<p data-start=3D"719" data-end=
+=3D"771">If possible, please also share your media kit.</p>
+<p data-start=
+=3D"773" data-end=3D"811">Looking forward to hearing from you.</p>
+<p dat=
+a-start=3D"813" data-end=3D"827" data-is-last-node=3D"" data-is-only-node=
+=3D"">Best,</p>
+<p data-start=3D"2120" data-end=3D"2134"><br></p>
+</div=
+></body>
+</html>
+
+--1ZfaYenM--
+

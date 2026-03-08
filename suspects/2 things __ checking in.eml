@@ -1,0 +1,123 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a89:207:0:b0:2f6:8aae:b1b9 with SMTP id t7csp1887544lqk;
+        Mon, 2 Mar 2026 07:32:17 -0800 (PST)
+X-Received: by 2002:a05:6000:25c4:b0:435:96a1:ee4d with SMTP id ffacd0b85a97d-4399d9b1583mr23783793f8f.14.1772465537148;
+        Mon, 02 Mar 2026 07:32:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772465537; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Rr87X092HsTcsJvG9b3s/HsF6m3nLYyC1xpyGFjlFCKBsu2W1tG10CA3C9d4aFMz1N
+         rPpVZ18LBV+qfy5RyOd387whBb6TiW3Ln/I59HSS3RXRgivZqDZZGa56hWbczjTT5MVN
+         nEJuZPO7IfXdlYwji4fqK34w4dDeXOsEf6JWeHK5VmuJAmCrCB5sfkMf2r8bJattNpHG
+         o0KslyoDsg6045LEHv/0KXvDGxZh6sMxnqAa43rWWyfJQspN6rn+3uXGo8qe4KIbf3+b
+         Db43ELR2r1SeLWuxDTuV3uUPHYCo5BfqpGp1Y5IJvIDRaRIKDK5r+Pcl22K6mVn3wsO8
+         kOzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-language:message-id:mime-version:date
+         :content-transfer-encoding:subject:references:in-reply-to:to:from
+         :dkim-signature;
+        bh=Voc2HLQjaMc9ehYAaojDAVrNGCodIsAZrpMUJA2nwHE=;
+        fh=89TqPo42mAxJqfAhlcmgIkx2NvnBS1R4PWTKFCAr/eE=;
+        b=OivaKMegDG+V74SLA1WX3HkNSvBQeyR1Pl2ZUtud0dvSAdJI6XfuNGpYp14dqH+OY0
+         uzAC137wZryFgWARKwqqjzcUwSwu2or6xl9PQlinVC8ZbnEBayhub4ex73m9KCZYX1+x
+         KAYzxdnWiRoylrnbYAhN5eJAtOTRmWmu4zuH3UJVnR55kg/jKpuAwlaKf8JM4s5IBevr
+         WkMJl8wduqVTXaJMv6FRWJVlxdHF792tiKFq4l+VKoL1DFkiH1kaLoGEOG3Xanxq6JMo
+         WDsXrL6PwpwK+5LhIw8nsXEgROCfSpCaV5wA2b4j9a21g6wcCOAXuTEMV+7jXvuMhDbX
+         Fh3Q==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gapbitcoin.com header.s=default header.b=levJQf2X;
+       spf=pass (google.com: domain of dan.lipshitz@gapbitcoin.com designates 209.151.151.207 as permitted sender) smtp.mailfrom=dan.lipshitz@gapbitcoin.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gapbitcoin.com
+Return-Path: <dan.lipshitz@gapbitcoin.com>
+Received: from mta-a1g8.listkitemailnow.com (mta-a1g8.listkitemailnow.com. [209.151.151.207])
+        by mx.google.com with ESMTPS id ffacd0b85a97d-4399c7d2654si23513802f8f.401.2026.03.02.07.32.16
+        for <fabio.akita@codeminer42.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 07:32:17 -0800 (PST)
+Received-SPF: pass (google.com: domain of dan.lipshitz@gapbitcoin.com designates 209.151.151.207 as permitted sender) client-ip=209.151.151.207;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gapbitcoin.com header.s=default header.b=levJQf2X;
+       spf=pass (google.com: domain of dan.lipshitz@gapbitcoin.com designates 209.151.151.207 as permitted sender) smtp.mailfrom=dan.lipshitz@gapbitcoin.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gapbitcoin.com
+DKIM-Signature: v=1; a=rsa-sha256; d=gapbitcoin.com; s=default; c=relaxed/relaxed;
+	bh=Voc2HLQjaMc9ehYAaojDAVrNGCodIsAZrpMUJA2nwHE=;
+	h=from:to:subject:date:sender:message-id:mime-version:content-type:reply-to
+	:
+		content-language; t=1772465231;
+	b=levJQf2XzijJA2qFN5GVtZjYDgmc/4p7sUvZYNkZxno2arJJt6OZSm4HsACAWsSHqul0tHFAG
+	SooioP6wi6UjEgAHymvzTivEw3EgJktIj0evGkrb6gLadRuXdLqbDfa55PxnxVPqAhyYA2Fu8Fy
+	Zk1CNzmu4IllZQi8Ro73Nic9oZb6+u6sCnbmnBxNDoRLFdlVAIsnUnfqoz9xRWa7FiLphu/cNO5
+	x+jq//Q7DP94s/BC4GvF3/ux7jZ4DQpNDUCeJW+GJy/4s6H3Mt01nAwnGlh7SY/L8P5xpMpopER
+	4JGLMLQ4zlx1SkNbTj/T8Wd4Ocq3nBGmIZC+g8S/JyYw==;
+From: Dan Lipshitz <dan.lipshitz@gapbitcoin.com>
+To: fabio.akita@codeminer42.com
+In-Reply-To: <41ebe4fb-5efc-sl79-4fe8-b48c-8a0dcc13bf13@gapbitcoin.com>
+References: <41ebe4fb-5efc-sl79-4fe8-b48c-8a0dcc13bf13@gapbitcoin.com>
+Subject: RE: 2 things // checking in
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 02 Mar 2026 15:27:09 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Message-ID: <589ca896-0734-4596-a03e-0abb1f1d4cc2@gapbitcoin.com>
+Content-Language: en-US
+
+Minutes between "deposit sent" and "funds available" is conversions lost to=
+ timing.
+
+
+We credit in 5 seconds by guaranteeing blockchain risk - =
+exchanges handling 1.5M+ monthly transactions use us to capture users at =
+moment of intent.
+
+
+Worth exploring how this integrates?
+
+
+
+
+Thanks,
+Dan Lipshitz
+GAP600
+
+
+
+
+
+
+P.S. Please reply 'no thanks' if not interested
+
+
+
+On Wed, Feb 18, 2026 at 04:22 PM UTC Dan Lipshitz <dan.lipshitz@gapbitcoin=
+.com> wrote:
+
+> Hello Fabio,
+>=20
+>=20
+> Quick note:
+>=20
+>=20
+> We credit deposits in 5 seconds instead of multi-minute delays - =
+activating users at moment of intent.
+>=20
+>=20
+> Managing $13.3B+ for =
+platforms that prioritize conversion over waiting.
+>=20
+>=20
+> Open to seeing how it works?
+>=20
+>=20
+>=20
+>=20
+> Thanks,
+> Dan Lipshitz
+> GAP600
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20
+> P.S. Please reply 'no thanks' if =
+not interested

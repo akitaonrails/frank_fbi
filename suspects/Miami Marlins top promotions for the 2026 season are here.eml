@@ -1,0 +1,1640 @@
+Delivered-To: boss@akitaonrails.com
+Received: by 2002:a05:6022:b217:b0:ee:2339:557b with SMTP id bg23csp3908411lab;
+        Thu, 5 Mar 2026 14:31:15 -0800 (PST)
+X-Forwarded-Encrypted: i=4; AJvYcCVXr8oLNNIKFjBDQB0lB+PIIHweT0FHhk3ag3RLqXsJsWQ7pu9mYooRYwf6ky97R/To+62L@akitaonrails.com
+X-Received: by 2002:a17:907:3c96:b0:b90:35c8:d01b with SMTP id a640c23a62f3a-b93f1409fd3mr475970166b.36.1772749875087;
+        Thu, 05 Mar 2026 14:31:15 -0800 (PST)
+ARC-Seal: i=3; a=rsa-sha256; t=1772749875; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=SY8FY2Y8QtFLAc0Booz5FDTcl3nixg2JCNeGdHW/Rp6HTSFybRQ/YEQg2sojCBRnCj
+         QfGO9WMRIs0xZN6WRJDT9N/Z9X71XN7yl9CqAmXZDOowPniTrGpXzSYTHqggamCzbWs7
+         eike4rF9cNTvMA658HqvWXbHzqGjyTum76oQRWI8mIo0D2LAGPoCQmbDZclUn8QDFH7v
+         C2621tWt//dv9FY7W6AqpXAple94jIFT+dhuqbZHWZF5/jhTBcUI1mhd9XyWB/i24W0o
+         U90qgtxIq4otLeGKJyglhcP5wk/k6N6g2QspkezLz/zQPqxMBm4pV+s/hr5KxDCLx5cb
+         Vb/Q==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:from:subject:list-unsubscribe-post:reply-to
+         :list-unsubscribe:mime-version:date:message-id:to:dkim-signature
+         :delivered-to;
+        bh=BjfStH+CfTQdt6h9wlUi/w3NgxKOor0CbopASu0Fx9U=;
+        fh=eKy/Mq+QxWqt/nCLZIb27RuhimOtOeqylt8x0sVLnZQ=;
+        b=W42OhN+3lMyS+af9xBk7hTyoFaUhsZe0HiNtKCV0AkWmW9zenp2jpaKKTXj0tYHdPk
+         6Q6h7h4DJyVqyzh+YTi6gjbSbLAxE/LrIIytQC1cyYGZP6wGM8/bUtIJwb+7yPzpUg5X
+         gWhNLjKPormm2X/BDP72DuDfvDvQcdsS/784yvwTQf5OAUc4IfYJ7Ezp/v8cETZE2DWb
+         TfnglarBPlunJ6VT2slWoqcLaVVJNnabk5mo4vhRA53U4Blk8hK90YXOSJ0kp81vCB19
+         SWVzu5blwMPc10JRaGPaZSe2KkIzioS/ujBNiJaB8IzYesjVKGYkYXHJF+c6TDjJRnBj
+         pt6g==;
+        dara=google.com
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@seatgeek.com header.s=scph0317 header.b=C4QWQlu+;
+       arc=pass (i=2 spf=pass spfdomain=b.seatgeek.com dkim=pass dkdomain=seatgeek.com dmarc=pass fromdomain=seatgeek.com);
+       spf=pass (google.com: domain of fabioakita+caf_=boss=akitaonrails.com@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom="fabioakita+caf_=boss=akitaonrails.com@gmail.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=seatgeek.com;
+       dara=neutral header.i=@akitaonrails.com
+Return-Path: <fabioakita+caf_=boss=akitaonrails.com@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id a640c23a62f3a-b935ad02e17sor576714866b.18.2026.03.05.14.31.14
+        for <boss@akitaonrails.com>
+        (Google Transport Security);
+        Thu, 05 Mar 2026 14:31:15 -0800 (PST)
+Received-SPF: pass (google.com: domain of fabioakita+caf_=boss=akitaonrails.com@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@seatgeek.com header.s=scph0317 header.b=C4QWQlu+;
+       arc=pass (i=2 spf=pass spfdomain=b.seatgeek.com dkim=pass dkdomain=seatgeek.com dmarc=pass fromdomain=seatgeek.com);
+       spf=pass (google.com: domain of fabioakita+caf_=boss=akitaonrails.com@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom="fabioakita+caf_=boss=akitaonrails.com@gmail.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=seatgeek.com;
+       dara=neutral header.i=@akitaonrails.com
+ARC-Seal: i=2; a=rsa-sha256; t=1772749874; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=NRefOGS4fLUvJtj31DybCifkQFVOw5EKAI+I57HCqJs1bquCwCItGpwDU6/p0K8pB6
+         0QIjx6RV7Uevn1T7oB6iGfwXVNW0TZVsYKCaIGzJRbCE2RPwrX6+SieLI8rkO/4xnsgH
+         NaetUAZYt6kuMWS4yg07HAiO6OjBEMDG/MhtH75lF6zhHYY5Sy7xeBpTkVgYGbponeCV
+         1TA09mR34DVx84cFxX9FRNMq6EZBvx1/YHk2MV/RsUBO1jH7Lwrld3MzerciMiBUmJ2Y
+         DGTCoM8mKOvIRrQekaJOKVEt90lQAVEA/olHT4+uuXaQkT4AOvcJfYuuqw222oMVyJyd
+         94ZQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:from:subject:list-unsubscribe-post:reply-to
+         :list-unsubscribe:mime-version:date:message-id:to:dkim-signature
+         :delivered-to;
+        bh=BjfStH+CfTQdt6h9wlUi/w3NgxKOor0CbopASu0Fx9U=;
+        fh=eKy/Mq+QxWqt/nCLZIb27RuhimOtOeqylt8x0sVLnZQ=;
+        b=U05QWWbUqCeB7Ot1bT3O7J5K7kUl3G9gTlLyuXOTHygjGGsk02XkAz6xA9D/odR2z9
+         0ijTWxOIge2OAAJ6NawuECPXYSacCRzYLmQNeY2tk195z0QfdVzoGJHxrluA9IpWFCR9
+         E7OQ+4Vsxkr0436TwrRnDoQ19h4SRWF1xXmlHAEna9tgedK7sMg1/SSOdFSYg4YZl7Xg
+         d7ulV4EqFBn2/FZvju7Fb9xa6CCs/z/FdKQo381NVvCNeYzG0i8IRDVSQ64qRLuJZADi
+         UcxbvlmPlnLCoNp6UW177f2EfGK+bym7+1oQ0A/uVlyO3cG9NZN8OLOnlFVt3igQGrcM
+         SZlA==;
+        darn=akitaonrails.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@seatgeek.com header.s=scph0317 header.b=C4QWQlu+;
+       spf=pass (google.com: domain of msprvs1=20524nfo5nzvx=bounces-137516@b.seatgeek.com designates 156.70.3.171 as permitted sender) smtp.mailfrom="msprvs1=20524NfO5NZvX=bounces-137516@b.seatgeek.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=seatgeek.com
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772749874; x=1773354674;
+        h=feedback-id:from:subject:list-unsubscribe-post:reply-to
+         :list-unsubscribe:mime-version:date:message-id:to:dkim-signature
+         :delivered-to:x-forwarded-for:x-forwarded-to:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BjfStH+CfTQdt6h9wlUi/w3NgxKOor0CbopASu0Fx9U=;
+        b=nco8i6p652+kgWp+KlNSp/H+ARBlKFa5hctfa4rbBtDszBzMeFexBBnR8RnpziUM9+
+         YuGiCVz7Jy5hJ+DE0UNKTyR2JFJogIXnS6bejuaw06lW1pTPjUsXkFGVWaHzgM7e20e1
+         rBVY6A2Iam4vaNsgzvY0lgtoDe0j4HnLm7QgROtODe89k2hHCmVPaQTepTmUKFRHDlg7
+         piJMBBu9oBKcMZ353l2LAg6tLw5IdMpM58H1Q0hWZPcEAYJviIYUKYk4D2Yjjl4ustF8
+         ZarBs74/RfbL6kL43VweWUr3/2j9dNMm+7VFOLnZBDgctCskQ+P02Noh+HoMiPg/1iDY
+         q9+g==
+X-Forwarded-Encrypted: i=2; AJvYcCVk02ExsDRIyQP+xAd8E//WHuQqgc6jw+FhuZrT34kn9T0xQ4h/cbKthd3yG41ONs5C1Er1@akitaonrails.com
+X-Gm-Message-State: AOJu0YzJfeqU5VVcMcgdpEU/Radt5p32ECqD07qXDHuYKMCmpBNV35TE
+	0ipsVoPYRirELS2EZ3vZ/Ce1cgco8hZso3cKMtf8u6ub8ud80BNKy8nnvZrObSJqexg0uNMZ4E4
+	b4uzW717iyHOnej0CkEO+q7mrKtyaP7MxG1pE+LK3Rvs2nXvlE3ZBd3t4TNmqpA==
+X-Received: by 2002:a17:907:1c0d:b0:b90:ba21:62c4 with SMTP id a640c23a62f3a-b93f14f0ffdmr489130466b.54.1772749874389;
+        Thu, 05 Mar 2026 14:31:14 -0800 (PST)
+X-Forwarded-To: boss@akitaonrails.com
+X-Forwarded-For: fabioakita@gmail.com boss@akitaonrails.com
+Delivered-To: fabioakita@gmail.com
+Received: by 2002:a17:907:9407:b0:b93:6308:537e with SMTP id dk7csp1985517ejc;
+        Thu, 5 Mar 2026 14:31:12 -0800 (PST)
+X-Received: by 2002:a05:690e:190b:b0:649:da44:78ad with SMTP id 956f58d0204a3-64d1429caf4mr140991d50.49.1772749872480;
+        Thu, 05 Mar 2026 14:31:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772749872; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kGNRxRHRFRZilYwQxdS5hZFFg12KEpbtVCH7iyutGBL8BHu2IPJPyDEV8Nl4fFPszJ
+         xd3qNsbz99bbOVUm7XOMdzLrsvfcSwmVFRsERRGUE0gecDnwBrl2StEbFvC85E3AqhrD
+         upZD7+RFzNbg/f6upqohIfEuZCALp0SpjOwptf/okT6sESmKfpiRju9O+8UJHQFz2xBz
+         m83W0Ay9vqFCwjTc/rhZ1uZSHn3Z09delMXmtNPFQjJfAnhZig5ObBINTPUXoDfPSZTt
+         BE1PmzD7FVOcaj0w/vLSyaPAejNgtOWMxTWrCTkiY/dE3HowTgJ38fU2LUrpY83V7aBx
+         M/Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:from:subject:list-unsubscribe-post:reply-to
+         :list-unsubscribe:mime-version:date:message-id:to:dkim-signature;
+        bh=BjfStH+CfTQdt6h9wlUi/w3NgxKOor0CbopASu0Fx9U=;
+        fh=tGNkxE0Jje+GlvGJEwFs7zxojE46fS+py/ed7RsdrWk=;
+        b=Gco7TNsiPUVI8VFJcOkkPA9Iig4zY7XK+5uza4F3EfhPdiHu4kQVvoHLgb7GwPOblh
+         3XYim4ZXZ1X8kpg5/BYTPJIWI6WtZt3wulW3DG5hLCjIgo1abb+NvZm/BhtG0PdXubr4
+         ZNu6MmWgwuIzaZIPomtj5HS9ZR9frmAH2hYDobiwtE2ipWJzOdrM2bnW/KMePQCAfiKh
+         4ksfyyolCACoBtvHwpmV/CsnZ1/mPhjT+PHBoJamcgKXUopB9hi25CExingyKfryiKTv
+         g/tkJ20D142p982wJJMDOnlDvAHoecwgfhM/qbLbJpSN0If0ukAjHZj85tOJkTKgBqov
+         uBoQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@seatgeek.com header.s=scph0317 header.b=C4QWQlu+;
+       spf=pass (google.com: domain of msprvs1=20524nfo5nzvx=bounces-137516@b.seatgeek.com designates 156.70.3.171 as permitted sender) smtp.mailfrom="msprvs1=20524NfO5NZvX=bounces-137516@b.seatgeek.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=seatgeek.com
+Return-Path: <msprvs1=20524NfO5NZvX=bounces-137516@b.seatgeek.com>
+Received: from mta-70-3-171.sparkpostmail.com (mta-70-3-171.sparkpostmail.com. [156.70.3.171])
+        by mx.google.com with ESMTPS id 956f58d0204a3-64cb757aca6si21806269d50.61.2026.03.05.14.31.11
+        for <fabioakita@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2026 14:31:12 -0800 (PST)
+Received-SPF: pass (google.com: domain of msprvs1=20524nfo5nzvx=bounces-137516@b.seatgeek.com designates 156.70.3.171 as permitted sender) client-ip=156.70.3.171;
+Return-Path: <msprvs1=20524NfO5NZvX=bounces-137516@b.seatgeek.com>
+X-MSFBL: vFW2t8HVoQTr2hlMZZmz4HL7vnkR8hoHI4qkHuUsFqg=|eyJtZXNzYWdlX2lkIjo
+	iNjlhNjJlMDRhYTY5MThjYzBjOTIiLCJ0ZW5hbnRfaWQiOiJzcGMiLCJjdXN0b21
+	lcl9pZCI6IjEzNzUxNiIsInN1YmFjY291bnRfaWQiOiIwIiwiciI6ImZhYmlvYWt
+	pdGFAZ21haWwuY29tIn0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seatgeek.com;
+	s=scph0317; t=1772749870; i=@seatgeek.com;
+	bh=BjfStH+CfTQdt6h9wlUi/w3NgxKOor0CbopASu0Fx9U=;
+	h=To:Message-ID:Date:Content-Type:List-Unsubscribe:
+	 List-Unsubscribe-Post:Subject:From:From:To:Cc:Subject;
+	b=C4QWQlu+PclPuTVPjUW1RVtrJXExFGlLHlRzVO6bLxLzf838kFaVeD/uK0S7BPBKw
+	 IdJ9KsmLMXIs0oc8VRXq3pd/eXAc1RUtfeDU/lrI05hoVnLDxGHO/wYkYGxcG3SnCL
+	 Rvc/rwi9cJHaiUb2bMWSSkSfrPBSrGZYOD+RaX4Y=
+Received: from [10.90.41.91] ([10.90.41.91])
+	by i-06e70e8ebb85ee448.mta1vrest.sd.prd.sparkpost (ecelerity 5.2.0.75207 r(msys-ecelerity:tags/5.2.0.3)) with REST
+	id 29/C8-37424-E240AA96; Thu, 05 Mar 2026 22:31:10 +0000
+To: fabioakita@gmail.com
+Message-ID: <29.C8.37424.E240AA96@i-06e70e8ebb85ee448.mta1vrest.sd.prd.sparkpost>
+Date: Thu, 05 Mar 2026 22:31:10 +0000
+Content-Type: multipart/alternative; boundary="_----kdJHtZ3uAkSFyMijsCGwmg===_A8/C8-37424-E240AA96"
+MIME-Version: 1.0
+X-Campaign-ID: 3940603
+List-Unsubscribe: <https://links.iterable.com/s/uh/Eoh4vitiGPa57jUcxO8lYxeQ6PY5FZox2MKjOo4Slvj-EBgV3ecxRfbIPPDz3w4PFXieZ8fAm1vVR9LeQpHk1CNDEo1uYI9V5AlXGh7ugIoE36BnKiDHvWjeMUGSI8aLmlcTmYl8m-2mMqbWNnzcmmgR_lLtaMgT3QL7oCtyZko0oLlOE1vcJoHf/nF8Z5BlBqfyfwMUFHDiWEAwc21PAj1NV/18>,<mailto:unsubscribe+3940603+5377940@unsubscribe.iterable.com>
+X-Auto-Response-Suppress: All
+X-Message-ID: 20476e73280c4ce58f5587af417ce73a
+X-Feedback-ID: 5377940:3940603:2190:iterable
+Reply-To: do-not-reply@seatgeek.com
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Subject: Miami Marlins top promotions for the 2026 season are here
+From: "Natalie @ SeatGeek" <events@seatgeek.com>
+Feedback-ID: 5377940:3940603:2190:iterable
+
+--_----kdJHtZ3uAkSFyMijsCGwmg===_A8/C8-37424-E240AA96
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+
+For the fans that will get there 4 hours early for a bobblehead or fun hat.=
+ =0A=0A <https://seatgeek.com> =0A Official Ticket Marketplace of Major Lea=
+gue Baseball =0A=0A=0A <https://seatgeek.com/e/performers/29> =0A=0A Miami =
+Marlins top promotions  <https://seatgeek.com/e/performers/29> =0A=0AIf you=
+=E2=80=99re more into the bobbleheads than the baseball, these are some of =
+the =0AMarlins games you=E2=80=99re not gonna want to miss. =0A=0A=0ATop pr=
+omotions this season =0A=0A <https://seatgeek.com/e/events/17693421> =0Avs =
+Colorado Rockies <https://seatgeek.com/e/events/17693421>=0AFri, Mar 27=0AK=
+yle Stowers Bobblehead & Fireworks=0A=0A=0A See tickets  <https://seatgeek.=
+com/e/events/17693421> =0A=0A <https://seatgeek.com/e/events/17693458> =0Av=
+s Philadelphia Phillies <https://seatgeek.com/e/events/17693458>=0ASun, May=
+ 3=0AMarlins Captain's Hat=0A=0A=0A See tickets  <https://seatgeek.com/e/ev=
+ents/17693458> =0A=0A <https://seatgeek.com/e/events/17693527> =0Avs San Di=
+ego Padres <https://seatgeek.com/e/events/17693527>=0ASun, Jul 26=0AJavier =
+Sanoja Gold Glove Bobblehead=0A=0A=0A See tickets  <https://seatgeek.com/e/=
+events/17693527> =0A=0A <https://seatgeek.com/e/events/17693504> =0Avs San =
+Francisco Giants <https://seatgeek.com/e/events/17693504>=0ASun, Jun 21=0AM=
+arlins Rope Hat=0A=0A=0A See tickets  <https://seatgeek.com/e/events/176935=
+04> =0A=0A <https://seatgeek.com/e/events/17693551> =0Avs Washington Nation=
+als <https://seatgeek.com/e/events/17693551>=0ASun, Aug 23=0AAgustin Ramire=
+z Bobblehead=0A=0A=0A See tickets  <https://seatgeek.com/e/events/17693551>=
+ =0A=0A <https://seatgeek.com/e/events/17693446> =0Avs Milwaukee Brewers <h=
+ttps://seatgeek.com/e/events/17693446>=0ASun, Apr 19=0AMarlins Basketball J=
+ersey=0A=0A=0A See tickets  <https://seatgeek.com/e/events/17693446> =0A=0A=
+ <https://seatgeek.com/e/events/17693564> =0Avs Chicago Cubs <https://seatg=
+eek.com/e/events/17693564>=0ASun, Sep 6=0AHall of Fame Bobblehead=0A=0A=0A =
+See tickets  <https://seatgeek.com/e/events/17693564> =0A=0A <https://seatg=
+eek.com/e/events/17693521> =0Avs Cleveland Guardians <https://seatgeek.com/=
+e/events/17693521>=0ASun, Jul 12=0ABilly the Marlin Shoulder Plush=0A=0A=0A=
+ See tickets  <https://seatgeek.com/e/events/17693521> =0A=0A <https://seat=
+geek.com/e/events/17693425> =0Avs Colorado Rockies <https://seatgeek.com/e/=
+events/17693425>=0ASun, Mar 29=0AReversible Bucket Hat=0A=0A=0A See tickets=
+  <https://seatgeek.com/e/events/17693425> =0A=0A <https://seatgeek.com/e/e=
+vents/17693581> =0Avs Atlanta Braves <https://seatgeek.com/e/events/1769358=
+1>=0ASun, Sep 27=0A2027 Magnet Schedule=0A=0A=0A See tickets  <https://seat=
+geek.com/e/events/17693581> =0A=0AView more > <https://seatgeek.com/e/perfo=
+rmers/29> =0A=0A=0A=0A <https://seatgeek.com/mlb-tickets> =0ASeatGeek is th=
+e Official Ticket Marketplace of Major League Baseball =0A<https://seatgeek=
+.com/mlb-tickets> =0AChoose from a wider selection of tickets and manage t=
+hem right from your =0ASeatGeek app. =0A=0A=0A=0A=C2=A9 2026 SeatGeek, Inc.=
+=0A=0APrivacy Notice <https://seatgeek.com/privacy> | Terms of Use =0A<http=
+s://seatgeek.com/terms> | Help & Support <https://seatgeek.com/help>=0A=0A9=
+02 Broadway, Fl 10, New York, NY 10010=0A=0AIf you believe this has been se=
+nt to you in error, please safely unsubscribe =0A<https://links.seatgeek.co=
+m/s/eh/ePdsNinp0YQXK0Q_0zOGJNs6l46fl8OFeKYBM4PTuX6F2_J17ZxuewkCwIzCtDuR6g6r=
+oZPYdEcFkjb1vO5ID65U0qk-wj4Pm0OcnzR91dbSIeg21mH6gyD6Eq1ZjeCBFN1ynT4UWb0C6BY=
+53UL3VBlTGLEmODtztHUtblCmYi3E5su2LUr7sape5UGsoJztkngnGmbnbXpeU4gHFJ6nZjGbdR=
+floaLIrsowe5AP38uB4oWYcBRhztyBKqmjdsgQaFFMXzIcivKOtz7eweV21vnkIUs0PjFMtU_2K=
+RowwKVFS2ADfUnT6GfyFtrVTjb-7GkoJh9jgnOS5mTCtKs4ef1X5dCQtMUrhOYS3vYcG28rs45Z=
+gei4yjX3ojRp88GOV1w736V_Nio3GzGzRP8bTEOUe2H2Oof_gaeDwk2k1dqO2SJe5-b11lCe_EV=
+-jg/UKjhkbTzbmpfcKdLFCjlswG5YUJEARpv/18>
+--_----kdJHtZ3uAkSFyMijsCGwmg===_A8/C8-37424-E240AA96
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="UTF-8"
+
+<!doctype html> <html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"urn=
+:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:off=
+ice"> <head> <title> </title> <!--[if !mso]><!-- --> <meta http-equiv=3D"X-=
+UA-Compatible" content=3D"IE=3Dedge"> <!--<![endif]--> <meta http-equiv=3D"=
+Content-Type" content=3D"text/html; charset=3DUTF-8"> <meta name=3D"viewpor=
+t" content=3D"width=3Ddevice-width, initial-scale=3D1"> <meta name=3D"color=
+-scheme" content=3D"light"> <meta name=3D"supported-color-schemes" content=
+=3D"light"> <style type=3D"text/css">#outlook a{padding:0}.ReadMsgBody{widt=
+h:100%}.ExternalClass{width:100%}.ExternalClass *{line-height:100%}body{mar=
+gin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}tab=
+le,td{border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0}img{bo=
+rder:0;height:auto;line-height:100%;outline:0;text-decoration:none;-ms-inte=
+rpolation-mode:bicubic}p{display:block;margin:13px 0}.x-gmail-data-detector=
+s,.x-gmail-data-detectors *,.aBn{border-bottom:0!important;cursor:default!i=
+mportant;text-decoration:none!important}[style*=3D"DM Sans"]{font-family:'D=
+M Sans',Arial,sans-serif!important}</style> <!-- Outlook Hacks: BEGIN --> <=
+!--[if mso]><style>*{font-family:sans-serif!important}td{font-family:sans-s=
+erif}td{font-family:sans-serif;!important}p{font-family:sans-serif;!importa=
+nt}</style><![endif]--> <!--[if !mso]><!--> <style type=3D"text/css">@media=
+ only screen and (max-width:500px){@-ms-viewport{width:320px}@viewport{widt=
+h:320px}}</style> <!--<![endif]--> <!--[if mso]><xml> <o:OfficeDocumentSett=
+ings> <o:AllowPNG/> <o:PixelsPerInch>96</o:PixelsPerInch> </o:OfficeDocumen=
+tSettings> </xml><![endif]--> <!--[if lte mso 11]><style type=3D"text/css">=
+.outlook-group-fix{width:100%!important}</style><![endif]--> <!--[if !mso]=
+><!--> <link href=3D"https://fonts.googleapis.com/css2=3Ffamily=3DDM+Sans:i=
+tal,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=3Dswap" rel=3D"stylesh=
+eet"> <style type=3D"text/css">@import url('https://fonts.googleapis.com/cs=
+s2=3Ffamily=3DDM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=
+=3Dswap');</style> <!--<![endif]--> <!-- Outlook Hacks: END --> <!-- Media =
+Queries: BEGIN --> <style type=3D"text/css">@media only screen and (min-wid=
+th:500px){.mj-column-per-100{width:100%!important}.mj-column-per-80{width:8=
+0%!important}.mj-column-per-75{width:75%!important}.mj-column-per-70{width:=
+70%!important}.mj-column-per-65{width:65%!important}.mj-column-per-60{width=
+:60%!important}.mj-column-per-50{width:50%!important}.mj-column-per-40{widt=
+h:40%!important}.mj-column-per-35{width:35%!important}.mj-column-per-30{wid=
+th:30%!important}.mj-column-per-25{width:25%!important}.mj-column-per-20{wi=
+dth:20%!important}.mj-column-per-15{width:15%!important}.align-left-desktop=
+{text-align:left!important}}@media screen and (max-width:500px){.headline-p=
+rimary{width:100%!important;max-width:100%!important}.align-left-desktop{te=
+xt-align:center!important}.stack-column{display:block!important;width:100%!=
+important;max-width:100%!important;direction:ltr!important;padding:0 25px!i=
+mportant}.border-bottom{border-bottom-left-radius:0!important;border-bottom=
+-right-radius:0!important}.mobile-padding{padding-left:24px!important}.mobi=
+le-footer{padding:10px 0!important}}</style> <!-- Media Queries: END --> </=
+head> <!--gmail promotional card begins--> =0D=0A<div style=3D"color:transp=
+arent;visibility:hidden;opacity:0;font-size:0px;border:0;max-height:1px;wid=
+th:1px;margin:0px;padding:0px;border-width:0px!important;display:none!impor=
+tant;line-height:0px!important;"><img border=3D"0" width=3D"1" height=3D"1"=
+ src=3D"https://tracking.seatgeek.com/q/TeS4ALJo2yKcKMJVKKWSpA~~/AAIZLBA~/z=
+Xy6WzwCPYIITCILALuXfnSMQi02uXt6507tIkVCJf9f_FxOg0ucTCprXSe9XQ-U5p7eER-bwc80=
+QCb5M8Gg-w~~" alt=3D""/></div>=0D=0A<div itemscope itemtype=3D"http://schem=
+a.org/Organization"> <meta itemprop=3D"name" content=3D"Gmail"> <meta itemp=
+rop=3D"logo" content=3D"https://seatgeek.com/images/marketing/sg_logo_gator=
+ade.jpg"> </div> <!--gmail promotional card ends--> <body style=3D"margin: =
+0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; =
+background-color: #EAE7E1;"><span style=3D"color:transparent;visibility:hid=
+den;display:none;opacity:0;height:0;width:0;font-size:0;">For the fans that=
+ will get there 4 hours early for a bobblehead or fun hat.</span><img src=
+=3D"https://links.seatgeek.com/s/eo/jny0zUqOk0hXKhEzSpb-moWCx3Y7-0pN_ex-Fqa=
+8g5WOeSBSBizz-vRQfxHWmKUZQF-U-y_2M4TQVpmbuXHB-i5lRUiEMeUrbc5uPbdZHPjfHE7gMY=
+JzFCTYWDmTaInTnodEQW5JB_4hFnxXemvcLQCZTalLQaG7lkYCY-QkWqCX9FrD8Idvc3MlyhboT=
+ZbOI0NEbf0q1jgb/Q2CnuIGN1T0fjkcAvGaIC4eXIUunDCiD/18" style=3D"border:0;widt=
+h:1px;height:1px;border-width:0px!important;display:none!important;line-hei=
+ght:0!important;" width=3D"1" height=3D"1"/> <!-- SECTION 1: Lockup --> <di=
+v style=3D"background-color:#EAE7E1;"> <!--[if mso | IE]><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"600" bgcolo=
+r=3D"#EAE7E1"> <tr><td style=3D"line-height:0px;font-size:0px;mso-line-heig=
+ht-rule:exactly;" bgcolor=3D"#EAE7E1"><![endif]--> <div style=3D"Margin:0px=
+ auto;max-width:600px;background-color:#000000;"> <table align=3D"center" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=
+=3D"width:100%;"> <tr> <td align=3D"center" style=3D"padding:0;text-align:c=
+enter;vertical-align:middle;"> <!-- --> <!-- MLB + SeatGeek lockup --> <tab=
+le align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"border-collapse:collapse;border-spacing:0px;"> <=
+tr> <td align=3D"center" style=3D"padding:40px;" class=3D"mobile-padding-lo=
+go"> <a href=3D"https://links.seatgeek.com/a/sc/FIIUyW26aDAeMZLM_JnbymNkFkN=
+TAaHcXw_JzMADcoxFdqdbVr-ocXOuhVSRbCAYzPv54UMOXY4PhCZmAZOf673Fj2DsxQwoq_DCi2=
+l7VPDLX5R_-Q5cONjf3eBaVsVCf_dp2rWjY3toedsfuwmUGExtUAhc08rawpRck2ayfbYwu5ks-=
+0vPql7OyWbDcOf2c_Wr4UfQIak9skii8wbb8-RD7cSo8AA8y287YXlfSAB6vradrzYjShSLGwti=
+e_22_IWc6wMjGfnzxDB8MgnOV9es4M00FlaNeQx5lRV7R_p1_FwPHMxrocdr7fjqf_bDvDDPtHp=
+vz764wNPFb-EPL4V-1kJvuMk5V4PQYR9ilZesFc6XmtRoN7K32NowMQTgyQm_nnUy20wmSZVajm=
+QunjVXxGy6m3cT38bqgXKZYcL5qkO1HTtHgAOR5f-kb0r8s64aFDTw-H5Lgr4Y7jYguwoiXMHdX=
+vvzlInrQ_GlWnDPwfWdGwvThyzZSMr1VYQ/j4pfP4-kxBEl466vJbvJwloimQMWEZQH/18" tar=
+get=3D"_blank" style=3D"text-decoration:none;"> <img height=3D"40" src=3D"h=
+ttps://seatgeek.com/images/marketing/crm/assets/lockups/white/mlb.png" widt=
+h=3D"153" style=3D"border:0;display:block;outline:none;text-decoration:none=
+;width:153px;height:40px;font-family:Arial, sans-serif, DM Sans;color:#1818=
+18;text-align:center;" alt=3D"Official Marketplace of MLB"> </a> </td> </tr=
+> </table> <!-- --> </td> </tr> </table> </div> <!--[if mso | IE]></td></tr=
+> </table><![endif]--> </div> <!-- SECTION 2: Partner Banner --> <div style=
+=3D"background-color:#EAE7E1;"> <!--[if mso | IE]><table align=3D"center" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"600" bgcolor=3D"#0=
+00000"> <tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule=
+:exactly;" bgcolor=3D"#000000"><![endif]--> <!-- --> <div style=3D"Margin:0=
+px auto;max-width:600px;background-color:#757576;"> <table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" sty=
+le=3D"width:100%;"> <tr> <td align=3D"center" style=3D"padding:8px 40px;fon=
+t-size:14px;font-family:Arial, sans-serif, DM Sans;letter-spacing:.2px;font=
+-weight:600;color:#ffffff;line-height:20px;text-align:center;" class=3D"x-g=
+mail-data-detectors mobile-padding"> <!-- --> Official Ticket Marketplace o=
+f Major League Baseball <!-- --> </td> </tr> </table> </div> <!-- --> <!--[=
+if mso | IE]></td></tr> </table><![endif]--> </div> <!-- Primary Section: B=
+EGIN --> <div style=3D"background-color:#EAE7E1;"> <!--[if mso | IE]><table=
+ align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"width:600px;" width=3D"600" bgcolor=3D"#00A3E0"> <tr> <td style=3D"line-he=
+ight:0px;font-size:0px;mso-line-height-rule:exactly;" bgcolor=3D"#00A3E0"><=
+![endif]--> <div style=3D"Margin:0px auto;max-width:600px;background-color:=
+#00A3E0;"> <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso-tabl=
+e-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width=3D"100%"> <tr> <t=
+d style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; direction: ltr; padding: 0px; text-align: center; vertical-align: =
+middle;" align=3D"center" valign=3D"middle"> <!--[if mso | IE]><table role=
+=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=
+=3D"#00A3E0"> <tr> <td style=3D"vertical-align:middle;width:600px;" bgcolor=
+=3D"#00A3E0"><![endif]--> <div class=3D"mj-column-per-100 outlook-group-fix=
+" style=3D"font-size:13px;text-align:center;direction:ltr;display:inline-bl=
+ock;vertical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse: collap=
+se; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" =
+width=3D"100%" valign=3D"middle"> <!-- SeatGeek Logo: BEGIN -- <tr> <td ali=
+gn=3D"center" style=3D"padding:40px 20px;"> <table align=3D"center" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"b=
+order-collapse:collapse;border-spacing:0px;"> <tr> <td style=3D"height:40px=
+; width:auto"> <a href=3D"https://links.seatgeek.com/a/sc/-1GXQGpaLcN6tSwYH=
+qM0qbe-HWh44Bi1bP4sXNBR0JzN2YHejNVroYrBVQnh1wdg-WuAUv-TfZduY0Z_aL34sjliqy45=
+tkA3fEnBoOQUSGeEOK9XTa3NFubplZx4ZORLTBi_uTIyFn1ymU0XVv1LK0w4znWp6d4_onb7tzy=
+ZI3Sz4q1Te3nbrSLpOx7jpcRBiEHyq6R5rrsTUCE3p6_pTXSbLq6b0GSm7jtCrn_OCM0uEHxVaz=
+qIbvFJ1qxUAmx5Xc1bQoFMCYv1EwsnUMKyybfj4PyOXtHZOldAyUhOosjE61SL8Nfgc1gnV8g-2=
+HxP6DNFAr9r3oRJ1LmCNO8maTTfARoMK1xj0uzGpZ8_VCJ2X7f-3PjmMJCDLhD_28-Jj8x1sqQu=
+vVgbpF5N77ubfew8a9xu5ssIvT9TwIytv7NhLd2nBoTTIJBVUjrGIMXSQ9WRQ0-75J22wEeDqdZ=
+LQsorVvnOSPkUjMg26qhipiPGWRqouYuh_HL3Y-gU1Q4arw/6yTx1f_qU8b7UnuFnbPHHNaqmoC=
+95Jw-/18" target=3D"_blank" style=3D"text-decoration:none;"> <img height=3D=
+"40" src=3D"https://s3.amazonaws.com/uploads.seatgeek.com/emails/logos/lock=
+ups/white/mlb.png" style=3D"border:0;display:block;outline:none;text-decora=
+tion:none;height:40px; width:auto;font-family:Arial, sans-serif, DM Sans;co=
+lor:#FFFFFF" width=3D"auto" alt=3D"Get your tickets on SeatGeek"> </a> </td=
+> </tr> </table> </td> </tr> <!-- SeatGeek Logo: END --> <!-- Hero Image: B=
+EGIN --> <tr> <td align=3D"left" style=3D"border-collapse: collapse; mso-ta=
+ble-lspace: 0pt; mso-table-rspace: 0pt; padding: 20px 40px 0px; background-=
+color: #00A3E0; border-radius: 10px;" bgcolor=3D"#00A3E0"> <table align=3D"=
+left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation=
+" style=3D"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: c=
+ollapse; border-spacing: 0px; border-radius: 10px;"> <tr> <td style=3D"bord=
+er-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width:=
+ 100%;" valign=3D"middle" width=3D"100%"> <a href=3D"https://links.seatgeek=
+.com/a/sc/LWpjzC5D-mDdAVIMePGG4OGCWIL_mv9utSLa8_n2LSGQ--fNW_bi1biGi6Cw4fyb=
+i7KhB7up9BWTZYXRO5lNvNZccB8cEju17BLw5OY7zb6hB9XXKguGLqvOVNGe6zdM-d3qLTy3Cay=
+4i2--VMGxg6_O6WOKOU01c4W5RW0_TRU9RuHFzI_iaG5lZvdSr6ZIA90ylvgIndza7vxFpCLKy0=
+qBbMfYIlFZY75fq9cLkzcUuiaGCSVAoIcdpE0djoMeP6YhaFyK0KHpPUF6Bb9RFuJXOGukl3xDH=
+IkXymoodFFd8z1TJI2r16_50ADuzliQKu0C94O7udSG4cJe5Q1xYcQXmhb_k-6Ew9qmrNf7RY3I=
+JhQlEzCU1aBWeAT22eENw4F0i-F4cFTiLKaV0rAzc39xc0i55u-nAkQaHoQ86FDo7VcNJuM3zuN=
+s2UWZV3FvN--rgLWOoIDEITJmYNm9tyQVPmpH-sPnDe921qrStAPSxe9l1HldVX5Rwp__9WQp_m=
+7g-J6njTXUuMdvtqyfwIR6gNbK7hBEy47JfAddgQNWAc8/f_Zem5dF339YgWUVXOaV69UYgVuvq=
+h1W/18" target=3D"_blank" style=3D"border-radius:10px"> <img height=3D"auto=
+" src=3D"https://seatgeek.com/images/marketing/crm/assets/baseball/email-he=
+ro/team-headers/miami-marlins.png" style=3D"height: auto; line-height: 100%=
+; -ms-interpolation-mode: bicubic; border: 0; display: block; outline: none=
+; text-decoration: none; width: 100%; color: #00A3E0; vertical-align: middl=
+e; font-family: 'DM Sans', Arial, sans-serif !important;" width=3D"100%" al=
+t=3D"Find MLB tickets here" class> </a> </td> </tr> </table> </td> </tr> <!=
+-- Hero Image: END --> <!-- Primary Headline: BEGIN --> <tr> <td align=3D"c=
+enter" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table=
+-rspace: 0pt; padding: 40px 40px 16px;" class=3D"mobile-padding"> <table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-collapse: co=
+llapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; max-width: 100%;" cla=
+ss=3D"headline-primary"> <tr> <td align=3D"center" style=3D"border-collapse=
+: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 48px; =
+font-weight: bold; line-height: 56px; text-align: center; color: #ffffff; f=
+ont-family: 'DM Sans', Arial, sans-serif !important;" class=3D"headline-pri=
+mary"> <a href=3D"https://links.seatgeek.com/a/sc/wJFr5qMZ05KtcLk2oxNwN_9FT=
+FoNlivz16XKpzz7NvrqifzyASaZBvl2JkGk5rY3dT1Wm6Pp5FF-FtnZHEm_tKE83oPN01J-WkyW=
+v_dhH3PnAJLV-aqVFXq5OtcbxZ0W3TuWrDwix2ogzHf48OpfwiE5Og34NHJHXak0zMm7Du8Ee0I=
+3jLP0ZtTv_cPiBD7M13hwnAIeCJVK53P7T_QyNHEJkRH05Wb9zHsp4AnsuP_Gkal_DU83wav2i3=
+5zOnyluTT81kFeztaFcYPaU1YuwugG7TRFK-JrySCCC_iJGKnhBEfndSb4mlk8SCJYGp1nplREI=
+VfmeeUtaubpzJcCwkA40MSe1DSLD6yiytd3IrVtY2YVDCak7fzFExXsVr-mLsT8Ael4GXlgU6_D=
+m0i1OBfj9PHb2znJVz7BAYNv-nURABv6tnqiT0hku7sIpZbLwSejjd_3mFunOemu5-de-OziXgK=
+V1UMfIaSDaJl4Mnwhgi0GFl6ia55djMnOpzUDsaJ3bEojVtlLPmzCvwYK7y5vAEsh5iKCO3KJpi=
+W-OuFA_v4/oSnxL1JdUjJkUhz8ROjgp2i3nEl9-Ou6/18" style=3D"text-decoration: no=
+ne; color: #FFFFFF"> Miami Marlins top promotions </a> </td> </tr> </table>=
+ </td> </tr> <!-- Primary Headline: END --> <!-- Copy Paragraph: BEGIN --> =
+<tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tab=
+le-rspace: 0pt; padding: 8px 40px; text-align: center;" class=3D"mobile-pad=
+ding" align=3D"center"> <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table=
+-rspace: 0pt; text-align: center;" width=3D"100%" align=3D"center"> <tr> <t=
+d style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; font-size: 20px; font-weight: 500; line-height: 28px; color: #F5F5=
+F4; text-align: center; font-family: 'DM Sans', Arial, sans-serif !importan=
+t;" align=3D"center">If you=E2=80=99re more into the bobbleheads than the b=
+aseball, these are some of the Marlins games you=E2=80=99re not gonna want =
+to miss. </td> </tr> </table> </td> </tr> <!-- Copy Paragraph: END --> <!--=
+ Spacer: BEGIN --> <tr><td style=3D"border-collapse: collapse; mso-table-ls=
+pace: 0pt; mso-table-rspace: 0pt; padding: 10px;">&nbsp;</td></tr> <!-- Spa=
+cer: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif=
+]--> </td> </tr> </table> </div> <!--[if mso | IE]></td> </tr> </table><![e=
+ndif]--> </div> <!-- Primary Section: END --> <!-- Secondary Section: BEGIN=
+ --> <div style=3D"background-color:#EAE7E1; border-collapse: separate;"> <=
+!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"width:600px;" width=3D"600" bgcolor=3D"#FFFFFF"> <t=
+r> <td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+" bgcolor=3D"#FFFFFF" width=3D"600"><![endif]--> <div style=3D"Margin:0px a=
+uto;max-width:600px;background-color:#FFFFFF; border-collapse: separate;" c=
+lass> <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D=
+"0" role=3D"presentation" style=3D"mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; width: 100%; border-collapse: separate;" class=3D"border-bottom" widt=
+h=3D"100%"> <!-- Upcoming Events: BEGIN --> <tr> <td style=3D"mso-table-lsp=
+ace: 0pt; mso-table-rspace: 0pt; direction: ltr; padding: 40px 40px; text-a=
+lign: center; vertical-align: middle; border-collapse: separate; border-bot=
+tom-left-radius: 12px; border-bottom-right-radius: 12px;" class=3D"border-b=
+ottom mobile-padding" align=3D"center" valign=3D"middle"> <!--[if mso | IE]=
+><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D=
+"0" bgcolor=3D"#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:600p=
+x;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-100 outloo=
+k-group-fix" style=3D"font-size:13px;text-align:left;direction:ltr;display:=
+inline-block;vertical-align:middle;width:100%;"> <table border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collaps=
+e: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: =
+middle; text-align: center;" width=3D"100%" valign=3D"middle" align=3D"cent=
+er"> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; font-weight: 700; font-size: 22px; line-height: 32px; =
+color: #181818; text-align: left; letter-spacing: .08px; padding-bottom: 12=
+px; font-family: 'DM Sans', Arial, sans-serif !important;" class align=3D"l=
+eft">Top promotions this season</td> </tr> <!-- Row: BEGIN --> <tr> <td sty=
+le=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0=
+pt; direction: ltr; font-size: 0px; text-align: center; vertical-align: mid=
+dle; padding-top: 12px; padding-bottom: 12px;" class=3D"performer-row" alig=
+n=3D"center" valign=3D"middle"> <!--[if mso | IE]><table role=3D"presentati=
+on" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#FFFFFF"> <=
+tr> <td style=3D"vertical-align:middle;width:100px;" bgcolor=3D"#FFFFFF"><!=
+[endif]--> <div class=3D"mj-column-per-15 outlook-group-fix" style=3D"font-=
+size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align=
+:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" role=3D"presentation" style=3D"border-collapse: collapse; mso-table-lspa=
+ce: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" hei=
+ght=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; =
+mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 12px; text-align: =
+left; padding: 0px 4px; border-bottom: 0 !important; cursor: default !impor=
+tant; text-decoration: none!important; font-family: 'DM Sans', Arial, sans-=
+serif !important;" class=3D"x-gmail-data-detectors" height align=3D"left"><=
+a href=3D"https://links.seatgeek.com/a/sc/Meu6JKO9_ctCVvyEMyGYBmzZo4w7wgy85=
+jr5nq70pkykO6yYNqEtfkJmd_ZbB63amBk3BRrCq9Hob8ZxHu09gYjWfJRoFtPJbM_VeD-bdGKw=
+NMpmv1RCkiZ3dYQLjIPPqyn0wOdAAUkucZ1hF5iizd9tfCccMjv8T6FXeBrdadpjNgJe66f4BW2=
+GeavUEZ8E9kCtMnSgOyfC0CutMzo10y-q4Ml2znll15Frz0HBs21WKNNMN1DFPfXkTjlXCNlv1X=
+NGacFU5VeaP4LxA63LC0k6AFLK2tCsJaFYj1WG35RR_tdpijzcMfHtwwmqIr7D4sZsNtuedoR1r=
+QA3DGOypidDnuAR_31FlTz4y94T8BbZgjOm7Vl30bIIRCbqZSvioh5uTEEFtcW-sDEQc12TsPgr=
+6N48vb8Xvwkn0vU5UJgNJsgqEb_LKNU_7RaxeWsifdXZwzH6ZvwTJ4i0cCzquKbLj9fsY3KT0pB=
+JshAE7Z6zhjvXZ-VkXdCtH-ZZVAPwUsrfHvFGCkqyC952pbRVIG2u-ikZLyWPS15PSK6gCyIoB3=
+rvf6_5/ACYfyH2SHnczz1Ub0IhYU3qLQDqrasox/18" target=3D"_blank" style=3D"colo=
+r: #181818; border-bottom: 0 !important; cursor: default !important; text-d=
+ecoration: none!important;" class=3D"event-date-small x-gmail-data-detector=
+s"><img src=3D"https://s3.amazonaws.com/uploads.seatgeek.com/content/images=
+/crm/assets/baseball/push-image/team-logos/colorado-rockies.png" alt=3D"" s=
+tyle=3D"border: 0; line-height: 100%; outline: none; -ms-interpolation-mode=
+: bicubic; width: 48px; height: 48px; border-radius: 10px; border-bottom: 0=
+ !important; cursor: default !important; text-decoration: none!important;" =
+width=3D"48" height=3D"48"></a></td> </tr> </table> </div> <!--[if mso | IE=
+]></td> <td style=3D"vertical-align:middle;width:300px;" bgcolor=3D"#FFFFFF=
+"><![endif]--> <div class=3D"mj-column-per-65 outlook-group-fix" style=3D"f=
+ont-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-a=
+lign:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%"=
+ height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collap=
+se; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-hei=
+ght: 24px; text-align: left; color: #181818; font-weight: 600; padding: 4px=
+; letter-spacing: 0.2px; width: 100%; border-bottom: 0 !important; cursor: =
+default !important; text-decoration: none!important; font-family: 'DM Sans'=
+, Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" width=3D"=
+100%" align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/5TT0XNroCfC=
+tCOflpvmh5QDprZ4HqINUJYGseF-ofq3kUf9AsqLCIbiDwhv6OXHwj2HsI2N6OYYyf1Zwnq-Lut=
+9KovZVF2zxqaJvJBN1kVSqhVKfzwBz7qbKJDqzJdzgHN_U-C_nJ4r7-Hl6WIrdxsBlvhAl1XQkM=
+D3ejpDCZVGaCu-MYH9mAhmfbph-UCo51b91ZM7UxtxOrcQ3vsoLjcoMsAs-f4usYk86AZy7ZlFf=
+kz8pjc2ri5hecGE4ZShXTL_--PiuMOfFrtWdiCAbatkX7K8IFVKLdHDYZmHVoBEgFBVSfpuWxjR=
+jTfqu6yQP-F_myoPC69p9f8Wy-xdHyR9AVQonER4MlnBOlUJOORpmucWrZv34nwp0fzE6uIXlF_=
+r8uPRQm29ZUGKjoqibE2aGjgWpZg6URPKn6CYgQnVKumbxMo6umsY_qawBgW1oBiemoNsvCggha=
+y_G_aLgDk_W8xtc6RjsviRIkBjVzXR43seWGM1uuANhVhXjMIp1NhpYXIp77rOkFm3rS0IqvHrF=
+jsIaKd53Bhr9_Dk/6IhjCWYpXfrOfvTYQVPCc7GUKtY8d9z_/18" target=3D"_blank" styl=
+e=3D"color: #181818; border-bottom: 0 !important; cursor: default !importan=
+t; text-decoration: none!important;" class=3D"event-date-small x-gmail-data=
+-detectors">vs Colorado Rockies</a><p style=3D"display: block; font-size: 1=
+5px; line-height: 20px; color: #525252; font-weight: 400; letter-spacing: .=
+24px; margin: 0; border-bottom: 0 !important; cursor: default !important; t=
+ext-decoration: none!important; font-family: 'DM Sans', Arial, sans-serif !=
+important;" class=3D"x-gmail-data-detectors">Fri, Mar 27<br style=3D"border=
+-bottom: 0 !important; cursor: default !important; text-decoration: none!im=
+portant;"><span style=3D"color: #11A669; font-size: 12; line-height: 16px; =
+font-weight: 700; border-bottom: 0 !important; cursor: default !important; =
+text-decoration: none!important;">Kyle Stowers Bobblehead &amp; Fireworks</=
+span></p> </td> </tr> </table> </div> <!--[if mso | IE]></td> <td style=3D"=
+vertical-align:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]--> <div c=
+lass=3D"mj-column-per-20 outlook-group-fix" style=3D"font-size:13px;text-al=
+ign:left;direction:ltr;display:inline-block;vertical-align:middle;width:100=
+%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presen=
+tation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" valign=
+=3D"middle"> <!-- Button: BEGIN --> <tr> <td align=3D"left" valign=3D"middl=
+e" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rsp=
+ace: 0pt; undefined: 0px;"> <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgcolor=3D"#=
+00A3E0"> <tr> <td style=3D"vertical-align:middle;" valign=3D"middle"><![end=
+if]--> <table align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" role=3D"presentation" style=3D"mso-table-lspace: 0pt; mso-table-rspace: =
+0pt; border-collapse: separate; width: 110px; line-height: 100%;" width=3D"=
+110"> <tr> <td align=3D"center" bgcolor=3D"#ffffff" role=3D"presentation" s=
+tyle=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; border-radius: 6px; border: solid 1px #DEDDDB; color: #DEDDDB; cursor=
+: auto; height: 36px;" valign=3D"middle" class=3D"button-secondary" height=
+=3D"36"> <a href=3D"https://links.seatgeek.com/a/sc/vuD3GwcE8QuYP64fqqNvEHW=
+iaRDHGKA6lq4dc2LqALNaj1_98f0nZMcEvEnC7G-UGIYsFkgbPuYnTFs0AwqxBOF6Ur_-D2JsbL=
+Ah5kgY4r87njUDNVDvIYtd72mYYINUH7D8NJ-zB_R_a_JTabcXIAPYPPvyaUP769otDGybDJ-sC=
+K7dLtKcpd99GZLGo5v78a5Mku3XctdHBVGnODtdo9FiyvPy0bbELdld9dga4hm2gSimDCwNpU1g=
+SkWz1cdyNnKsle8gwNqLrwA_UUQm1L7lpOQ_G7CO0HgJPvB3XHujla2NtJr9wvXXSJcKqIyg20G=
+TUbUFv4VD5bkUHRn-V3fvSlO_01rEmFL5a6zWplShKhYHZW7IZGe-2Uv_84gpdO08pr4A_OKzf2=
+K8Rq1wafsn4Q-yG80jeXOO9QT7h8UtWvq2xxtMZrPsfm9039m7dLg31BjN7dNsToSVgZ2s_XeW9=
+pMwImiRtyqT8zQ4MeKgbX9B5gIrLGdi2bBMJ66IDzPTqbCTLhGo1EqlYS3QV8nQj3e-qhu7A6W_=
+F90/oc3rQJJxd4ELxgwG6g3sXvAeTH-gc5K2/18" target=3D"_blank" style=3D"text-de=
+coration: none; background: #ffffff; color: #000000; font-size: 14px; font-=
+weight: 600; line-height: 20px; text-decoration: none; text-transform: none=
+; letter-spacing: .28px; vertical-align: middle; display: block; font-famil=
+y: 'DM Sans', Arial, sans-serif !important;" class=3D"button-secondary"> Se=
+e tickets </a> </td> </tr> </table> <!--[if mso | IE]></td> </tr> </table><=
+![endif]--> </td> </tr> <!-- Button: END --> </table> </div> <!--[if mso | =
+IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Row: END --> <!-- Row=
+: BEGIN --> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace: =
+0pt; mso-table-rspace: 0pt; direction: ltr; font-size: 0px; text-align: cen=
+ter; vertical-align: middle; padding-top: 12px; padding-bottom: 12px;" clas=
+s=3D"performer-row" align=3D"center" valign=3D"middle"> <!--[if mso | IE]><=
+table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0=
+" bgcolor=3D"#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:400px;=
+" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-15 outlook-g=
+roup-fix" style=3D"font-size:13px;text-align:left;direction:ltr;display:inl=
+ine-block;vertical-align:middle;width:100%;"> <table border=3D"0" cellpaddi=
+ng=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse: =
+collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: mid=
+dle;" width=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"bor=
+der-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-=
+size: 12px; text-align: left; padding: 0px 4px; border-bottom: 0 !important=
+; cursor: default !important; text-decoration: none!important; font-family:=
+ 'DM Sans', Arial, sans-serif !important;" class=3D"x-gmail-data-detectors"=
+ height align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/0s4T6W62y=
+3ycge-6-eaxR6lypG3J_bBnQI0j6C99u7BibF_ZV1OGXMZSE1I60O-YUX0SawJWmxta2OxyKoI8=
+9P0uqoB3qlYHGlGZ96PO2dm7LweiaStgD275hGfQCMBgfMEQGFEUJb3Dv7kOJoIB81FPJdoN6iY=
+8hHZPxlxCgYyvKi1OzclQhOB_unq61tBPvBPvQA3mTSBg6N_4DaUoS60LhxyGPJ2ap3e67ohMlu=
+c2kfGhuKphzcEOKJLTkjyvQnAXQvvAv7QIk0qijdCTNTWt3LjU2cuiG6MEvi-9FkJM52bVMptQh=
+GF2mxNCAk9pI3OMJWBNkSCMBDV6stZDTcBGFVmTATdxicXzDPY0c4vz7T0QANGBtNLy8dcMnlN3=
+vqVnbJRMzsZxlnF4SWg6dEMJ1EDpylFAoyNlhx3ITFiZ0hBWYpdswYa1JwT7EiT6IpZckYSW44O=
+r_oDAIEGlcQrPIYbDbzHHosS-y8aqFQC0JNdugImkCanUP4jVPfUX6xPaMKIrlf_8BarPTvKWQL=
+e7l6zsqSnLmpzX7k-hkfcO_hNe1oQC/ZiHPvw30dSZItOtUK5zJW8oG5Ma8NZrY/18" target=
+=3D"_blank" style=3D"color: #181818; border-bottom: 0 !important; cursor: d=
+efault !important; text-decoration: none!important;" class=3D"event-date-sm=
+all x-gmail-data-detectors"><img src=3D"https://s3.amazonaws.com/uploads.se=
+atgeek.com/content/images/crm/assets/baseball/push-image/team-logos/philade=
+lphia-phillies.png" alt=3D"" style=3D"border: 0; line-height: 100%; outline=
+: none; -ms-interpolation-mode: bicubic; width: 48px; height: 48px; border-=
+radius: 10px; border-bottom: 0 !important; cursor: default !important; text=
+-decoration: none!important;" width=3D"48" height=3D"48"></a></td> </tr> </=
+table> </div> <div class=3D"mj-column-per-65 outlook-group-fix" style=3D"fo=
+nt-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-al=
+ign:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%"=
+ height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collap=
+se; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-hei=
+ght: 24px; text-align: left; color: #181818; font-weight: 600; padding: 4px=
+; letter-spacing: 0.2px; width: 100%; border-bottom: 0 !important; cursor: =
+default !important; text-decoration: none!important; font-family: 'DM Sans'=
+, Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" width=3D"=
+100%" align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/paTmHjseLj7=
+KY3VQcoyWNn2mnF2PEbWX6e0FJdNKx_7Z_HWwME2bm6G-N5pifVkK2PjAeTxLxHY6SzXKL4vdPk=
+XLhuQjXIeGh2LLKTRdhwr2RouQ4wUNaPBXGRgSuuIkWxVgh3wrIjXtULb4cSTD6DjdWppzzdH-V=
+RNCoV5siy2spkl2g9T50lFOC-RdI7y9xOPWD36L22XsnxIVBzIWBSlD5xFTnOgVcUaFr-W8l1kC=
+gHe0KcII_fjiYKwYbhKqfteNF8N4mBhmch1TMcilSX2-_aleiM9XTwbUiHrujJqocBMOFDLoIoH=
+kXY7NNfjI9vRYU63LeOFassR5xwzIPMP-zZvyPQjeaa7OuM2a0bdqoX7qD-QPgIzBswh62uIX4P=
+ZDyZbL-z7rcVJwFa24V_UPA5pPTNs22VM7TCoXmvMIUN7aZK4XDAmK-hZiojRipObhxeVNrzrEP=
+chYfpUPtWVcK0moAOf_Sc2wzhqwwTKioE4ujBP928AMbxAXrsKh6ijjbULs0qYoAgViypASIQHj=
+ihybvuVVaZKPKtY/loamVozskxX0ncYA1XBiUx5O5d1o_5Bo/18" target=3D"_blank" styl=
+e=3D"color: #181818; border-bottom: 0 !important; cursor: default !importan=
+t; text-decoration: none!important;" class=3D"event-date-small x-gmail-data=
+-detectors">vs Philadelphia Phillies</a><p style=3D"display: block; font-si=
+ze: 15px; line-height: 20px; color: #525252; font-weight: 400; letter-spaci=
+ng: .24px; margin: 0; border-bottom: 0 !important; cursor: default !importa=
+nt; text-decoration: none!important; font-family: 'DM Sans', Arial, sans-se=
+rif !important;" class=3D"x-gmail-data-detectors">Sun, May 3<br style=3D"bo=
+rder-bottom: 0 !important; cursor: default !important; text-decoration: non=
+e!important;"><span style=3D"color: #11A669; font-size: 12; line-height: 16=
+px; font-weight: 700; border-bottom: 0 !important; cursor: default !importa=
+nt; text-decoration: none!important;">Marlins Captain&#x27;s Hat</span></p>=
+ </td> </tr> </table> </div> <!--[if mso | IE]></td> <td style=3D"vertical-=
+align:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"m=
+j-column-per-20 outlook-group-fix" style=3D"font-size:13px;text-align:left;=
+direction:ltr;display:inline-block;vertical-align:middle;width:100%;"> <tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" s=
+tyle=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" valign=3D"middl=
+e"> <!-- Button: BEGIN --> <tr> <td align=3D"left" valign=3D"middle" style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; undefined: 0px;"> <!--[if mso | IE]><table role=3D"presentation" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0=
+"> <tr> <td style=3D"vertical-align:middle;" valign=3D"middle"><![endif]-->=
+ <table align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" rol=
+e=3D"presentation" style=3D"mso-table-lspace: 0pt; mso-table-rspace: 0pt; b=
+order-collapse: separate; width: 110px; line-height: 100%;" width=3D"110"> =
+<tr> <td align=3D"center" bgcolor=3D"#ffffff" role=3D"presentation" style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; border-radius: 6px; border: solid 1px #DEDDDB; color: #DEDDDB; cursor: au=
+to; height: 36px;" valign=3D"middle" class=3D"button-secondary" height=3D"3=
+6"> <a href=3D"https://links.seatgeek.com/a/sc/_XRtaZtTENgJKBIYhJQdekQbqeiw=
+YP3qc_PXwLfMeljwaZbWUcYL57IqWEkP2bnvfMQPfUeALWN4ctqRpsxkgxzoU1EGGX8RWO8mutH=
+eD22RMNSv02CGMuY7Xi0Gl6yUVW08BDTlFj4g_beZxfRzj7e9yytNi6kTj9Jb9Xp0BVmwSaqlCO=
+AwVANkxq8eE9-Fk8sy6Ilrl_wiMywyRJuNP95F7AVcJ9f6fRx0e5HkXjGgArQ0YFGlEdGw3E01x=
+YO4bqYnyu_mHWmhJUgTyulP63zIx6Zr0hheN8lVtP8dtfogskmtRkoB3kKB4LI-Q1JIW3BK4TZp=
+-LlHAsJLv_tE-od16ZALGBnurzIaX8MFoW5hKcGPaca4OPA1hsLwTWJxPQZ8h22gMFEj4eailot=
+g278nfUzKGGXFsBhd1YLn98eQy_54qiBulyXLCeX-BlzcMh94IIGdGC1PpPrj2Fm-d_INhHpb9l=
+yY9gGXYE9UYOrKxaTiHcYA01YF3UKWwmdwGeAJJqToThEiGytkH79oHXaTyvHTq6GuiMO_12Q/c=
+MhxzKSLbS7_QayyX8MaPCFfVuxVynMJ/18" target=3D"_blank" style=3D"text-decorat=
+ion: none; background: #ffffff; color: #000000; font-size: 14px; font-weigh=
+t: 600; line-height: 20px; text-decoration: none; text-transform: none; let=
+ter-spacing: .28px; vertical-align: middle; display: block; font-family: 'D=
+M Sans', Arial, sans-serif !important;" class=3D"button-secondary"> See tic=
+kets </a> </td> </tr> </table> <!--[if mso | IE]></td> </tr> </table><![end=
+if]--> </td> </tr> <!-- Button: END --> </table> </div> <!--[if mso | IE]><=
+/td> </tr> </table><![endif]--> </td> </tr> <!-- Row: END --> <!-- Row: BEG=
+IN --> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; direction: ltr; font-size: 0px; text-align: center; =
+vertical-align: middle; padding-top: 12px; padding-bottom: 12px;" class=3D"=
+performer-row" align=3D"center" valign=3D"middle"> <!--[if mso | IE]><table=
+ role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgc=
+olor=3D"#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:400px;" bgc=
+olor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-15 outlook-group-=
+fix" style=3D"font-size:13px;text-align:left;direction:ltr;display:inline-b=
+lock;vertical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse: colla=
+pse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;"=
+ width=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-c=
+ollapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size:=
+ 12px; text-align: left; padding: 0px 4px; border-bottom: 0 !important; cur=
+sor: default !important; text-decoration: none!important; font-family: 'DM =
+Sans', Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" heig=
+ht align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/cqHM2a5nJKsOnq=
+7MHJWVXZlMuePx1BBEV74r0r8IgBhR17-JMoVZ5Ql9y0IdNKqTYOpfS9CmwcBD5azA6Oo4N3IgG=
+CplY8lfB27IeBtZG3zeUfAIsPYWGElam55e5h3Z3rgNFWvR73DveoaZANOlhStcTmPc30r_QQ4-=
+vJAOc5_hYf-Hxb-hILh-MeTpXChTjH5Wz5euZbIaVAKL_2ZPO8eEyklDJTlop193j46ru8lDp05=
+MJZNZFqcVGC0AWiLu-vAAnRqCxq5ZHt0AQowtL9-Noi57W6sOFQqkV9NldVkkNvbjgQVyeFQnXP=
+XqgqbJpMJhj-9S4j_C-o4Xh1y-r-GMYujC4ymr-azxYZ0jr3Im0A5Jr26NRIt3mCpQliyj5fdgp=
+xcuor-K8CxcdTcRvOtZEoOHBOmuCrSL7jgEfgS4caJsnSsdy-OqogRKePisBrbqF15VlTCV4sVz=
+YSLSsX1XiFxp_aIaIBHyifLt91RYXxZBL_A-9RxqrWYOmBvGq1QKLUQzsnkjuqxYkwPuzHhvi3u=
+WJ7GxRVPH_e7BwbPO19NXkyctLA/_dDF0nbLa4UIO7-PCGjFgKHP3LihLCmU/18" target=3D"=
+_blank" style=3D"color: #181818; border-bottom: 0 !important; cursor: defau=
+lt !important; text-decoration: none!important;" class=3D"event-date-small =
+x-gmail-data-detectors"><img src=3D"https://s3.amazonaws.com/uploads.seatge=
+ek.com/content/images/crm/assets/baseball/push-image/team-logos/san-diego-p=
+adres.png" alt=3D"" style=3D"border: 0; line-height: 100%; outline: none; -=
+ms-interpolation-mode: bicubic; width: 48px; height: 48px; border-radius: 1=
+0px; border-bottom: 0 !important; cursor: default !important; text-decorati=
+on: none!important;" width=3D"48" height=3D"48"></a></td> </tr> </table> </=
+div> <div class=3D"mj-column-per-65 outlook-group-fix" style=3D"font-size:1=
+3px;text-align:left;direction:ltr;display:inline-block;vertical-align:middl=
+e;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" rol=
+e=3D"presentation" style=3D"border-collapse: collapse; mso-table-lspace: 0p=
+t; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D=
+"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso-ta=
+ble-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-height: 24px;=
+ text-align: left; color: #181818; font-weight: 600; padding: 4px; letter-s=
+pacing: 0.2px; width: 100%; border-bottom: 0 !important; cursor: default !i=
+mportant; text-decoration: none!important; font-family: 'DM Sans', Arial, s=
+ans-serif !important;" class=3D"x-gmail-data-detectors" width=3D"100%" alig=
+n=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/YBnCcIVZHktLUuWx8sLzs=
+U1mkKsHi_v1T1Tu5K4uKFhub1J8vTrM3lmH9QNfz7a-UWeA84h9y7-UeSiaQh0bgmdgaaul5bC2=
+f9v4mGsJoMyJkUcMiSz1UKOlEwHShypMrzy6by6wDx6AE84-jDrzSYfBgwN0XqkDL-8L48J8PJL=
+HkgDmmfuxVI_XigdflHMZ5FT5fNV5GLlPHqRbcz1UEHiaX7za0lAi83GoPs6CunPy8NJRm51ff2=
+qjL0vbNPRvt2A2szn4ZjvzvqTD7_VEQxtxsMWLOi_QE7k4Ui0jVLN9QN_mVtH51yIHRHVQL5alV=
+txJ3gRyIRRhqdvaAOuwy7mwEiTM-F9RP1wpIjrTNm5kKl92JStkcLn6GTpUA7gpGQsJyMUrr8i5=
+gZ2xQNqU0s0WH-Nqf8runLtxkBlaznD7Rsj9oX2469eMspwl1OU54U8X1DlSV8DI2C-gAFVRgLP=
+ovk2xabWbGVXe-fA27H9dS_JltWtxI57IYw7dGz2Dk4kAMTp-qvYZta5-pBRMgcJKyPHZZScUNb=
+uVzdS_/MRo5hC9Epi4_QY04pRWPf4gyUvOdPEel/18" target=3D"_blank" style=3D"colo=
+r: #181818; border-bottom: 0 !important; cursor: default !important; text-d=
+ecoration: none!important;" class=3D"event-date-small x-gmail-data-detector=
+s">vs San Diego Padres</a><p style=3D"display: block; font-size: 15px; line=
+-height: 20px; color: #525252; font-weight: 400; letter-spacing: .24px; mar=
+gin: 0; border-bottom: 0 !important; cursor: default !important; text-decor=
+ation: none!important; font-family: 'DM Sans', Arial, sans-serif !important=
+;" class=3D"x-gmail-data-detectors">Sun, Jul 26<br style=3D"border-bottom: =
+0 !important; cursor: default !important; text-decoration: none!important;"=
+><span style=3D"color: #11A669; font-size: 12; line-height: 16px; font-weig=
+ht: 700; border-bottom: 0 !important; cursor: default !important; text-deco=
+ration: none!important;">Javier Sanoja Gold Glove Bobblehead</span></p> </t=
+d> </tr> </table> </div> <!--[if mso | IE]></td> <td style=3D"vertical-alig=
+n:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-co=
+lumn-per-20 outlook-group-fix" style=3D"font-size:13px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:middle;width:100%;"> <table b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; vertical-align: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> =
+<!-- Button: BEGIN --> <tr> <td align=3D"left" valign=3D"middle" style=3D"b=
+order-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; und=
+efined: 0px;"> <!--[if mso | IE]><table role=3D"presentation" border=3D"0" =
+cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr>=
+ <td style=3D"vertical-align:middle;" valign=3D"middle"><![endif]--> <table=
+ align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pr=
+esentation" style=3D"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-c=
+ollapse: separate; width: 110px; line-height: 100%;" width=3D"110"> <tr> <t=
+d align=3D"center" bgcolor=3D"#ffffff" role=3D"presentation" style=3D"borde=
+r-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-=
+radius: 6px; border: solid 1px #DEDDDB; color: #DEDDDB; cursor: auto; heigh=
+t: 36px;" valign=3D"middle" class=3D"button-secondary" height=3D"36"> <a hr=
+ef=3D"https://links.seatgeek.com/a/sc/nR0Z9qPReoUVI3un9REbLnvmyozir19o7id6d=
+MZNCaT_kgVyf0Zp-PsXeimMhjicA7A2cE1JzfFchOizchXTbSXYHuPhdUVSbjMrpxMyBMAoabnn=
+PPrgx9bnkOWtEj2KHRicZ0HDLZS4-hvXEAje9kehrnCW-Z4hhadKJdZQoLNS6K1j_Ye5czAh_a2=
+4R-Mdwt9BFdzfhUzi5q3rXPV3O7fw9vFouU0gGzE-VPJxGxkQZP4YelXGG3s5U3JdY3--MKu5XI=
+WQOMGsX16_FZ9RBNkHgEBopDN0kK9BJ-dEdxd70ZHBG9MFHte56eJ3bAT93YziMYqfRGxde9XmV=
+oIcFTS1Y6bt4aXW7HmIpgyxsoT4jVaJyJd4u1-ziHtVrdFxdg6gssWXOAUPikxQam3iqVPBqdHs=
+bzFZC-9_B31H0e6dUlD22tEISNVCdbL8hl4JAsUUl8WX8pzgfNZgFcAXekNDvG7w1bH0Pk4ZWz0=
+vZSRzd-yAbWqn-fXmaxGbMPL1sZbVDO1cR45zd6UEBzZnCa2FEEDjiKt09JioKc-w/81miVGF4A=
+Dbfs2NTEWiwc1knWJeuQxk-/18" target=3D"_blank" style=3D"text-decoration: non=
+e; background: #ffffff; color: #000000; font-size: 14px; font-weight: 600; =
+line-height: 20px; text-decoration: none; text-transform: none; letter-spac=
+ing: .28px; vertical-align: middle; display: block; font-family: 'DM Sans',=
+ Arial, sans-serif !important;" class=3D"button-secondary"> See tickets </a=
+> </td> </tr> </table> <!--[if mso | IE]></td> </tr> </table><![endif]--> <=
+/td> </tr> <!-- Button: END --> </table> </div> <!--[if mso | IE]></td> </t=
+r> </table><![endif]--> </td> </tr> <!-- Row: END --> <!-- Row: BEGIN --> <=
+tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; direction: ltr; font-size: 0px; text-align: center; vertical=
+-align: middle; padding-top: 12px; padding-bottom: 12px;" class=3D"performe=
+r-row" align=3D"center" valign=3D"middle"> <!--[if mso | IE]><table role=3D=
+"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"=
+#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:400px;" bgcolor=3D"=
+#FFFFFF"><![endif]--> <div class=3D"mj-column-per-15 outlook-group-fix" sty=
+le=3D"font-size:13px;text-align:left;direction:ltr;display:inline-block;ver=
+tical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=
+=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collaps=
+e: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 12px;=
+ text-align: left; padding: 0px 4px; border-bottom: 0 !important; cursor: d=
+efault !important; text-decoration: none!important; font-family: 'DM Sans',=
+ Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" height ali=
+gn=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/xyy1TqmmOOiXta3op_Xc=
+SGAHeRSh8AyJWLtpM7xI5yj6KSncxOPPG4VP-7wSHpNL-9a2aP-d2tHXy58hEQXuN-r8lJziFOb=
+N0aei28cwG4xak9tHKoTi65qlE7RkPswVNktmpXKwoYfjuY-Q-f3oLC7nUew_xSX1_6VQT7jwrq=
+Dd6mqkdeCNjhvo4LvpUmsoHhh7_rvdrE5YRHWqyk1KipI8Fpc8dxbUrb6IOVrhWSUB1Mg5hroUO=
+TGMJcBNiEieAVbxjhuL8mI0EX1SH804-SiMWutKsbCPYaIblaWfvPK2UZFOBB34CUk11ZeNV9nf=
+-frN_qMYU_-aphF-jV-_T0jVZMWADS6mVt7bopqapsLUox_cpcOqgvOAYIdX7Ehj2p-r8qFM9F3=
+xD8OAIUyX_qZP3A-FqKq6w6VmPkK7wxI5IYtEejJlQdGJeF3umsSgKrAlMSW9N9Cy6VmwlMTfR6=
+3HuUclyi9AXc8z6JfT1Jjz1__RSMJSx2Qx2Kaubaa4E3vQL1zrJl_mT9sRo3naViFBU8chq7j46=
+Apg06r8N1azidn8tBSz-Q/Wm5r31ADZr4INjiIgy8hIyDlZ-BQGLgW/18" target=3D"_blank=
+" style=3D"color: #181818; border-bottom: 0 !important; cursor: default !im=
+portant; text-decoration: none!important;" class=3D"event-date-small x-gmai=
+l-data-detectors"><img src=3D"https://s3.amazonaws.com/uploads.seatgeek.com=
+/content/images/crm/assets/baseball/push-image/team-logos/san-francisco-gia=
+nts.png" alt=3D"" style=3D"border: 0; line-height: 100%; outline: none; -ms=
+-interpolation-mode: bicubic; width: 48px; height: 48px; border-radius: 10p=
+x; border-bottom: 0 !important; cursor: default !important; text-decoration=
+: none!important;" width=3D"48" height=3D"48"></a></td> </tr> </table> </di=
+v> <div class=3D"mj-column-per-65 outlook-group-fix" style=3D"font-size:13p=
+x;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;=
+width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt=
+; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"=
+46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso-tab=
+le-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-height: 24px; =
+text-align: left; color: #181818; font-weight: 600; padding: 4px; letter-sp=
+acing: 0.2px; width: 100%; border-bottom: 0 !important; cursor: default !im=
+portant; text-decoration: none!important; font-family: 'DM Sans', Arial, sa=
+ns-serif !important;" class=3D"x-gmail-data-detectors" width=3D"100%" align=
+=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/BH8rJNTBQT7pzYdplW5ino=
+_fxsprbXSuWS5rOXiF5CyFY07HPITnZmiTRmP7jX_2pd3kS3JJe6dm19394Gm8oB1Ioj9ysglv3=
+7H0OP4gGTvO8nrC4Zweau3OSFHNE7EDUsgqxG0Jz-iX4Mn81KgwbLLqPqiwcs9dN0F62UM60jdC=
+PI9FeFogfraGbBKYUkyVpo9ezfXHqArBa3ERZmBbk3wg72zr2AnmR2NSLLH_-Mh8plxF2pBgsb5=
+cDtHhfSkfZnH_7p6W7G0YRXsa36jRMIuLjUdFul4UFzgzP8E359q3eqAQxUmscPkJhtFxhabtzG=
+5KgeTj9xklHwxXNeOLwT9vkC46qSjSQPOq_3BfNLF3u10yZX7PBD7piDfOS_iPBQ6ZMdssEi6xY=
+Ik2MA4N5H8KCl7zR1J0BKWTpYe0QjsFZUiJOkxtY3OJt_fzb4qlkUqGoswMdemyL8Adu2GvCswM=
+oe9Th0QF4YHDKIhLokWabaQFXTjsA_e1qmRGEodB2r5pzoaU5B98VygxPpwopXw20Uc5GpFxOUF=
+Od1Tx/tmyHlRFAU-lln2Wngh-5aVhMsTAje-9e/18" target=3D"_blank" style=3D"color=
+: #181818; border-bottom: 0 !important; cursor: default !important; text-de=
+coration: none!important;" class=3D"event-date-small x-gmail-data-detectors=
+">vs San Francisco Giants</a><p style=3D"display: block; font-size: 15px; l=
+ine-height: 20px; color: #525252; font-weight: 400; letter-spacing: .24px; =
+margin: 0; border-bottom: 0 !important; cursor: default !important; text-de=
+coration: none!important; font-family: 'DM Sans', Arial, sans-serif !import=
+ant;" class=3D"x-gmail-data-detectors">Sun, Jun 21<br style=3D"border-botto=
+m: 0 !important; cursor: default !important; text-decoration: none!importan=
+t;"><span style=3D"color: #11A669; font-size: 12; line-height: 16px; font-w=
+eight: 700; border-bottom: 0 !important; cursor: default !important; text-d=
+ecoration: none!important;">Marlins Rope Hat</span></p> </td> </tr> </table=
+> </div> <!--[if mso | IE]></td> <td style=3D"vertical-align:middle;width:2=
+00px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-20 outl=
+ook-group-fix" style=3D"font-size:13px;text-align:left;direction:ltr;displa=
+y:inline-block;vertical-align:middle;width:100%;"> <table border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-colla=
+pse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align=
+: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> <!-- Button: BEG=
+IN --> <tr> <td align=3D"left" valign=3D"middle" style=3D"border-collapse: =
+collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; undefined: 0px;"> <=
+!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr> <td style=3D"ve=
+rtical-align:middle;" valign=3D"middle"><![endif]--> <table align=3D"left" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" styl=
+e=3D"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: separat=
+e; width: 110px; line-height: 100%;" width=3D"110"> <tr> <td align=3D"cente=
+r" bgcolor=3D"#ffffff" role=3D"presentation" style=3D"border-collapse: coll=
+apse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 6px; bor=
+der: solid 1px #DEDDDB; color: #DEDDDB; cursor: auto; height: 36px;" valign=
+=3D"middle" class=3D"button-secondary" height=3D"36"> <a href=3D"https://li=
+nks.seatgeek.com/a/sc/8MuVx8djp4Nx9c0bt60vyGVV_ogUaAFXNtSkXyyEv9YgF5AYqC3H9=
+ULRGSQ42KC4g0ja1qjm-33WyWet9UU1HoQyR-xVN7cTBDK30r8NRE0thDZNK-9m95UXtfyBAuDy=
+3VXXAj7Du2lYxMC6KrnKh2T-jmENGkpxSSbiFMk9G-7CaCcZDrq5pxrxo9MDJYVFGmIJNaCHBV7=
+LcmscJaAF1KHxQk7n68dg-f1W7l2z22MOd6K4LqlmHoJKcFW9E82mZ_7f5_knNxVGCPaBn9w123=
+Z0Y9SV-en1amw35f-Q-mVyc2wbidsFmnta8rlahBTU4wGyCuL6XWMw5lj0sgvYrmygK6Teo6VCl=
+hIjCjtxBy7BRbYUh0AHqgdcQdzqOrxrgcRCyFXsWSWSxw3WScT0MT-bZqqbRgkimAF7tKevx6Ja=
+MZqopZ5qFFXvXw3EwRccubkHRqSBsAFPi0ReGreJhYrT5MvJ08d7Lggw5tJn1eOAN88FPD-xfhi=
+DGS9ktYrrz4lxdPXNEJWVmfi4e9nF9reXc6qBB-obZZhDgo3d/urfvFlFYsyqgfFK_Ua6UxXkzc=
+A1ckD1e/18" target=3D"_blank" style=3D"text-decoration: none; background: #=
+ffffff; color: #000000; font-size: 14px; font-weight: 600; line-height: 20p=
+x; text-decoration: none; text-transform: none; letter-spacing: .28px; vert=
+ical-align: middle; display: block; font-family: 'DM Sans', Arial, sans-ser=
+if !important;" class=3D"button-secondary"> See tickets </a> </td> </tr> </=
+table> <!--[if mso | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- =
+Button: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![en=
+dif]--> </td> </tr> <!-- Row: END --> <!-- Row: BEGIN --> <tr> <td style=3D=
+"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; d=
+irection: ltr; font-size: 0px; text-align: center; vertical-align: middle; =
+padding-top: 12px; padding-bottom: 12px;" class=3D"performer-row" align=3D"=
+center" valign=3D"middle"> <!--[if mso | IE]><table role=3D"presentation" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#FFFFFF"> <tr> <=
+td style=3D"vertical-align:middle;width:400px;" bgcolor=3D"#FFFFFF"><![endi=
+f]--> <div class=3D"mj-column-per-15 outlook-group-fix" style=3D"font-size:=
+13px;text-align:left;direction:ltr;display:inline-block;vertical-align:midd=
+le;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"border-collapse: collapse; mso-table-lspace: 0=
+pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=
+=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 12px; text-align: lef=
+t; padding: 0px 4px; border-bottom: 0 !important; cursor: default !importan=
+t; text-decoration: none!important; font-family: 'DM Sans', Arial, sans-ser=
+if !important;" class=3D"x-gmail-data-detectors" height align=3D"left"><a h=
+ref=3D"https://links.seatgeek.com/a/sc/C_2nri2d8A3vPxecDhbJfewdpz0vfZ7gu-NO=
+1HwijWjFoDhqZSgQsB6DhPuHaezvYdwYsgCDD3D4UziByCic3ybGtZBgURcpJzrjoROCQSSHP-x=
+zXN3PY_xhnEFdnH2LkNsduGvluHIc5bq7CRB1gtnZ6wJlyjP7fc1q3lG3okQkyDhCDR-yXTGfVN=
+Fv-L2gxuOsA911UOcFr5dNxH1K_qYroGFQFFkSu_b0CNzNvRYr7_CvTle8n5Zt5m_Bs9Tc2-hYy=
+kII_3rNtDwj4ELLO6V3vaX1E_BqMfLU6HeKBwoxu2uz1hbQQLt0j5SVIeV4NvN2AtyCQ1KPNrSB=
+l62n7WDQG8vQ7gmzAGOleiLEMs9rOlRCdStb5A8R0NcK10FCeHZ0Mu3SYyqFgoPY3rmkfwa43ff=
+V14kLm26ut87ZA1h-KVIQ7nNoToe_VAWAA4rlQyiUwUPEulJewMmhECIWrqMWUoGhUOxmufKpbB=
+8mZ2aD4sN-qUuthDNYbQ3S5tCBea_4rJ_-aoxS0Rd6QjrtwSzfCu0ijtUIqkhgydgoyTUz24hLw=
+EnPIg/0n4cqRJgcSLgjAoq-mFdHmP1PWVJb5Rq/18" target=3D"_blank" style=3D"color=
+: #181818; border-bottom: 0 !important; cursor: default !important; text-de=
+coration: none!important;" class=3D"event-date-small x-gmail-data-detectors=
+"><img src=3D"https://s3.amazonaws.com/uploads.seatgeek.com/content/images/=
+crm/assets/baseball/push-image/team-logos/washington-nationals.png" alt=3D"=
+" style=3D"border: 0; line-height: 100%; outline: none; -ms-interpolation-m=
+ode: bicubic; width: 48px; height: 48px; border-radius: 10px; border-bottom=
+: 0 !important; cursor: default !important; text-decoration: none!important=
+;" width=3D"48" height=3D"48"></a></td> </tr> </table> </div> <div class=3D=
+"mj-column-per-65 outlook-group-fix" style=3D"font-size:13px;text-align:lef=
+t;direction:ltr;display:inline-block;vertical-align:middle;width:100%;"> <t=
+able border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"=
+ style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspac=
+e: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" valign=3D"mid=
+dle"> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; m=
+so-table-rspace: 0pt; font-size: 17px; line-height: 24px; text-align: left;=
+ color: #181818; font-weight: 600; padding: 4px; letter-spacing: 0.2px; wid=
+th: 100%; border-bottom: 0 !important; cursor: default !important; text-dec=
+oration: none!important; font-family: 'DM Sans', Arial, sans-serif !importa=
+nt;" class=3D"x-gmail-data-detectors" width=3D"100%" align=3D"left"><a href=
+=3D"https://links.seatgeek.com/a/sc/PQ2ApMdVgyNCfRVn9pvv5WUfl9pOBtBv2D_0_vQ=
+5B7p10_DNUpKDztPSSb5moRgwkw3tdMQ6kF0Q8WSbDkPm7AyJtYOsSYKLav7kl23qqS-Z5tZcIo=
+NqY-U-vVr36eSw0uTu_GxVLZBFiGO9FJQLrPN6RudXiAJ8JvOSkj3-RRImxkbnDaQC3jV3Lgxtk=
+I9Yfz92bJNj_rJJuPM-BlBeSHqt6rOg-E1Bx5ztbaarcr7cZo0bR4wqfOBbeFUW5_MvE-F6vmQG=
+EcqKxoJCA3RjVYbHUbw0GXDHng7-ID22VftPv6KU02a4R6Cmbv-ve0XH_aowxW-Gk3R-W4It96R=
+HTlrRaopS6SuNfc2QJvW98_3MCPm0W8O9Olk5waDit9aAgGdu-vTtZdwfxOd2GOpJzpmUF3onZo=
+2MnA8L1NWWii1QpW6S-H1gUW8g_p-sw-iLY50Kb4nhwBqS82WHYZIpIE2qbol1pRhjcgdLAYhb_=
+H9VUNFil10O20uprQQio5tG3MXPjPfzn94pp_Uu_hi3pBTXAyaSe7N6it4eTxez/eQAbqZ5zwHK=
+8ZmTV6GMsr5faG_jIZhgY/18" target=3D"_blank" style=3D"color: #181818; border=
+-bottom: 0 !important; cursor: default !important; text-decoration: none!im=
+portant;" class=3D"event-date-small x-gmail-data-detectors">vs Washington N=
+ationals</a><p style=3D"display: block; font-size: 15px; line-height: 20px;=
+ color: #525252; font-weight: 400; letter-spacing: .24px; margin: 0; border=
+-bottom: 0 !important; cursor: default !important; text-decoration: none!im=
+portant; font-family: 'DM Sans', Arial, sans-serif !important;" class=3D"x-=
+gmail-data-detectors">Sun, Aug 23<br style=3D"border-bottom: 0 !important; =
+cursor: default !important; text-decoration: none!important;"><span style=
+=3D"color: #11A669; font-size: 12; line-height: 16px; font-weight: 700; bor=
+der-bottom: 0 !important; cursor: default !important; text-decoration: none=
+!important;">Agustin Ramirez Bobblehead</span></p> </td> </tr> </table> </d=
+iv> <!--[if mso | IE]></td> <td style=3D"vertical-align:middle;width:200px;=
+" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-20 outlook-g=
+roup-fix" style=3D"font-size:13px;text-align:left;direction:ltr;display:inl=
+ine-block;vertical-align:middle;width:100%;"> <table border=3D"0" cellpaddi=
+ng=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse: =
+collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: mid=
+dle;" width=3D"100%" height=3D"46" valign=3D"middle"> <!-- Button: BEGIN --=
+> <tr> <td align=3D"left" valign=3D"middle" style=3D"border-collapse: colla=
+pse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; undefined: 0px;"> <!--[i=
+f mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr> <td style=3D"vertica=
+l-align:middle;" valign=3D"middle"><![endif]--> <table align=3D"left" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"=
+mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: separate; wi=
+dth: 110px; line-height: 100%;" width=3D"110"> <tr> <td align=3D"center" bg=
+color=3D"#ffffff" role=3D"presentation" style=3D"border-collapse: collapse;=
+ mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 6px; border: =
+solid 1px #DEDDDB; color: #DEDDDB; cursor: auto; height: 36px;" valign=3D"m=
+iddle" class=3D"button-secondary" height=3D"36"> <a href=3D"https://links.s=
+eatgeek.com/a/sc/g-spxi5JNyh96Y-vTiJe-cZw6hfCGTzWTczOtnWAPf0ppRCtvGJ1bA9RHL=
+OaXVwvamO0NUSEGUEnzNIqtEyE7flaKbzWbjOTPjPr80CC1UELKZR-_2MupiaYiKbTnrwRkfXbF=
+1yXfc8OvIbL1fpgOq5gpNK7sN7lyS6v4mM1p8q0KF9GS4BwCbIHO5c0Bd12p0B51Q9trZUBR6NY=
+a_uR7L0ULZFwUHeyYmaIp5KXKhBOqy6sa6KdBPEWjHerkd2-pZ7wMFcukjMAFxKaYoavOTPJnCk=
+29_laEPlJNkFr_7H2qG4MAtp0bQspsE__gY3yJeKlOf8JjqI2PhM7Q_t7t7i_z_rup8-zgz-fHw=
+hA8SxZGe4rsChFggmoKghvA0aPEDcSZozLeKNgURG9-cpDYxFLhjtTAFWLdIDWsioZ4xhvEYhTW=
+wDxa4XXYyGF87siOli1L1dM2ugSemImnvE3s34Xave5MNo-lGYLVr4IIE-mKzuDp2TrT3rgD2GM=
+DnoG7q38mHI7H86VC-PcuHOqSgoqeonhNl_rvu1FcZ9w/G3lBymCDQ1Xo8r2_k8u4n2CrPPD8xg=
+TN/18" target=3D"_blank" style=3D"text-decoration: none; background: #fffff=
+f; color: #000000; font-size: 14px; font-weight: 600; line-height: 20px; te=
+xt-decoration: none; text-transform: none; letter-spacing: .28px; vertical-=
+align: middle; display: block; font-family: 'DM Sans', Arial, sans-serif !i=
+mportant;" class=3D"button-secondary"> See tickets </a> </td> </tr> </table=
+> <!--[if mso | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Butto=
+n: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]-=
+-> </td> </tr> <!-- Row: END --> <!-- Row: BEGIN --> <tr> <td style=3D"bord=
+er-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; direct=
+ion: ltr; font-size: 0px; text-align: center; vertical-align: middle; paddi=
+ng-top: 12px; padding-bottom: 12px;" class=3D"performer-row" align=3D"cente=
+r" valign=3D"middle"> <!--[if mso | IE]><table role=3D"presentation" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#FFFFFF"> <tr> <td st=
+yle=3D"vertical-align:middle;width:400px;" bgcolor=3D"#FFFFFF"><![endif]-->=
+ <div class=3D"mj-column-per-15 outlook-group-fix" style=3D"font-size:13px;=
+text-align:left;direction:ltr;display:inline-block;vertical-align:middle;wi=
+dth:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D=
+"presentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; m=
+so-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46"=
+ valign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt; font-size: 12px; text-align: left; padd=
+ing: 0px 4px; border-bottom: 0 !important; cursor: default !important; text=
+-decoration: none!important; font-family: 'DM Sans', Arial, sans-serif !imp=
+ortant;" class=3D"x-gmail-data-detectors" height align=3D"left"><a href=3D"=
+https://links.seatgeek.com/a/sc/QMMJYFvyVRDCiza3g56qfo75xcbQr9cFbX1rAjPd-Vx=
+mFuJiop8cpft2LpeGfSv0LpmBLtV3z5VsbFSyTUDYvwWSimlRMfxR-pyliaUubefKaIrKL32bv4=
+F6Pd_R29n5AfEj89EmeL_rKltzX8SH5aqa0xBp6_uBe84rdFn78hGWDhB86v7YZa6vQmv7H6QlT=
+oW9LI1H4nLApVv8ZphNpf-c4_MovzzY4srywTYM4zaUgoI2omZeH44cDdBVpAsA7bN10fTWmfn0=
+WM3mc8Stu29DW3Y-px76KUcOcR6TNA8Zv2QeX5CkcLgywGI-UaFncMzuy9bQXPfwT_OW5zShsaM=
+pfgCCpLakzsnlbPHt3whdxQ7e6v14jyTVk84btnkWBoWQsMtAIZlnpHLulleWtK1Knk0abXzXgC=
+veS0BJk1XG35wh2WbeesT9bdRKewvbrU9w5rSQdjWD29h3rAgKrg52kG7zObVc9iuJW9gftltmY=
+mBncEALioMAg3pgP_Le7Oqt3AcD6MNQvz6cSMBG4MuesQtjdiI3i6IHYXW6vd9xB4F9gXt3IQ/i=
+X8Td92-d8cBXu3DoYiEgRMCCbab7ZUe/18" target=3D"_blank" style=3D"color: #1818=
+18; border-bottom: 0 !important; cursor: default !important; text-decoratio=
+n: none!important;" class=3D"event-date-small x-gmail-data-detectors"><img =
+src=3D"https://s3.amazonaws.com/uploads.seatgeek.com/content/images/crm/ass=
+ets/baseball/push-image/team-logos/milwaukee-brewers.png" alt=3D"" style=3D=
+"border: 0; line-height: 100%; outline: none; -ms-interpolation-mode: bicub=
+ic; width: 48px; height: 48px; border-radius: 10px; border-bottom: 0 !impor=
+tant; cursor: default !important; text-decoration: none!important;" width=
+=3D"48" height=3D"48"></a></td> </tr> </table> </div> <div class=3D"mj-colu=
+mn-per-65 outlook-group-fix" style=3D"font-size:13px;text-align:left;direct=
+ion:ltr;display:inline-block;vertical-align:middle;width:100%;"> <table bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; vertical-align: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> =
+<tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tab=
+le-rspace: 0pt; font-size: 17px; line-height: 24px; text-align: left; color=
+: #181818; font-weight: 600; padding: 4px; letter-spacing: 0.2px; width: 10=
+0%; border-bottom: 0 !important; cursor: default !important; text-decoratio=
+n: none!important; font-family: 'DM Sans', Arial, sans-serif !important;" c=
+lass=3D"x-gmail-data-detectors" width=3D"100%" align=3D"left"><a href=3D"ht=
+tps://links.seatgeek.com/a/sc/jQ-EN7c3_xZ-7uZun-nRC-eFQT8f21lEYesgpSSpTJPS6=
+GkGlCBiWFgEZ_qdwYYoQZVHaOVWGoRW8exeh-WVxjdGAUfO67yxLaw6-HYIoSIpWDNT4KM0xD4C=
+fM9-3ueT2DnI4m-Np8K3tblI23XcTz3OZKJ2ZV2kXr3Wv3Ai-iMZqfBId4MAv-EkOQYxXny7UM1=
+nKBUZXbfhi1-Reph0M5q8SlhP7mmkWBqJKCpv1yhCi7wuOMQr2tQMrcFYwX7iKr_8Hym-yx8fhJ=
+l1kxlokCiVOZqO_1XtVOngjos_SsOSiWvJkQnE3WNlEJdNrexw7Vbzu_WuJphzVaHeJRfjowTKs=
+9smC_hQmNCXVkqn8sMZ-Qi4UAeN-BBsoPzj44z81Tp7Giy48BR5g4RYa0216LAtp8cdUdPK3NEZ=
+xQRM-BLFTDV9AF54zA94TqurvGaK28V2GPXBwZlYauz6LbNkGGjp0dXGCU0bwm20RAUfTBFB15j=
+3G26NcVwl_hgQDJfPujyw6R1zkgw1wV0mvkgc5tdBhuGeQ8PVw2ZzkrRk/s1VaYCROkMKhHzc36=
+MzHl3zdvazcqEPF/18" target=3D"_blank" style=3D"color: #181818; border-botto=
+m: 0 !important; cursor: default !important; text-decoration: none!importan=
+t;" class=3D"event-date-small x-gmail-data-detectors">vs Milwaukee Brewers<=
+/a><p style=3D"display: block; font-size: 15px; line-height: 20px; color: #=
+525252; font-weight: 400; letter-spacing: .24px; margin: 0; border-bottom: =
+0 !important; cursor: default !important; text-decoration: none!important; =
+font-family: 'DM Sans', Arial, sans-serif !important;" class=3D"x-gmail-dat=
+a-detectors">Sun, Apr 19<br style=3D"border-bottom: 0 !important; cursor: d=
+efault !important; text-decoration: none!important;"><span style=3D"color: =
+#11A669; font-size: 12; line-height: 16px; font-weight: 700; border-bottom:=
+ 0 !important; cursor: default !important; text-decoration: none!important;=
+">Marlins Basketball Jersey</span></p> </td> </tr> </table> </div> <!--[if =
+mso | IE]></td> <td style=3D"vertical-align:middle;width:200px;" bgcolor=3D=
+"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-20 outlook-group-fix" st=
+yle=3D"font-size:13px;text-align:left;direction:ltr;display:inline-block;ve=
+rtical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=
+=3D"100%" height=3D"46" valign=3D"middle"> <!-- Button: BEGIN --> <tr> <td =
+align=3D"left" valign=3D"middle" style=3D"border-collapse: collapse; mso-ta=
+ble-lspace: 0pt; mso-table-rspace: 0pt; undefined: 0px;"> <!--[if mso | IE]=
+><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D=
+"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr> <td style=3D"vertical-align:mid=
+dle;" valign=3D"middle"><![endif]--> <table align=3D"left" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"mso-table-l=
+space: 0pt; mso-table-rspace: 0pt; border-collapse: separate; width: 110px;=
+ line-height: 100%;" width=3D"110"> <tr> <td align=3D"center" bgcolor=3D"#f=
+fffff" role=3D"presentation" style=3D"border-collapse: collapse; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt; border-radius: 6px; border: solid 1px #=
+DEDDDB; color: #DEDDDB; cursor: auto; height: 36px;" valign=3D"middle" clas=
+s=3D"button-secondary" height=3D"36"> <a href=3D"https://links.seatgeek.com=
+/a/sc/5MnQwoDTC6-IauXfyqFwyvoZjaKVuFelkJby_dncBkbrN18I_AwyqvxqP4rJhqGxXIKkc=
+JGc_-bmV1ddF6Y6KOtSqddru2rC-UqyA3gbfn2Yx253kwkcGGjzVbxU8LRQFnnvNNsQPayif-8Q=
+psJM-8FWpnB8T1cuZvyI3IFehHkDKEas4JmZYOoNdXdi7jetH3z0Gv4t6cvJkAeLoPFzwdB5M09=
+hXSHgaLZghkxlpBQ8eEWlKRHOsObUZ81OTc8FjA5QJwIrrs1JLzyVqmeW6eZ69YKN9hL1GC7Hag=
+FMzxDaQdPZTyGhH7W067SFrBP8xGlfXtvw8izc-KcAIKbec8KPob7IrL9SAEkE5YfqP1cHeDpFk=
+ypAPLKMAN-dKETFkqHi7sLORO_LpE5qJ5nzwzEePZ7KhzuFoGqcpzcuo0ML_rokvBwhTswDnmxa=
+17SE0uKnQtMBV90xdu_XRYFtgEq0Zf1OfuG8lXg3fJQXHvelJf4pzHm1zRzGCfY1ZpSyxNh79YP=
+JGXihTkMMOWbwn8lsFKuHtrnbOXu4h_Qq/YJ67yOGhmGozKdIqJ2Cvygk4gc382Ybx/18" targ=
+et=3D"_blank" style=3D"text-decoration: none; background: #ffffff; color: #=
+000000; font-size: 14px; font-weight: 600; line-height: 20px; text-decorati=
+on: none; text-transform: none; letter-spacing: .28px; vertical-align: midd=
+le; display: block; font-family: 'DM Sans', Arial, sans-serif !important;" =
+class=3D"button-secondary"> See tickets </a> </td> </tr> </table> <!--[if m=
+so | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Button: END --> =
+</table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]--> </td> </=
+tr> <!-- Row: END --> <!-- Row: BEGIN --> <tr> <td style=3D"border-collapse=
+: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; direction: ltr; f=
+ont-size: 0px; text-align: center; vertical-align: middle; padding-top: 12p=
+x; padding-bottom: 12px;" class=3D"performer-row" align=3D"center" valign=
+=3D"middle"> <!--[if mso | IE]><table role=3D"presentation" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#FFFFFF"> <tr> <td style=3D"ve=
+rtical-align:middle;width:400px;" bgcolor=3D"#FFFFFF"><![endif]--> <div cla=
+ss=3D"mj-column-per-15 outlook-group-fix" style=3D"font-size:13px;text-alig=
+n:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;=
+"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-=
+rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" valign=
+=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace:=
+ 0pt; mso-table-rspace: 0pt; font-size: 12px; text-align: left; padding: 0p=
+x 4px; border-bottom: 0 !important; cursor: default !important; text-decora=
+tion: none!important; font-family: 'DM Sans', Arial, sans-serif !important;=
+" class=3D"x-gmail-data-detectors" height align=3D"left"><a href=3D"https:/=
+/links.seatgeek.com/a/sc/vA8WU7hQgoT00hEwQHymgyu7zXLigmXfjGxVdz6lEUikhcwgWD=
+U19QwQ3894hGu88U3mybA1rCpdIaWZw7r4fHE-HOaKwbZXYkLo0yC5tgQwgSTJD7N6ws5-VZ4fR=
+rxxc5z8VDKdn068ScRolwoYQUgInp0rOmW90fHTwuyNN8b_BPkuZCaHJu71hmEjnUkZj3dJMN4z=
+r0GrhEb6NWEOB8XeBdWUoGKewrY2NfF8bhdt3TpWNzNEdQBXzUuaUh5ATAXfDAn-VRiihqSDNWH=
+jeuroBG7RzSPvE5naD4sadtGV9OI-Dm6oq3yyi8AD9j3IzNjrRQ4BH5r9A6XNHInafjAwoKHplP=
+m8P1O4KeatRagniCGLRZF0QrOL8LbkFttelA1rLXQM8DLNSWS1lreLxiS5icOKQKibUdJb0-Js4=
+92ilMS7Jf76ZmyFDAUz8bM2UFojlB5GKTE2KNKVsTaCZ-fD60L_vnteDJLqlyze3TbKsu5WFziK=
+YuwQjN2ZbvnMiOqmHCudcs-56H1FwC-m61G4Xs6_AUGMxhcB9dNhcJO_ipXiU4uDlg/y_dsU8sV=
+y-WlTOG3oKjHOzR4FuOqpOeX/18" target=3D"_blank" style=3D"color: #181818; bor=
+der-bottom: 0 !important; cursor: default !important; text-decoration: none=
+!important;" class=3D"event-date-small x-gmail-data-detectors"><img src=3D"=
+https://s3.amazonaws.com/uploads.seatgeek.com/content/images/crm/assets/bas=
+eball/push-image/team-logos/chicago-cubs.png" alt=3D"" style=3D"border: 0; =
+line-height: 100%; outline: none; -ms-interpolation-mode: bicubic; width: 4=
+8px; height: 48px; border-radius: 10px; border-bottom: 0 !important; cursor=
+: default !important; text-decoration: none!important;" width=3D"48" height=
+=3D"48"></a></td> </tr> </table> </div> <div class=3D"mj-column-per-65 outl=
+ook-group-fix" style=3D"font-size:13px;text-align:left;direction:ltr;displa=
+y:inline-block;vertical-align:middle;width:100%;"> <table border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-colla=
+pse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align=
+: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; font-size: 17px; line-height: 24px; text-align: left; color: #181818; fon=
+t-weight: 600; padding: 4px; letter-spacing: 0.2px; width: 100%; border-bot=
+tom: 0 !important; cursor: default !important; text-decoration: none!import=
+ant; font-family: 'DM Sans', Arial, sans-serif !important;" class=3D"x-gmai=
+l-data-detectors" width=3D"100%" align=3D"left"><a href=3D"https://links.se=
+atgeek.com/a/sc/K75XGFHfUns6bGx_ttCx_xzi0X7AVomfl-NhZzFGDQRDUz7x69hdChEqll3=
+jWFcIiW0Qa8zvPcUK9F-ivFi4MYRqEC0QAs8g_owdf92aik6-yFDtX-4Q88MSShOkrE6odVgdD8=
+-G-KN3x-s1VvCyQ9jlGTkPLcZBEMEHgmUdQccqnnfa_ISPKSppjdqeEQCtDrzMttIIEu9gHw4Db=
+iy8-z78hQq76pUeowbQ9Y06OJpe3sgFLqqCqHoZnqrWw6SM0NBUcM8blx0LAsR7Tbo5gGz42vKO=
+f2830yYf1hD1lortEWKu43R4Y3x745qQ7nnJeGqy8k2OGzjKhXYz4AIdqkDfuP_Gme8zLwW73xx=
+yiCRU2zrnWId0yihFNmWVaHPjI-j_xcK_oQMPMppU3tDrAVusbyZwvFgw27sLp4pmKj22uERnyv=
+63xN049gp4P2scQLuBJX4pQHC0xDcbQRyupi9MhgkSirN0XnZT_31vkvtClrN36LFP8o4hzt4mE=
+ewJHNfdXOARo2rlo6dPE5IZs9kRFWPrZnFy4Cu48JuD/0DQs-wOFnUSnHokuRr3AHwpa12Rx056=
+0/18" target=3D"_blank" style=3D"color: #181818; border-bottom: 0 !importan=
+t; cursor: default !important; text-decoration: none!important;" class=3D"e=
+vent-date-small x-gmail-data-detectors">vs Chicago Cubs</a><p style=3D"disp=
+lay: block; font-size: 15px; line-height: 20px; color: #525252; font-weight=
+: 400; letter-spacing: .24px; margin: 0; border-bottom: 0 !important; curso=
+r: default !important; text-decoration: none!important; font-family: 'DM Sa=
+ns', Arial, sans-serif !important;" class=3D"x-gmail-data-detectors">Sun, S=
+ep 6<br style=3D"border-bottom: 0 !important; cursor: default !important; t=
+ext-decoration: none!important;"><span style=3D"color: #11A669; font-size: =
+12; line-height: 16px; font-weight: 700; border-bottom: 0 !important; curso=
+r: default !important; text-decoration: none!important;">Hall of Fame Bobbl=
+ehead</span></p> </td> </tr> </table> </div> <!--[if mso | IE]></td> <td st=
+yle=3D"vertical-align:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]-->=
+ <div class=3D"mj-column-per-20 outlook-group-fix" style=3D"font-size:13px;=
+text-align:left;direction:ltr;display:inline-block;vertical-align:middle;wi=
+dth:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D=
+"presentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; m=
+so-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46"=
+ valign=3D"middle"> <!-- Button: BEGIN --> <tr> <td align=3D"left" valign=
+=3D"middle" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-=
+table-rspace: 0pt; undefined: 0px;"> <!--[if mso | IE]><table role=3D"prese=
+ntation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgc=
+olor=3D"#00A3E0"> <tr> <td style=3D"vertical-align:middle;" valign=3D"middl=
+e"><![endif]--> <table align=3D"left" border=3D"0" cellpadding=3D"0" cellsp=
+acing=3D"0" role=3D"presentation" style=3D"mso-table-lspace: 0pt; mso-table=
+-rspace: 0pt; border-collapse: separate; width: 110px; line-height: 100%;" =
+width=3D"110"> <tr> <td align=3D"center" bgcolor=3D"#ffffff" role=3D"presen=
+tation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; border-radius: 6px; border: solid 1px #DEDDDB; color: #DEDDD=
+B; cursor: auto; height: 36px;" valign=3D"middle" class=3D"button-secondary=
+" height=3D"36"> <a href=3D"https://links.seatgeek.com/a/sc/seRqC_yDcIqxtS3=
+p2N8173-vndsidOrHp6qHGRyPGf9WJQJ3JW9BYO7QwAIH9JJsoAPLnfkOuOea1i68sNIRD7C_FJ=
+H9korcq4pN41Sbyuf6ncs_Dbe_Vdpp1awJIMYeBhFHomOfAbH8_IgZr4div1yAMo0QXUp_07Q0z=
+hbPM1CzoRHXT8OI1DLUmsDsYxSAfCXeJGZw3LeLWJFUWe3nENBhIjgCxeJ4l90J4I2cLKJF3cgr=
+VRlfhVxJyeTtgqLqwNr9UiUStYgpRSVmgoe_NBaVwQe7nw65oNB09qrbbWPkIj4sC-lRwrcyiDn=
+ot8V0SHDeDWVQs_yZtAAiF_yqPafZ5wxbwMKzafbHXHDKPqXAxYnKlwNUIPVIHT2jJwjnTMf5E0=
+G32CWcdV0jD8wHz4D_EMlu5K7BIdBhQzMSLkbspJ-nYMVLcPyhvsdmtoIgaGO_NwGvRFch7l_Ud=
+RCAlBps0GzpJ9oxwndahZOSlUFDN8tY4Gg3yqIug8xHiJ6XJeKb6JzrS1c4jJpTR8n3JES3WeT-=
+S4hos1pe4DQB/NwEWOo6YF3jK4qlkBL2jifx89GfUtA2C/18" target=3D"_blank" style=
+=3D"text-decoration: none; background: #ffffff; color: #000000; font-size: =
+14px; font-weight: 600; line-height: 20px; text-decoration: none; text-tran=
+sform: none; letter-spacing: .28px; vertical-align: middle; display: block;=
+ font-family: 'DM Sans', Arial, sans-serif !important;" class=3D"button-sec=
+ondary"> See tickets </a> </td> </tr> </table> <!--[if mso | IE]></td> </tr=
+> </table><![endif]--> </td> </tr> <!-- Button: END --> </table> </div> <!-=
+-[if mso | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Row: END -=
+-> <!-- Row: BEGIN --> <tr> <td style=3D"border-collapse: collapse; mso-tab=
+le-lspace: 0pt; mso-table-rspace: 0pt; direction: ltr; font-size: 0px; text=
+-align: center; vertical-align: middle; padding-top: 12px; padding-bottom: =
+12px;" class=3D"performer-row" align=3D"center" valign=3D"middle"> <!--[if =
+mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" bgcolor=3D"#FFFFFF"> <tr> <td style=3D"vertical-align:middle;w=
+idth:400px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-1=
+5 outlook-group-fix" style=3D"font-size:13px;text-align:left;direction:ltr;=
+display:inline-block;vertical-align:middle;width:100%;"> <table border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border=
+-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical=
+-align: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td s=
+tyle=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; font-size: 12px; text-align: left; padding: 0px 4px; border-bottom: 0=
+ !important; cursor: default !important; text-decoration: none!important; f=
+ont-family: 'DM Sans', Arial, sans-serif !important;" class=3D"x-gmail-data=
+-detectors" height align=3D"left"><a href=3D"https://links.seatgeek.com/a/s=
+c/tdC3j3IDNryEKAX00OHOATe7PNn9-acJzH3xU9Ywl8FSNDakLqE2wi0UfP9ENAs6H-bOw5hOM=
+XqhHOZo0AjPqgbbUfaKJkz6DOfTqknSQAIqyAq0LamcvWB4NkSXQZOYIyJAyqwhFpQJB_kZpH-E=
+c38tJJpmk-RxZPANZzoVoV1Sf8gqunO5_tN58donWDfFAkmmSsRl-Dodgt7JY7naKfBs7Rvjo_s=
+H1x5eNXmwvM9lgkOx-tdbbWU9BcQ9QP1oLMRykHUzivJ0CqJEY15AX4J6L120fbmDWCdOYtrRW1=
+BlHpYiFlZDyKgBPw_Pb7vDtK2Nc30n0FD3OkEpHW6efb5WpnLaBbFmkqRib3hBHMDJJSiakOWWq=
+9eHoD7WCQmr51gnwQvAYPgzO1wTrx7guf4imQmZexqhoz5LCEXyz1s8cS1wNeNtyoIAcowUFAU1=
+_RjDvlk5mjHi4Oq7EKKoRRoNg5pe7Hi1lIiQWMGtUORvUEsrdgIA-Fw4MqnGcABuND0ymHF0Fzt=
+mm6hrPUvNGXsmPCnCotXraY4ZEGkrXdD_64Apt-dDaw/1DyhQTxhKKfdSIS6yIC4je3VWAJ4G1Z=
+D/18" target=3D"_blank" style=3D"color: #181818; border-bottom: 0 !importan=
+t; cursor: default !important; text-decoration: none!important;" class=3D"e=
+vent-date-small x-gmail-data-detectors"><img src=3D"https://s3.amazonaws.co=
+m/uploads.seatgeek.com/content/images/crm/assets/baseball/push-image/team-l=
+ogos/cleveland-guardians.png" alt=3D"" style=3D"border: 0; line-height: 100=
+%; outline: none; -ms-interpolation-mode: bicubic; width: 48px; height: 48p=
+x; border-radius: 10px; border-bottom: 0 !important; cursor: default !impor=
+tant; text-decoration: none!important;" width=3D"48" height=3D"48"></a></td=
+> </tr> </table> </div> <div class=3D"mj-column-per-65 outlook-group-fix" s=
+tyle=3D"font-size:13px;text-align:left;direction:ltr;display:inline-block;v=
+ertical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=
+=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collaps=
+e: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px;=
+ line-height: 24px; text-align: left; color: #181818; font-weight: 600; pad=
+ding: 4px; letter-spacing: 0.2px; width: 100%; border-bottom: 0 !important;=
+ cursor: default !important; text-decoration: none!important; font-family: =
+'DM Sans', Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" =
+width=3D"100%" align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/m_=
+wQVo2rykqB90KfYTO9s7rzMzWOER1AlK2LyLBJcfOwEfGKeyVjTmtWQWJX2ButC46hGjuNOMWRi=
+s6Ir1yzXYe0nmTbm7qingCnsmisSoDnuC601D6EDXec5mzCV5-XhE7Vcl3dhYFWJcDmxnDDmF5R=
+REgg5UiYIQdSA87U_YN652ZQ3mf7CKu5NCSnAGPlCvLmoDdm3xZGrrFcfHOzSwuDRNcP47H-DtF=
+Pz8YP6pOOzsA8sflBkuDxRtBiH3ZD_quMAE6CuJh8U-kmJ_cO7-MHq_vOWHAAQt2V-xy1f_qhWD=
+CYBiN7oL_X7tHVEEYKaJBigOWEPiva6LJk2z746zeFx1x_R3pU-51MN1mzWmFvT27HSTO3ZaoTO=
+jxKRz7aPTozBEzv0gFaDln7CaJKF3gsW9wSDhSRkYsCBP-9i7JjMpcTWRsUfeJ_TziQAW-PjZlL=
+BIxDKVwpZ6CQYvrpsx5BM-krOGtWg1MsiymDMC8-LyzWTkZ_kxTTHZ4wzlFgHFHpMZfd25Cpw5h=
+85byPtD1DRjX45ny9TTATn6CS/AG-SP_Dmaw3OOYqISrxJjWX_2USTHi-7/18" target=3D"_b=
+lank" style=3D"color: #181818; border-bottom: 0 !important; cursor: default=
+ !important; text-decoration: none!important;" class=3D"event-date-small x-=
+gmail-data-detectors">vs Cleveland Guardians</a><p style=3D"display: block;=
+ font-size: 15px; line-height: 20px; color: #525252; font-weight: 400; lett=
+er-spacing: .24px; margin: 0; border-bottom: 0 !important; cursor: default =
+!important; text-decoration: none!important; font-family: 'DM Sans', Arial,=
+ sans-serif !important;" class=3D"x-gmail-data-detectors">Sun, Jul 12<br st=
+yle=3D"border-bottom: 0 !important; cursor: default !important; text-decora=
+tion: none!important;"><span style=3D"color: #11A669; font-size: 12; line-h=
+eight: 16px; font-weight: 700; border-bottom: 0 !important; cursor: default=
+ !important; text-decoration: none!important;">Billy the Marlin Shoulder Pl=
+ush</span></p> </td> </tr> </table> </div> <!--[if mso | IE]></td> <td styl=
+e=3D"vertical-align:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]--> <=
+div class=3D"mj-column-per-20 outlook-group-fix" style=3D"font-size:13px;te=
+xt-align:left;direction:ltr;display:inline-block;vertical-align:middle;widt=
+h:100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"p=
+resentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso=
+-table-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" v=
+align=3D"middle"> <!-- Button: BEGIN --> <tr> <td align=3D"left" valign=3D"=
+middle" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; undefined: 0px;"> <!--[if mso | IE]><table role=3D"presentat=
+ion" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgcolor=
+=3D"#00A3E0"> <tr> <td style=3D"vertical-align:middle;" valign=3D"middle"><=
+![endif]--> <table align=3D"left" border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" role=3D"presentation" style=3D"mso-table-lspace: 0pt; mso-table-rsp=
+ace: 0pt; border-collapse: separate; width: 110px; line-height: 100%;" widt=
+h=3D"110"> <tr> <td align=3D"center" bgcolor=3D"#ffffff" role=3D"presentati=
+on" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rs=
+pace: 0pt; border-radius: 6px; border: solid 1px #DEDDDB; color: #DEDDDB; c=
+ursor: auto; height: 36px;" valign=3D"middle" class=3D"button-secondary" he=
+ight=3D"36"> <a href=3D"https://links.seatgeek.com/a/sc/3NW2dUmkJXz2FxNvMyP=
+jMFUK6Ro3UNKJF9sZH92Co9Pq2tPaUvj01_HaEPpYmfygEFFsmdpCL2Zm_igw2Zr77JJGaz4853=
+_CM_lwGmV9PZhgybafmOc7cAyw4hMTqdK-BVNoa1W6O9kHJrgLODueoIqBZ30tD6NJJO1zuxEFi=
+vSJ_A1tFxZhGCOI3NUUopyRF0dPAyAGECDFuftahOObcxbOXrLTGm5XFeSXVmw3dD-MsqLbS_Kv=
+oJPL1_HVbJ3c7zZLMk6gJUr8RoAvkVGUB76DidCXwJcJ7rIaB5zPSaCmd7iXb9NEujAqZgexai0=
+Mpgfuu_YhWHjMDIu8KrfILuI4DQ9vo5B9cR0t2Hy58xuqeoTb9sYTZ9T59KeKV7Dg-1Yb77nBIN=
+SmR_grxzDFe61uDaFgGnYsEcrEJw6pshLqaRS72CUEQhuCDgbWjBQqtVai3qDobRuCZLwViG_gK=
+Pndj3gHgJu505ee5ftmsb4etX_EQwgBd8KGtHRcjiovb8T9e9pahkOp-PgBjvFM9DnBUFOLjzvW=
+9ilKD5_M/lu4vQmhEHXeR9171HgLtDXkGO3emFVt_/18" target=3D"_blank" style=3D"te=
+xt-decoration: none; background: #ffffff; color: #000000; font-size: 14px; =
+font-weight: 600; line-height: 20px; text-decoration: none; text-transform:=
+ none; letter-spacing: .28px; vertical-align: middle; display: block; font-=
+family: 'DM Sans', Arial, sans-serif !important;" class=3D"button-secondary=
+"> See tickets </a> </td> </tr> </table> <!--[if mso | IE]></td> </tr> </ta=
+ble><![endif]--> </td> </tr> <!-- Button: END --> </table> </div> <!--[if m=
+so | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Row: END --> <!-=
+- Row: BEGIN --> <tr> <td style=3D"border-collapse: collapse; mso-table-lsp=
+ace: 0pt; mso-table-rspace: 0pt; direction: ltr; font-size: 0px; text-align=
+: center; vertical-align: middle; padding-top: 12px; padding-bottom: 12px;"=
+ class=3D"performer-row" align=3D"center" valign=3D"middle"> <!--[if mso | =
+IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" bgcolor=3D"#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:4=
+00px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-15 outl=
+ook-group-fix" style=3D"font-size:13px;text-align:left;direction:ltr;displa=
+y:inline-block;vertical-align:middle;width:100%;"> <table border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-colla=
+pse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align=
+: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; font-size: 12px; text-align: left; padding: 0px 4px; border-bottom: 0 !im=
+portant; cursor: default !important; text-decoration: none!important; font-=
+family: 'DM Sans', Arial, sans-serif !important;" class=3D"x-gmail-data-det=
+ectors" height align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/DS=
+M3VJFlDub4WfB30I1dpygbLIaTvq1_E2Fu4Pfjgpu-0kvDHSl0lVAJRjqdWYspCVlGmwO7-83EG=
+TCkWgO5U4VYixVfBxnhpMRZxYA_hkNJRDx0QJcRazEMXXLF8fv2ArYog0sEbDUGnE3vtQ2iOUdr=
+VDEUAssGUFu_won3u5eQoFy-yzjQI6hox5X8aPM2DN_rz8x1EDh9GqNXI6gY2t8s_9KxrTK8mvz=
+LtchhPzoeY5Igl1cNO4fhnXWd8Q4YtvoI4IAXihfQIr5j0NqR2kVvAz4FRIsroewM3yHp2pHYer=
+4LlGZKeMx5Rl50eTKh1XJLEWYW0DlYun7GwJnQ36wY0Tndr66BHI0jwpE3RV6tQK0_0TcTKZ1b8=
+HJ5XJGkoK6yKpD5vRL6C6JlVTPJDkeQKQsbdYzxKiVwzJ8AztyVRFNXlk4S1N55nqvSyFEhcryO=
+hQ_EBheRNCwBQ8dtPOsv_wxNkWQTmwzk36Ekz7lcKbB2U6JA5dnJI8XUxj8vmBnDamSCZjLPJ7Z=
+tX_JNtFCsbeSgsWP2BTZTcf95F37G_vpza5kiNQ/wdYc3EWXZAPTnmCmE33_GB8uShDKZSCJ/18=
+" target=3D"_blank" style=3D"color: #181818; border-bottom: 0 !important; c=
+ursor: default !important; text-decoration: none!important;" class=3D"event=
+-date-small x-gmail-data-detectors"><img src=3D"https://s3.amazonaws.com/up=
+loads.seatgeek.com/content/images/crm/assets/baseball/push-image/team-logos=
+/colorado-rockies.png" alt=3D"" style=3D"border: 0; line-height: 100%; outl=
+ine: none; -ms-interpolation-mode: bicubic; width: 48px; height: 48px; bord=
+er-radius: 10px; border-bottom: 0 !important; cursor: default !important; t=
+ext-decoration: none!important;" width=3D"48" height=3D"48"></a></td> </tr>=
+ </table> </div> <div class=3D"mj-column-per-65 outlook-group-fix" style=3D=
+"font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical=
+-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso-tabl=
+e-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100=
+%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collapse: coll=
+apse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-h=
+eight: 24px; text-align: left; color: #181818; font-weight: 600; padding: 4=
+px; letter-spacing: 0.2px; width: 100%; border-bottom: 0 !important; cursor=
+: default !important; text-decoration: none!important; font-family: 'DM San=
+s', Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" width=
+=3D"100%" align=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/2q8pGgm=
+GqI2SijzLVTEYhcX33C0jbH1PM8D75FrtnIc_VbmKMOdyYPRJLwVJtg3i5ZSR9m0DEcWgi31zmO=
+7aay4cGJ_zZVMxz-lV5McP2_aNA8DP9sWlQbTViIHYdTPVunKpMsrE9fJNUVddzfnW19-tj4Jv-=
+jx5abQO8BMLNgJ4v_cKRYqyMIoyswMXjj_8WAp_ZiE2Eg_dnVHEl5YrFiFusjF-1IXG94j643vp=
+axvXzGXoTN0tuWKt4mvtC8B6daUJUkvCQYEF2P9x__VTIRiPCBMT105RgVghyvnRkFg059_GXb3=
+ngqDX6II5zrW9fCrfgN_KqjjfYsj8c3AiQTDby_ovmPcV5L6m-cJxsjX6x3EeznqPiQkR9KINub=
+8o7B2aWRESd4fbc8PswWme-jwAcc9XLnpBSc_4E1hNMibRGaC7-31HDwtgvBApQR0IKUnMYcKZh=
+TXauTVWuB8R2Ta1LUgLVgneGTdWOb-aUGOi2uufcqdeSijMiUhDhB4tMDu_YgAdtR5jMLWAHgZd=
+-b1g0rDjiaZD7_mkGsPN/OuDTjfrD8D22f8YlgIPI4xebbC4r3Dh4/18" target=3D"_blank"=
+ style=3D"color: #181818; border-bottom: 0 !important; cursor: default !imp=
+ortant; text-decoration: none!important;" class=3D"event-date-small x-gmail=
+-data-detectors">vs Colorado Rockies</a><p style=3D"display: block; font-si=
+ze: 15px; line-height: 20px; color: #525252; font-weight: 400; letter-spaci=
+ng: .24px; margin: 0; border-bottom: 0 !important; cursor: default !importa=
+nt; text-decoration: none!important; font-family: 'DM Sans', Arial, sans-se=
+rif !important;" class=3D"x-gmail-data-detectors">Sun, Mar 29<br style=3D"b=
+order-bottom: 0 !important; cursor: default !important; text-decoration: no=
+ne!important;"><span style=3D"color: #11A669; font-size: 12; line-height: 1=
+6px; font-weight: 700; border-bottom: 0 !important; cursor: default !import=
+ant; text-decoration: none!important;">Reversible Bucket Hat</span></p> </t=
+d> </tr> </table> </div> <!--[if mso | IE]></td> <td style=3D"vertical-alig=
+n:middle;width:200px;" bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-co=
+lumn-per-20 outlook-group-fix" style=3D"font-size:13px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:middle;width:100%;"> <table b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=
+=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; vertical-align: middle;" width=3D"100%" height=3D"46" valign=3D"middle"> =
+<!-- Button: BEGIN --> <tr> <td align=3D"left" valign=3D"middle" style=3D"b=
+order-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; und=
+efined: 0px;"> <!--[if mso | IE]><table role=3D"presentation" border=3D"0" =
+cellpadding=3D"0" cellspacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr>=
+ <td style=3D"vertical-align:middle;" valign=3D"middle"><![endif]--> <table=
+ align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pr=
+esentation" style=3D"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-c=
+ollapse: separate; width: 110px; line-height: 100%;" width=3D"110"> <tr> <t=
+d align=3D"center" bgcolor=3D"#ffffff" role=3D"presentation" style=3D"borde=
+r-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-=
+radius: 6px; border: solid 1px #DEDDDB; color: #DEDDDB; cursor: auto; heigh=
+t: 36px;" valign=3D"middle" class=3D"button-secondary" height=3D"36"> <a hr=
+ef=3D"https://links.seatgeek.com/a/sc/4RxteW1z1PYVizfkNLv8H03rzJEuJw6HgobNi=
+DJAFgY0-yxVkmpOwgH9jKlfsxz4BhgaGbvu2KhMXBGA24_G49Rxq63NZRGZds8enmE5dwC3n0kP=
+tOGwguCBufZisHaAnN0cB39fP-qjrbwo-ivTydwORHa5renDCVDb_dYHK8mvdW9iwRzFET3pCt5=
+seC5dVLy9JzyfGrzuB0bLlyc95vq5wSCBqX3BddWQqIzaEdyFbXFA6ZWNaRgMwUPihnppo-wvGF=
+9KAe6RJgxD9EnZWFdRDINT_1G_GoEDUhJjB1ggktUwrUG3UpDFEf2QHibnv7IRP1kuUe-9OdaAl=
+Q3kvcrXfPZZtrp4TqRMvQlw0ztPO4p1KdBCDzdjFTNhAGU5csUUlFba9O_N-S6mhDDAq9tu8-HB=
+hXapwyI81mehKWcBE9DNMPn9QTnC6bjj5R3B-2gBKIT-PGkjR2Qrc8h49TsFWCtfUr3k3yq_0oy=
+if9tNWXmSn_mZuCMCRqO15WS6zk8L3LYVkHkeBen4kE5XFhC4kgAztgpzRPfFk5Gg/JnwyT6npk=
+DQunFDgoL_o8d952TwEzh62/18" target=3D"_blank" style=3D"text-decoration: non=
+e; background: #ffffff; color: #000000; font-size: 14px; font-weight: 600; =
+line-height: 20px; text-decoration: none; text-transform: none; letter-spac=
+ing: .28px; vertical-align: middle; display: block; font-family: 'DM Sans',=
+ Arial, sans-serif !important;" class=3D"button-secondary"> See tickets </a=
+> </td> </tr> </table> <!--[if mso | IE]></td> </tr> </table><![endif]--> <=
+/td> </tr> <!-- Button: END --> </table> </div> <!--[if mso | IE]></td> </t=
+r> </table><![endif]--> </td> </tr> <!-- Row: END --> <!-- Row: BEGIN --> <=
+tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; direction: ltr; font-size: 0px; text-align: center; vertical=
+-align: middle; padding-top: 12px; padding-bottom: 12px;" class=3D"performe=
+r-row" align=3D"center" valign=3D"middle"> <!--[if mso | IE]><table role=3D=
+"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"=
+#FFFFFF"> <tr> <td style=3D"vertical-align:middle;width:400px;" bgcolor=3D"=
+#FFFFFF"><![endif]--> <div class=3D"mj-column-per-15 outlook-group-fix" sty=
+le=3D"font-size:13px;text-align:left;direction:ltr;display:inline-block;ver=
+tical-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=
+=3D"100%" height=3D"46" valign=3D"middle"> <tr> <td style=3D"border-collaps=
+e: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 12px;=
+ text-align: left; padding: 0px 4px; border-bottom: 0 !important; cursor: d=
+efault !important; text-decoration: none!important; font-family: 'DM Sans',=
+ Arial, sans-serif !important;" class=3D"x-gmail-data-detectors" height ali=
+gn=3D"left"><a href=3D"https://links.seatgeek.com/a/sc/Zsbi3IUINnPupGr3rUaj=
+mDFwoK6-OPkEq4ZDkAz1J7SK2fgsbuzXJUpJGnd7lKe27pHRQ7jRA4TKOzlttFmWGLnpUi8zHHE=
+TZVdc6ZEIx5PcDxyFHbhgleoE1af_xEN7JY8VAJGNrLVWLhGkCbc1cdsO9BlVq78HRjLm9ji53a=
+O6g-tByErFq-mVLUdVWqz8A13KjRMp7neZgJ0iYK3oqlfZinQhs9071JLK__WR7dUXZrKo-8A9E=
+9ma3JjMdWV0XskFcc10XoX7PDJdhfBAK61p7OCZhZGHcGPSQZQ_bWjMW4dgYRXCvcxGmwvIz_NM=
+axh9JiGEuTXQMqs3Hh0PonUXp9e_oSiKsPncirMYfRQvcbfwZ0LKynZdUANowPtv3QRElwcmBIe=
+OQ29AfC4-7juxHaxtxu-BG6PFNtNjq3oLcpt0J5Hb05N2zIL8hqu4NMnUwHe91yTcd6acmwqHJ5=
+4WOaT2C9-oe9CP3yB4oeJASW1GQ9ZXF8O-kJV7eIFLvw6e2gi5YLpOBrBkWiU6MXV4ND3OjI3-x=
+oh1V1UV6jafzifJzxH_bw/OPWJWu_eyJWAM1a7lBpfTBisDlN3nduN/18" target=3D"_blank=
+" style=3D"color: #181818; border-bottom: 0 !important; cursor: default !im=
+portant; text-decoration: none!important;" class=3D"event-date-small x-gmai=
+l-data-detectors"><img src=3D"https://s3.amazonaws.com/uploads.seatgeek.com=
+/content/images/crm/assets/baseball/push-image/team-logos/atlanta-braves.pn=
+g" alt=3D"" style=3D"border: 0; line-height: 100%; outline: none; -ms-inter=
+polation-mode: bicubic; width: 48px; height: 48px; border-radius: 10px; bor=
+der-bottom: 0 !important; cursor: default !important; text-decoration: none=
+!important;" width=3D"48" height=3D"48"></a></td> </tr> </table> </div> <di=
+v class=3D"mj-column-per-65 outlook-group-fix" style=3D"font-size:13px;text=
+-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:=
+100%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-t=
+able-rspace: 0pt; vertical-align: middle;" width=3D"100%" height=3D"46" val=
+ign=3D"middle"> <tr> <td style=3D"border-collapse: collapse; mso-table-lspa=
+ce: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-height: 24px; text-al=
+ign: left; color: #181818; font-weight: 600; padding: 4px; letter-spacing: =
+0.2px; width: 100%; border-bottom: 0 !important; cursor: default !important=
+; text-decoration: none!important; font-family: 'DM Sans', Arial, sans-seri=
+f !important;" class=3D"x-gmail-data-detectors" width=3D"100%" align=3D"lef=
+t"><a href=3D"https://links.seatgeek.com/a/sc/t8slBAXgSMnLToga9-2SULsdoeSKi=
+wSgrpPX5KaWR1P2Mk23vr9yvzL-dgXtsteI3Jc9hTcWUMrMzoftkVmGUVtLQahhkK1UuEVYrLT8=
+k-Qi3zgRcRe2kUYFGIfhmIJCR4YZDSHW6qIKA_x_bY6XzHr8TPZKd4n-W2Jm_uM568T-w_qKStf=
+9aMP6b3zeB5b8H4jQl3JLBnDPXu4OGq2OKkaaxPRkeLLVFeE4NNRqiOXKkzs4O1UBV7N-eBlgQX=
+0IbWeABeKcL8EO4jRtgBFOcBWx-5S4Qvd2Mwezv-Q6wKNB22QEkTrCCdKF6qTSxY6IPUQXjTDui=
+CLebnviB7wC6PeBaXIs-eIHvDmSFU_Vqs0xqTn-FDt5KjhMGeazdpyVICETU2rfWLfXR31hVjoZ=
+8itujQWdNgAxHElkWdTC7wicRxwJl-MKIaCoppH_PFZYdA_ajXmkckMUETNn0Wb2PsUyoD_0RLQ=
+QidyQ8i2wpK9snQagOi4hHjqFI6b7n3OY1naFPuRvv3IwdQ5GZOEGS8Sl5zeSQWviifCaPPoQ/G=
+Z5_nyja4tv83NwvrEXjHr4VVZX8K7aY/18" target=3D"_blank" style=3D"color: #1818=
+18; border-bottom: 0 !important; cursor: default !important; text-decoratio=
+n: none!important;" class=3D"event-date-small x-gmail-data-detectors">vs At=
+lanta Braves</a><p style=3D"display: block; font-size: 15px; line-height: 2=
+0px; color: #525252; font-weight: 400; letter-spacing: .24px; margin: 0; bo=
+rder-bottom: 0 !important; cursor: default !important; text-decoration: non=
+e!important; font-family: 'DM Sans', Arial, sans-serif !important;" class=
+=3D"x-gmail-data-detectors">Sun, Sep 27<br style=3D"border-bottom: 0 !impor=
+tant; cursor: default !important; text-decoration: none!important;"><span s=
+tyle=3D"color: #11A669; font-size: 12; line-height: 16px; font-weight: 700;=
+ border-bottom: 0 !important; cursor: default !important; text-decoration: =
+none!important;">2027 Magnet Schedule</span></p> </td> </tr> </table> </div=
+> <!--[if mso | IE]></td> <td style=3D"vertical-align:middle;width:200px;" =
+bgcolor=3D"#FFFFFF"><![endif]--> <div class=3D"mj-column-per-20 outlook-gro=
+up-fix" style=3D"font-size:13px;text-align:left;direction:ltr;display:inlin=
+e-block;vertical-align:middle;width:100%;"> <table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse: co=
+llapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middl=
+e;" width=3D"100%" height=3D"46" valign=3D"middle"> <!-- Button: BEGIN --> =
+<tr> <td align=3D"left" valign=3D"middle" style=3D"border-collapse: collaps=
+e; mso-table-lspace: 0pt; mso-table-rspace: 0pt; undefined: 0px;"> <!--[if =
+mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" width=3D"160" bgcolor=3D"#00A3E0"> <tr> <td style=3D"vertical-=
+align:middle;" valign=3D"middle"><![endif]--> <table align=3D"left" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: separate; wid=
+th: 110px; line-height: 100%;" width=3D"110"> <tr> <td align=3D"center" bgc=
+olor=3D"#ffffff" role=3D"presentation" style=3D"border-collapse: collapse; =
+mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 6px; border: s=
+olid 1px #DEDDDB; color: #DEDDDB; cursor: auto; height: 36px;" valign=3D"mi=
+ddle" class=3D"button-secondary" height=3D"36"> <a href=3D"https://links.se=
+atgeek.com/a/sc/MLF3fEfMThCfeJYLuOAUz94-1TA6_mU5voqiQS_HPdJAD0y3saGB3fSb1iC=
+6XkynXxN-WkTMNE-riuFUp3jR94drkg7Bp0iMhLtUJo5AjSnui1bjjYkvmZyXZup-PS1DbMTfRP=
+efMSzYlLQMeUhpJHM79dJdeD8vK90naCzg3nXj8aNhypFIXXbOeMWKwwrjWMA-kQK0gvtubDwO-=
+nOMdT1nk83U1vSFCCzB9VMcBqT-IXJ2m_7_yVpZ6krTaRc4F2AvitUamMHP6-pEcMVHw0KRUgtJ=
+pdnBlkR7pxJjxUsrrYb1DToOCwyWtyah84Pp8TK-Ybp-sxnGN2tzAnKdN6Zhu_cjSnjp3LO7Rb-=
+okmLadwfLXIa_tikZQ6sPtP7rnFXLvpKId9QJYpD5fwsd1oHL1EsqGsATEauU8UK_5xb1cafWfV=
+YF_0psRDLAubR2_sGZdCH-v6kLwCI4wmGuD7GiijOXY6v18fRqSC4yvkeuIvtsydM9_HPf7vN7x=
+h-pL1u_FcdGlKRBzGq8XH9qTTr9-z-IveOvzh8Z-waf/gnVx3cDgYRif1OsWfs02bUEg3EJ3gR7=
+f/18" target=3D"_blank" style=3D"text-decoration: none; background: #ffffff=
+; color: #000000; font-size: 14px; font-weight: 600; line-height: 20px; tex=
+t-decoration: none; text-transform: none; letter-spacing: .28px; vertical-a=
+lign: middle; display: block; font-family: 'DM Sans', Arial, sans-serif !im=
+portant;" class=3D"button-secondary"> See tickets </a> </td> </tr> </table>=
+ <!--[if mso | IE]></td> </tr> </table><![endif]--> </td> </tr> <!-- Button=
+: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]--=
+> </td> </tr> <!-- Row: END --> <!-- View more: BEGIN --> <tr> <td style=3D=
+"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; p=
+adding: 10px 0px; text-align: left;" align=3D"left"> <table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"border-collapse: collapse; mso-t=
+able-lspace: 0pt; mso-table-rspace: 0pt; text-align: left;" width=3D"100%" =
+align=3D"left"> <tr> <td style=3D"border-collapse: collapse; mso-table-lspa=
+ce: 0pt; mso-table-rspace: 0pt; font-size: 16px; font-weight: 700; line-hei=
+ght: 24px; color: #0056D6; text-align: left; font-family: 'DM Sans', Arial,=
+ sans-serif !important;" align=3D"left"><a href=3D"https://links.seatgeek.c=
+om/a/sc/68DzSSA3BnLxnRrkhsm5D4knuO-9PT5DTy69u7Hd7VxHFJP-8oq5018tBfdmazJFJKg=
+qK8u7NKvCtzbHR9UAUNf7BsKCUhtGCc_u2hcc5ZiUccD4i0-7k8bUtTxq_6k7OlHGm5YPWFKtPc=
+gKmZM9q_3YpBIbHXs1G_F2pF5u5MKrkdYiWMo7E00W_w2ird069pfl6tDstzM2M7zXh07UV8L-S=
+-q7e-bXIj8uhZn6lyuxFb5ro8C6pfDJ1Dpr4ESAyULpIcEcGufbLyd0Eznq3_4714CpKl4lE7F7=
+P0rcoGBbQGlW4xL1lbnpdrr-7dTU42_es83evilEXmGVH3RzKn7P664a5JXfBytmRf5Dl7ng3ko=
+xkStySOI4N5-lkqpgP4imFKWUpQM3_GtC0BDnnnJXalolrXKrrnHOShTzT8QhucPGORceA-nWgT=
+-Q9N6UpRjcGFh8IUEnNBneYLi91Vh387qhxJNq-ya6KqeR24EJaY1BnI7uDUycuDsEECb6Ne-Hi=
+NmVVdKLwdmAUJOPbxE4eW1lSzQgtLYrEukKwEeB85JD/aHdb-c56bwhgBe2kxjKUZ97GDYoJOD2=
+8/18" style=3D"font-size: 16px; font-weight: 600; line-height: 24px; color:=
+ #0056D6; text-align: left; text-decoration: none; font-family: 'DM Sans', =
+Arial, sans-serif !important;">View more ></a> </td> </tr> </table> </td> <=
+/tr> <!-- View more: END --> </table> </div> </td> </tr> <!-- Upcoming Even=
+ts: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]=
+--> </div> <!-- Secondary Section: END --> <!-- Tout Section: BEGIN --> <di=
+v style=3D"background-color:#EAE7E1;"> <!--[if mso | IE]><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"width:600px=
+;" width=3D"600" bgcolor=3D"#041E42"> <tr> <td style=3D"line-height:0px;fon=
+t-size:0px;mso-line-height-rule:exactly;" bgcolor=3D"#041E42"><![endif]--> =
+<div style=3D"Margin:0px auto;max-width:600px; background-color: #041E42; b=
+order-collapse: separate; border-bottom-left-radius: 12px; border-bottom-ri=
+ght-radius: 12px" class=3D"border-bottom"> <table align=3D"center" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; border-collapse: =
+separate; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px=
+;" class=3D"border-radius-mobile" width=3D"100%"> <!-- MLB Partnership: BEG=
+IN --> <tr> <td style=3D"border-collapse: collapse; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; direction: ltr; padding: 20px 20px; text-align: cent=
+er; vertical-align: middle;" class=3D"mobile-footer" align=3D"center" valig=
+n=3D"middle"> <!--[if mso | IE]><table role=3D"presentation" border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#041E42"> <tr> <td style=3D"v=
+ertical-align:middle;width:600px;" bgcolor=3D"#041E42"><![endif]--> <div cl=
+ass=3D"mj-column-per-100 outlook-group-fix" style=3D"font-size:13px;text-al=
+ign:left;direction:ltr;display:inline-block;vertical-align:middle;width:100=
+%;"> <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presen=
+tation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; vertical-align: middle; text-align: center;" width=3D"100%" =
+valign=3D"middle" align=3D"center"> <!-- Row: BEGIN --> <tr> <td style=3D"b=
+order-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; dir=
+ection: ltr; font-size: 0px; text-align: center; vertical-align: middle;" c=
+lass bgcolor=3D"#041E42" align=3D"center" valign=3D"middle"> <div class=3D"=
+mj-column-per-100 outlook-group-fix" style=3D"font-size:13px;text-align:lef=
+t;direction:ltr;display:inline-block;vertical-align:middle;width:100%;"> <t=
+able border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"=
+ style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspac=
+e: 0pt; vertical-align: middle;" width=3D"100%" valign=3D"middle"> <!-- Hea=
+dline: BEGIN --> <tr> <td style=3D"border-collapse: collapse; mso-table-lsp=
+ace: 0pt; mso-table-rspace: 0pt; padding: 0px 20px 8px; text-align: left; v=
+ertical-align: middle;" class align=3D"left" valign=3D"middle"> <table bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D=
+"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; v=
+ertical-align: middle;" width=3D"100%" align=3D"center" valign=3D"middle"> =
+<tr> <td align=3D"left" style=3D"border-collapse: collapse; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt; font-size: 17px; line-height: 24px; text-ali=
+gn: left; color: #181818; font-weight: 600; letter-spacing: .2px; padding: =
+8px 0px; border-bottom: 0 !important; cursor: default !important; text-deco=
+ration: none!important; font-family: 'DM Sans', Arial, sans-serif !importan=
+t;" class=3D"x-gmail-data-detectors"><a href=3D"https://links.seatgeek.com/=
+s/c/v0-Ks9stst2n--YKsaH75APtcOXn4YQp_qvJVzOVbLgEI_90-uGj8-HbzWbeEF7faEjVFJA=
+Ykgbclrsh7yiVgNNmFaL0Iha1lbvg_gaKVbs6MfYZz0jxiofQ4E3oCiLlq-SeVNHQrzeuesZayR=
+4qN9prHKveEwbPLupo0keC2guLcV0vALLhswFPqkCMQSxdS3Ju-F9L9iTrlN0_UYLfVLCJ2iliO=
+cEGoGMAoNUcdwD6-3swIa01ctdfj5k66YL59Uuq0LXXG1-BGV-lXeSVuVrd2HRVqb7rKwnQar0a=
+kUHnjZKjD-hUlkCNzLGzWGa87OUCKtMRbliwf71O_aE16WXH-ZLFuQWaPj2QqQk4JOOy58Fr2L5=
+CxcyeFClvUnJlg3UWEqTSJbrZEvcXezdfeF3Xf3v1k_yUXOl_ANPeXyfPxKfUP_Lgwc4AITruXi=
+EI_vTgudh9h7wwF308EK7NXosLzyul-5qQZIilFEEeA46qh2_Sse0DTLwFDu6vnqX2g-KTnM8lV=
+bbYYS9VaTqWqImmZOKLrGAs9u3knQ/lVuYgrbMpHHrTFg1_nLGCi2Wwii04kXK/18" target=
+=3D"_blank" style=3D"color: #181818; border-bottom: 0 !important; cursor: d=
+efault !important; text-decoration: none!important;" class=3D"x-gmail-data-=
+detectors"><img src=3D"https://seatgeek.com/images/marketing/crm/assets/loc=
+kups/color/mlb.png" style=3D"border: 0; line-height: 100%; outline: none; -=
+ms-interpolation-mode: bicubic; text-align: left; width: 117px; height: 32p=
+x; text-align: left; border-bottom: 0 !important; cursor: default !importan=
+t; text-decoration: none!important;" alt=3D"SeatGeek is the Official Ticket=
+ Marketplace of MLB" width=3D"117" height=3D"32"></a> </td> </tr> </table> =
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-col=
+lapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: =
+left;" width=3D"100%" class align=3D"left"> <tr> <td style=3D"border-collap=
+se: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 22px=
+; font-weight: 700; line-height: 32px; color: #FFFFFF; text-align: left; le=
+tter-spacing: .08px; font-family: 'DM Sans', Arial, sans-serif !important;"=
+ class=3D"headline-tout" align=3D"left"><a href=3D"https://links.seatgeek.c=
+om/s/c/22vO4hYuI6mFLGpOMmkzE4_lP7_XQ0HfYWZ4-8UbcK9aTFWn1deFhgMh2Qwo_KsuYZTW=
+qTGjsd1cNmB1GZUFYjDDikO88wCQ_tA5ARS6UnxxhBBavAItY50ZAfGC1Dc5qCRISWsHs5Odsdx=
+2xLwBCVoSegnllG_rxaD_gfQRPjTA18B0WRQ16R8pAy-pSJucYA06MwugK7Goe9C4c8fu7j1J3o=
+GJUWo0xBzWuImsYaedJjcIlV8DSe362MzIZC8lzaTtyb0BB1Ql3aB3KAI599psqsmflA8wjJM81=
+2TLRmDvbs-Qs1EMOrU7Pg6rGw1rXXuBf-O-VMkbeD2_CuvO8ugCbsLEqjvhK4XQcoVLnpGso4g8=
+7Zgt04r5A2hrHMquh8AiBIvLv_JCxh5Mcqa-5Lau3U-V6tRIdepyGlX7dUHv1q40vFO1BpcdEUO=
+uvwwNRJlBeRTxAgDCsQwwEAoTxCqCMNai55kjlrRCelo98jm13C2sTbyR5wgkGTC1-IEaK6u3Ym=
+I3K29r5ONFcAfIAaMXeyvxMK64fPS4PA/hKT7u2ulh8DSFwgRi4VgLch0dGG-Xmn4/18" targe=
+t=3D"_blank" style=3D"color: #FFFFFF; border-bottom: 0 !important; cursor: =
+default !important; text-decoration: none!important;" class=3D"x-gmail-data=
+-detectors">SeatGeek is the Official Ticket Marketplace of Major League Bas=
+eball</a></td> </tr> <tr> <td style=3D"border-collapse: collapse; mso-table=
+-lspace: 0pt; mso-table-rspace: 0pt; font-size: 16px; font-weight: 400; lin=
+e-height: 24px; color: #FFFFFF; text-align: left; letter-spacing: .2px; pad=
+ding-top: 4px; font-family: 'DM Sans', Arial, sans-serif !important;" class=
+ align=3D"left">Choose from a wider selection of tickets and manage them ri=
+ght from your SeatGeek app.</td> </tr> </table> </td> </tr> <!-- Headline: =
+END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]--> =
+</td> </tr> <!-- Row: END --> </table> </div> </td> </tr> <!--MLB Partnersh=
+ip: END --> </table> </div> <!--[if mso | IE]></td> </tr> </table><![endif]=
+--> </div> <!-- Tout Section: END --> <!-- Footer: BEGIN --> <div style=3D"=
+background-color:#EAE7E1;"> <!--[if mso | IE]><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"width:600px;" width=3D=
+"600" bgcolor=3D"#EAE7E1"> <tr> <td style=3D"line-height:0px;font-size:0px;=
+mso-line-height-rule:exactly;" bgcolor=3D"#EAE7E1"><![endif]--> <table alig=
+n=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"prese=
+ntation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-tab=
+le-rspace: 0pt; background: #EAE7E1; background-color: #EAE7E1; width: 100%=
+;" width=3D"100%" bgcolor=3D"#EAE7E1"> <tr> <td style=3D"border-collapse: c=
+ollapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"> <!--[if mso | IE]>=
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" st=
+yle=3D"width:600px;" width=3D"600" bgcolor=3D"#EAE7E1"> <tr> <td style=3D"l=
+ine-height:0px;font-size:0px;mso-line-height-rule:exactly;" bgcolor=3D"#EAE=
+7E1"><![endif]--> <div style=3D"Margin:0px auto;max-width:600px;"> <table a=
+lign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pr=
+esentation" style=3D"border-collapse: collapse; mso-table-lspace: 0pt; mso-=
+table-rspace: 0pt; width: 100%;" width=3D"100%"> <tr> <td style=3D"border-c=
+ollapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; direction:=
+ ltr; padding: 20px 20px 40px; text-align: center; vertical-align: middle;"=
+ align=3D"center" valign=3D"middle"> <!--[if mso | IE]><table role=3D"prese=
+ntation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#EAE7E=
+1"> <tr> <td style=3D"vertical-align:middle;width:560px;" bgcolor=3D"#EAE7E=
+1"><![endif]--> <div class=3D"mj-column-per-100 outlook-group-fix" style=3D=
+"font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical=
+-align:middle;width:100%;"> <table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" style=3D"border-collapse: collapse; mso-tabl=
+e-lspace: 0pt; mso-table-rspace: 0pt; vertical-align: middle;" width=3D"100=
+%" valign=3D"middle"> <tr> <td align=3D"left" style=3D"border-collapse: col=
+lapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 13px; line-=
+height: 14px; text-align: left; color: #767575; padding: 0px 20px; font-fam=
+ily: 'DM Sans', Arial, sans-serif !important;" class=3D"mobile-footer"> <p =
+style=3D"font-family:Arial, sans-serif, Proxima Nova;font-size:13px;line-he=
+ight:14px;text-align:left;color:#a6a6a6;">&copy; 2026 SeatGeek, Inc.</p><p>=
+<a href=3D"https://links.seatgeek.com/s/c/C0ctcRGW68ZVykF5a467n3p71niTB5oXO=
+awRpm_U6W0uzVkHeUMeQS_9C9fFUcWL6RaRGoTYfkQc84Odb4M1i7_jo3PmjiWuiXKIq1QZrvC2=
+8XUSKkzuJXoGQ60hATtUHL79tKuyTXPsp60ZNU9X8bmFa9Xf2QVOSiL2oBsRHQKIXmjTyJoNehu=
+-dSt7CFyFh_uIbeN96GG-0R0DUZu_rsjqQ_rkmgf7TTXpZQ5DH6E5Cef-dR6tb6J9EDohsISbhW=
+5bam4Y1IceOOisvl4Oex0EvNoE8-nNlZq4I7WcoH5AOG_hrThtYMl-5SkGUNx-2ZUuSKxO1Dzi5=
+PGiEp4GQxd_PvlASnRgALEB4VXn-DUwuPkHngl_o-aUh5xm-CIXzsDB-ECA4gQH2kuErsYnxEXH=
+_XBHmLjKQZSKBOefoXnqkWK8DgTxjAep5KBmAxlQX4nJjKnmjdXSR8pPuAdHK9gae2JQgTJGPHw=
+ubt6BZObSVD-88xPtijky7_2dJTsTJbl38D1m-fVpI517TTs/jaIcCQwRUmX245SLiVNyZsktD6=
+-XGv1Q/18" style=3D"font-family:Arial, sans-serif, Proxima Nova;font-size:1=
+3px;line-height:14px;text-align:left;color:#a6a6a6;">Privacy Notice</a>&nbs=
+p;|&nbsp;<a href=3D"https://links.seatgeek.com/s/c/EpIYEzFiXgTwvLDNh0y5Om2o=
+mVAiO2DqycD0VOcmxDJi3iMcPlTSlCn4eLLiJtJHLqSLTgNrGut1SH539wEFfbfgcbLXDg8SSQG=
+WpDdx_PeajOr5B7dP0IBj7NFqKshUGt1nMuAmnMhj1tDD7_vqT4vqlkK9ISePG5vM66_oUt7mDO=
+wZDGy9DZ_OGJUTuetYQB4BQX_BDVAxMPiaXVkThfNRVPWQksSPB2ruyt9OkYwtX6ljf6SNQEg3S=
+iNNCGd83Eu51-YRb9vwuFlT7CQAnY1YcME7zJ6LE0xGy5whG2jywXZLDlRddirZnK0wQNJ326Nd=
+-LSPy2PhqWDrkMldib5n0LsVxHcNLBx44KM6yCSete73Lki_uM8c8FW8YA__BS1_IZwl_GJ8W0X=
+HUUtu0mRe-UJSDhcIMrX5CshWKSYasqy8vKRaU9A6NN-Vu561Pkk9OTobokN4J7EDQsgpZTi3RJ=
+K_MvVxdnDbI-JZEZWY-arQ5kIMDkdSWU-ZQ5yDsZMUC3SiMIcpjw/70GaOVjpMj21kcyC1dG6tt=
+BH-5uzOAED/18" style=3D"font-family:Arial, sans-serif, Proxima Nova;font-si=
+ze:13px;line-height:14px;text-align:left;color:#a6a6a6;">Terms of Use</a>&n=
+bsp;|&nbsp;<a href=3D"https://links.seatgeek.com/s/c/dA1oKCOSLoH3VwINlRGLro=
+JrMryko0soIXWarWRcMhQJJkM99b9SWF5dNFcojif_GHOzGf_ceAzclMRIIXQO6zHh4840m-WuX=
+eTePuY-fDSz15g4K42ewA7Msl3ZGWzncLSTLZ2ltIWH8Lb9ztImFjo0GGtqyrYu35rQRSBHFjbX=
+O4vxBjcFu4d1PmeWT3y1gAeCUnXnvqLwptHWt9vRhfDWNcdI5RXEHD5flDf_kH11YWl56PShpti=
+WbBFefwnjeJuayjsfJaG1IoftGfue2i71y2kBIOlrz8wmiHQkKRb70YVhmc4KLdogC0Yxc1nybT=
+TbCoePOHVWO61pW3IyKU6XX0t6b6VwurdpNIqPNKzvNC_AXMqDaJZHh4bcfLg4cg5xoclU55CZW=
+xbprtv9j07OF8ou8wdBixif9pc3g3IbY38djuXx-jLGOs69c2fk_smnwXJEmguMrhHRabYI7-kI=
+rcXAHMe8zHpXGuK0uXwG98ZAuJcoSp77qM-7IWeq9wVZBLcs7Hs/5JgvXixavr0bYScYjmv57O6=
+05E_PeNXx/18" style=3D"font-family:Arial, sans-serif, Proxima Nova;font-siz=
+e:13px;line-height:14px;text-align:left;color:#a6a6a6;">Help & Support</a><=
+/p> <p style=3D"font-family:Arial, sans-serif, Proxima Nova;font-size:13px;=
+line-height:14px;text-align:left;color:#a6a6a6;text-decoration: none;">902 =
+Broa&#8203;dway, Fl&#8203; 10, Ne&#8203;w York, N&#8203;Y 10010</p> <p styl=
+e=3D"font-family:Arial, sans-serif, Proxima Nova;font-size:13px;line-height=
+:14px;text-align:left;color:#a6a6a6;">If you believe this has been sent to =
+you in error, please <a href=3D"https://links.seatgeek.com/s/eh/cB0SFIs_q-b=
+1sA3hq770nvofTAEdal1CfeMqkQBWN8aJz5qqXH6fgjpHuu5bt4OTS9f2QdJw46au5tI6xFsdzs=
+Zqq1W8uYaT2ZEeGQ9XZKLSDd1G1O2KXgAoCGPFeJoGCFPu1qvkdNJmwJ-kYaTdNBoHwz7ZkssQy=
+Qf4S1EV08Ep53ve1e8VJDU5UmIRkpNHUENlKmQUTBTS0BFIO7VUMCJOzGaAk3Y-2Ars7b_JGB2_=
+XisyUISCmLZHgWrQizCvVGq8ObxAdN5ukJ45DWlyiOVLVg7jIX3b72bfi0-wc9WLNZqmXknhIZX=
+gGdoTP4LcWnTZOK7fdDjXvhLamyV4uJKjHjusC8ojBpjyL18-xxlNjITuIGwwX6zs_8N7J1HWD4=
+xI-axBqfagGbSVRm3aMV29CPDOAwL41AEtnHYlLhsggoE3yAmv-TrHcv5TXTSWxVj4fg_mIT8_f=
+Zh0gEIyo-vz1LfDJ3VRd163ipx-IyrZMx4mCYuG9QColORCXGNiJ8doJpagNSYV1-I_EJNaohs4=
+VGj6Dtoy3l8JEEEmC0M-ob4VcpgJZKpIargfuEl1741H_YWE-N-768vrX7e2MkBCUyMu1nmjAZC=
+SAswed7bKFC8shx_4k_lSpkYaU0sOrE3ggGtf1zBsMbjzfk_1IdO9nHCQHNcS_0Pdv1-zsiaIDx=
+z7o4UFxIWh3HGXEJuJwjt6YbdadNcZpsDhpSLHRdY_okpS0KEVon_c8fyof7B1QhWIeK3VOHeaM=
+FU1h6Tj5WWne4k3VcvoSlFArDKH6iKjosquZ917TJiHjgUEZDmSJAczKdTJvQp338_PdCkA53K9=
+bWasVBB6tw9IjnrqU5QVr1udVyHxjc-Go1tdFNlaQpcuXBHsR4yERf_Td_GFiIgdJchb0Ucwale=
+M5CYpO3EP5f0CweOC38Kt7h7KoDKyFwIuOCmS3px11-ZgOeC50oT8MmwVyNORlfYZG0X6eUDOJd=
+hz95f6XiaexHrAKjoDyZosSfoIRodzCbKQeTwNbMDKfPmtihD8jr4kRQX8zH6Hle6ferJ-XoY15=
+C7W0Mbnnj2oS4xE-CQ3qqChNjrSYTQIgCZ1eVjnvFaYtacWTaYrqL2EWuXO0UzSIIkHIqbt-wgF=
+zmMd0yvqfOelFccb32Q0PwpW_JVa_7-_38PzGjRH-aFNJSRqhWOg0YYUfTIo-iNhia5LmeCZPaV=
+bPEyb9NL6gtv5Q2-TtQgcamuSUDRj0C_CvsLzr1ZRFTii0k_4eXv2c9DkCubW2CcFWXP3twhHPz=
+Er5R3QYXRNYEo6Op8JjKKye3jKtGfPTpz729yfBlPr-PZXKLXw-fLNio9xvRZd87IJU7ODoOwKF=
+w/_HIoEMNISRGynsDsegwy4yhkZr12ovbd/18" style=3D"font-family:Arial, sans-ser=
+if, Proxima Nova;font-size:13px;line-height:14px;text-align:left;color:#a6a=
+6a6;">safely unsubscribe</a></p> </td> </tr> </table> </div> <!--[if mso | =
+IE]></td> </tr> </table><![endif]--> </td> </tr> </table> </div> <!--[if ms=
+o | IE]></td> </tr> </table><![endif]--> </td> </tr> </table> <!--[if mso |=
+ IE]></td> </tr> </table><![endif]--> </div> <!-- Footer: END --> =0D=0A<im=
+g border=3D"0" width=3D"1" height=3D"1" alt=3D"" src=3D"https://tracking.se=
+atgeek.com/q/vC2jeM9cIyAT7rU165tb2w~~/AAIZLBA~/GifsnRgQ08EpGf_GdVU7rAw8MA-N=
+GjTMEhOHAgnxlfVMfPpQvnlMDrG12-vmZ9tNvF2cUrlOMNvzvqtqb08Hbg~~">=0D=0A</body>=
+ </html>
+--_----kdJHtZ3uAkSFyMijsCGwmg===_A8/C8-37424-E240AA96--
+

@@ -1,0 +1,234 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a89:207:0:b0:2f6:8aae:b1b9 with SMTP id t7csp2368257lqk;
+        Tue, 3 Mar 2026 02:05:06 -0800 (PST)
+X-Received: by 2002:ac8:5a03:0:b0:507:3ee:23bf with SMTP id d75a77b69052e-5075295727bmr195079901cf.55.1772532305924;
+        Tue, 03 Mar 2026 02:05:05 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1772532305; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=f67JviOhSzvUzZzv6QsJCwwOayfWHUdQh4I3YJW0c2MPGrWaHiiTFLykleEQQ+wZvO
+         emxLusJZpi2O4StCRXOrB1iXxYno5fdhb56yWU/MsDm3GB5tbsX3Mag8l99DDvRjYYPk
+         Umm7owdabH7HjJEprLWnzDJzzaSwnJAhopyX+RjoFMj5w3P8PUawl2/eW3DpOFBE/b5T
+         7c7fw/Ga0OCul2zWsn/M5MPlTbaie69uYxiHmTar5vcvmgg3FaG3Z8KNzoi8aX44+bBE
+         whZ0gEZXzH261S8LhuuEjQP5nj3+ZAUN/o1NnnRJXNFwyEnirOh6PtwvjUExCA3mjslR
+         vdew==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:date:content-transfer-encoding:subject:to:from
+         :references:in-reply-to:message-id:dkim-signature;
+        bh=oxpRiKRwojCy6JjcfQAlxuo30dG/3GqEE7Tq6hmAyBM=;
+        fh=89TqPo42mAxJqfAhlcmgIkx2NvnBS1R4PWTKFCAr/eE=;
+        b=QQrTO6nuF5eHcNH5RbpEyCa09IQFcQ37Z0asP77ocot2mXS5Z2B2UuYlvj0sTPA5ot
+         uhtHYuwoOl25UWBpu1y+3kx1q2w3pJNkqMqHpvF/55Ar0HccMnwrmxRNVCtezmdTOofz
+         9R6L/txLymzDYPjCojf+Lodhuhma0Fh1D1bv0nmQFyJGvcMp3zuIDGI1KJPrw42bLJvg
+         t/hIH1AwTzVgTh3MXzoC69vL7nKt+DpQQIMoFQEVBbrf3/fxXf7M9tDTkVw+xp/+NE7k
+         qu6wzPwaN/a2Lx6vRQri6aaPxpm7n7/E7suckUut+5OpCUUEWaRMAAvlB3/gJxHvJFUV
+         v3Kg==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@geticonsultnordic.com header.s=selector1 header.b=Kl0qrOvp;
+       arc=pass (i=1 spf=pass spfdomain=geticonsultnordic.com dkim=pass dkdomain=geticonsultnordic.com dmarc=pass fromdomain=geticonsultnordic.com);
+       spf=pass (google.com: domain of karo@geticonsultnordic.com designates 2a01:111:f403:c100::f as permitted sender) smtp.mailfrom=karo@geticonsultnordic.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=geticonsultnordic.com
+Return-Path: <karo@geticonsultnordic.com>
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazlp17011000f.outbound.protection.outlook.com. [2a01:111:f403:c100::f])
+        by mx.google.com with ESMTPS id d75a77b69052e-50744ab8164si195000491cf.187.2026.03.03.02.05.05
+        for <fabio.akita@codeminer42.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 02:05:05 -0800 (PST)
+Received-SPF: pass (google.com: domain of karo@geticonsultnordic.com designates 2a01:111:f403:c100::f as permitted sender) client-ip=2a01:111:f403:c100::f;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@geticonsultnordic.com header.s=selector1 header.b=Kl0qrOvp;
+       arc=pass (i=1 spf=pass spfdomain=geticonsultnordic.com dkim=pass dkdomain=geticonsultnordic.com dmarc=pass fromdomain=geticonsultnordic.com);
+       spf=pass (google.com: domain of karo@geticonsultnordic.com designates 2a01:111:f403:c100::f as permitted sender) smtp.mailfrom=karo@geticonsultnordic.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=geticonsultnordic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=srwVGp68aVtw9Q2iPC0dtDt5C8HO3vuq0A0f97kB3v+R8yCYnvjJXSh7dn2Pt/2lQiSiXEsK2ofU/HXGSQ2rvGRuAHAH70SMJ608UJ67D7/6TJ2hUALvqWcM8tPJ+bVm+C0TWMWUPVcJObubshchC2CQ4DV5/RxBMFaSHnE8Lpr6R++zUxCAR0q1sCFCChgpAEOjll6y3mNhO/Wab76Nky7a+Dkc717Tw1eTGn02+R1Vz7AuiwlI0jzz/KNz+ysv2VnECCf4nkoBLTI0l/1xLj2uxD1F10+GxEm/CtJMCufik/2/RuGOQUdNih1NYabf6nrZ7a3U5vM32UGoV/zJPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oxpRiKRwojCy6JjcfQAlxuo30dG/3GqEE7Tq6hmAyBM=;
+ b=JsW7grC964VjwhZjxhlF8C3HKwoID8825kcvN2ddTilgREd7kBbDpbaCI8MIl1K2ZauLpw7y+lqxEi6CHRTpaCenMfcJaL/Am6lnr2pBWWdhWMVrQK0Cp0rraNol762On2IatCmM+b3uVxqWXIi50B4fufXNaiGv32KkFCd5YelBnpRZzgXIxkD3JRBbrda6iiYgm3ehT+z42+65pdy2EkKi407iVQKzieBuk6uZayCHfnIWuMu+qXGbfZEWEm662mkRflix9fcFDEVn6IoHkO+O4HCbipx5HaL30jAysr/AM88oJLyY1ueOXBWqt4/gSZOTQ4nk64X3LOm+zWZT2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=geticonsultnordic.com; dmarc=pass action=none
+ header.from=geticonsultnordic.com; dkim=pass header.d=geticonsultnordic.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geticonsultnordic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oxpRiKRwojCy6JjcfQAlxuo30dG/3GqEE7Tq6hmAyBM=;
+ b=Kl0qrOvpsehtDjgrDpt/AyFwDtVaEPDLpq9P+a7NE8KaLP6txU1Zlbj8s5pUmJ98tFIt903QKVb46cYjxM+R7oux+z9eDEnPlvjPnNobuQ3Kn5v2C4bwRx5TFQ4qinVuoLqAnncQvHhjh305+2XAs09rX9FLEB1tt+G4KRSXY9jQDj9i7YSiO0tbiJrhWJHsrxdIZKrJyiexz+JwITo/GVR0p+kkItw+o1k3YTnkqEyQlxPq9Q1TY3x/SIoKuTfSxGsiQoqW1DIiGNsHLYYQC2Gwj3KEcS4CPDqcOmJbtyMbxfV7g4QwMUjCt/tf+TdsyoJh7+B+uyy27Y+rRbn3Zg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=geticonsultnordic.com;
+Received: from LV8PR08MB9632.namprd08.prod.outlook.com (2603:10b6:408:1fb::16)
+ by LV8PR08MB10736.namprd08.prod.outlook.com (2603:10b6:408:296::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Tue, 3 Mar
+ 2026 10:05:02 +0000
+Received: from LV8PR08MB9632.namprd08.prod.outlook.com
+ ([fe80::b983:ce0f:4d85:d96a]) by LV8PR08MB9632.namprd08.prod.outlook.com
+ ([fe80::b983:ce0f:4d85:d96a%6]) with mapi id 15.20.9654.020; Tue, 3 Mar 2026
+ 10:05:02 +0000
+Message-ID: <019cb328-7e70-75c7-af55-8d404e114518@geticonsultnordic.com>
+In-Reply-To: <019c6ad4-1bbd-7502-ad57-048b95c5a1c3@geticonsultnordic.com>
+References: <019c6ad4-1bbd-7502-ad57-048b95c5a1c3@geticonsultnordic.com>
+From: Karo Hajrapetian <karo@geticonsultnordic.com>
+To: fabio.akita@codeminer42.com
+Subject: Re: Inquiry
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Mar 2026 10:05:01 +0000
+Content-Type: text/plain; charset=utf-8
+X-ClientProxiedBy: CH2PR20CA0017.namprd20.prod.outlook.com
+ (2603:10b6:610:58::27) To LV8PR08MB9632.namprd08.prod.outlook.com
+ (2603:10b6:408:1fb::16)
+Return-Path: karo@geticonsultnordic.com
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR08MB9632:EE_|LV8PR08MB10736:EE_
+X-MS-Office365-Filtering-Correlation-Id: e10689fd-e421-4cb0-316d-08de790c5628
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|3613699012;
+X-Microsoft-Antispam-Message-Info:
+	GsjQqeC6h7pcPcHjPI9R6fiAA+NYPcz1ZpA0vvS/L1fMAOBdnid7PjchzNN3bK3adrO/q9YbCby2Nb5zWisBbn3HLcJflFWOVLsIv+AdixU5YT0WlHXwMoYFJXZD5m6kCJ71GHI3rLBj/tA7bMVIS8XYMxci/JcQfDkwZVqgog5mOG5TBo6+hS1kzC33rptXTBGiDoHVqQepFazmsiLbr0PC4LkweTKAMWm72CNEmeWMD1UEZUGPq2eqqHa6m3MrfHATJZhFn43SdkgSPt6QhbfkRCuGYZb5EG0019IPXLdsYvbfhaCjfKmiw263A3fcar+3W0I3DGIFbq/s7o825Ua3oflUzCr3IXFElvwwB/koeB3HvFUcnsd8qpwxx6G0j3JT3AxEFoG6hxSQ5zCMmZfadM4wa+TkyiHje6Vt8MHBk/+7t8EPlU/rCgHkrPPPySJXDb5fnyCLZr13cLUfZv0pwb9BHdmJ3SNCWrkUKvDcD+YYMsz7aBvnCVO9ZDFBEbhFOkfcacaENm4dFkMwjSy4+0AW+HJ22wiJ/HTIAArT2FBi3RJtaDfVjD8sJMIRnrNHA9EfSyr5Hx/jJ5GZCW0AaxE7JWlwcSkTCFbc19NZAzc8Y1gR8OexYTPHHaLtVS2708HlcBljdCakpEadg8FIbbg3CR/Jo9+qiehOhwUg3kEjQHmdOmw6Jn9tMGht0jvlDqiS92FOepOuMXMfDToayGTLMMPSfx3GbaSPpFsiajYZf1bbvPzCcK/XFICPa6DMoaP84zzIjkD26+B8VmVQKYbOKdDeGq9/0EpelZw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR08MB9632.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(3613699012);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MW9WZFJLcmVlZURhTHRGNnYvYjYycVd0SjhsNS8yQ1lJK010V0JtWVlzdCtH?=
+ =?utf-8?B?aWc0Mm9wSGlHY0dvbDBtWDdpNnlxdjM3SmhvV2FCdnRzZkFPdHN3Z216QXNv?=
+ =?utf-8?B?KzJNYWZqTFlrVVU4Smg2NTB2citlSE9ybndBb292NWwxZjdMU1dmLy9vNkxJ?=
+ =?utf-8?B?dHhZelh1WDVaTzNJRVM1VDByc3Vsck5pYytjb1NUSGkxbVBtWllpMFRZdHh5?=
+ =?utf-8?B?RFNSMVhwcnBVSk1MODMrLzhqWmxaZjZoZUZ3SnpxaGFSdU1qd3VaVW1BMFVG?=
+ =?utf-8?B?VktoQkZtM2RzVFQrd0RId2k1WGExeGVHMWtRcGxlVlRTWVd0RVhqbktIWmw0?=
+ =?utf-8?B?RWljc3E5OGFmc0pKTEhJYUQvUk4zbUFvN1FQTnpOb3NMRG1weTFyZitzNXBx?=
+ =?utf-8?B?T3lqMjMrZ3hScWJFc1dONkZnelh3N3IrcmEvVzRBQ005dWpNck9GVVNCdWhI?=
+ =?utf-8?B?OUw5ZEhuZm5zYlNCTGhCek5zajdRalVHajFidUd2KzVkc2I1aVVNOHpqWEZY?=
+ =?utf-8?B?MWJ0RkIxOXRqcy9kREVGU2hUQy9YUXpFY0o5MXhwY0w2Z0VyWFllWXR2c1Nw?=
+ =?utf-8?B?SDdVZ0FUcWpibmFlZ1RRN0dBVWhxamZVM2ZzZ0JCeTk4ckRBemNkTWNJemZM?=
+ =?utf-8?B?TklhVmVIVWRieDNOTVJlQzNoVWRLZVBYOHRlSnFrWmtzYVlvNnpmdTc2YUpm?=
+ =?utf-8?B?OWQ2RkZ1UGFSM0dBTit6bFFnbC9QSWFUUjlNTC9CK0FqRHRwODU0cTRRMnBE?=
+ =?utf-8?B?L2RQR2cyU3VZSHRLQnRlaHQ2TnA0OTIwazVNbXAwb0t4SzNmM2tlNVN6aWp1?=
+ =?utf-8?B?c3Z2aEZNWXBYbW9Fd2QrWHVMRXE1M3prV2E4d1h0dm1MdU40RWtXdE9DaFZH?=
+ =?utf-8?B?VHh6eHpFTk1wN2trRzBDcUhoTWQwUHZNUTFyU2IzZGRCeXZLQ1BHNHNvc2ps?=
+ =?utf-8?B?Kzk0TEZqUCtGNzdVcEJ3RzJRdCt3cE9oWkpUR2loVFNrRkYzK3JoeVZISDhI?=
+ =?utf-8?B?bGMwNWpUaXRQS2dWeE1iL05IcHlQazRybTU2OUcvSkJjWUJaVUtVNWlJakh1?=
+ =?utf-8?B?aFk3REdYMG4wTWw3cVdjZnZ2dzlySkNLUSt2MzBFUjdaVC90NG9JRlc2STQz?=
+ =?utf-8?B?cGI2UWRPSERvQlZiS3YyOEthOWZDYUphMGhNc2ZMaU5ZNUJ3YzlWanhrdUFT?=
+ =?utf-8?B?c21xVk50K2dEcVRpRlY0cTVxUzRVS3hyRnd0ckFZRk9kWkYwT0VDaklnUTV2?=
+ =?utf-8?B?d1dLd0oxclFJU0gva1UvWVM2VHQ5RFBPeVVZWnNOMnF1ZEVERWVIaEtkcUZy?=
+ =?utf-8?B?c0s3amswaHhMM290NnBqSXAxaXM2T213QWdBU3JDTXB4Ym45VUxMQ3ZaK2th?=
+ =?utf-8?B?RStQT2RkSlF6MlMrZ3pHb1VxRlRRWGpMdnc2M0VPR1Z2c0R3MnFPeE5TbTVz?=
+ =?utf-8?B?RkM1QTYvWDhyZG4vTmR2UWdmWFoyNnJPOWQ3SjlyVVJiS09oVDc3dXZBcWp2?=
+ =?utf-8?B?VUQ4SkVhNFNEc2ZUMElFaEk2MUtpRHVDcGczaHh4elRidjQzQU9XWlBLU1BC?=
+ =?utf-8?B?ZVVUVld5UHBMZHVnSUxqN2ZmMFVSWnZmVmZNejkrdis0eFR2MDdiTHQ0WGpP?=
+ =?utf-8?B?NUQydDdMSi9FNFNWKzZpcUtnK1BXdzlkVm5xQWFER3dHa2hndEZjMmdjMVF4?=
+ =?utf-8?B?QWFHVXArY1A4NkxHa3IwRWdHZkduVFM1cUNUTW9aQ2loa2JpVjE3b0x4bHh4?=
+ =?utf-8?B?MEQ2eFRyT0RNaXRRZHRsR3lxSjI3NEJyWTY4SlUrN0VUeEp4SUlUek1DVHJS?=
+ =?utf-8?B?aElXaWswdGVJVGhKUTJKZllpRW5ZZ0FhTGxNOE8rMklBeER6K3hVdHQvZVc3?=
+ =?utf-8?B?N0J1OVdtVU5lUHlGZ29IY05aQUZEUTRMOTdwNzlRaWRJWm1BMVRtYTMweVVH?=
+ =?utf-8?B?M0dBalVxb1RSK0tNbWh5WFRmWWwwa3BHNmVKYlpLMnRqMDIxMUhwS3IyLzlE?=
+ =?utf-8?B?dDNMc0lpVnpQTHBHZXFtSGVCVHlqTWRJcUVOc0tQK08xNGZvaWhuZGdQZnR1?=
+ =?utf-8?B?MXMrNm1rT3hFdVp4S3lQb09Xd3ZmU0ZhbE5HUWNtRmkrK0F2RFBseDl5YTRR?=
+ =?utf-8?B?b05sSWNqVXN3eC82Q3BRb2FzUkdlcitZbWhTNkR4MVVQaTM5TmhrL1dweWZZ?=
+ =?utf-8?B?Q0ZLUENrTXVObCttaXc2NFZleXRuaElmRlpxV3VSOVNSM2NrL3V1bkVpM1hQ?=
+ =?utf-8?B?dUFnVituRG0xSjN6M3Z1cjdYSC9jRFVhUmZBclpTUCtHUTliN1gwQWs0YUtT?=
+ =?utf-8?B?eFByRG5xK3c2UFRBRHRuNzlSQ2ViempZNnNDNHZJUjBsbjJnaFZKRyttazNK?=
+ =?utf-8?Q?rdiSl5GxClEhZiB8=3D?=
+X-OriginatorOrg: geticonsultnordic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e10689fd-e421-4cb0-316d-08de790c5628
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR08MB9632.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2026 10:05:02.7045
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: c1011163-bb81-4cb6-92de-e17023761d3c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6ZunTxbjqprp1GEa2sxhlP+BnaZV+r/HgHCMTi9XuisMAFg9p82u89+99nCRp5kAQaBopGgOTj4UB+OmiySQLlgVJ/zcMuOadtEaCiR6qd0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR08MB10736
+
+Hi Fabio,=C2=A0
+
+I'm just trying to get in touch with you again regarding this to hear what =
+your thoughts were?=C2=A0
+
+By working with us you will not just gain more revenue but you'll achieve a=
+ geographical expansion to the Scandinavian & Western European markets whic=
+h can open a lot of doors for Codeminer42.=C2=A0
+
+If we could connect for a short conversation sometime this or next week I c=
+ould explain further?
+
+P.S. there was just a very interesting market report released on the Swedis=
+h IT market, I'd be more than happy to share it if you want to have a look?
+
+Best regards
+
+Karo Hajrapetian
+CEO & Founder
+iConsultNordic
+
+Just let me know if you don't find this interesting and don't want to hear =
+from me anymore.
+
+On Tue, February 17, 2026 9:00 AM, Karo Hajrapetian <karo@geticonsultnordic=
+.com>
+[karo@geticonsultnordic.com]> wrote:
+
+> Hi Fabio,
+>=20
+> I just wanted to follow up and hear if you received my previous email and=
+ what your thoughts were on it?
+>=20
+> As I previously mentioned, I can help Codeminer42 generate valuable reven=
+ue from the Scandinavian & Western European markets which are very strong a=
+nd attractive markets. There is a huge shortage of developers which is why =
+a lot of companies are looking for outsourcing - I can help you connect wit=
+h those companies.
+>=20
+> Would you be interested in a short conversation to discuss this further?
+>=20
+> P.S. there was just a very interesting market report released on the Swed=
+ish IT market, I'd be more than happy to share it if you want to have a loo=
+k?
+>=20
+> Best regards
+>=20
+> Karo Hajrapetian
+> CEO & Founder
+> iConsultNordic
+>=20
+> Just let me know if you don't find this interesting and don't want to hea=
+r from me anymore.
+> On Tue, January 13, 2026 10:00 AM, Karo Hajrapetian <karo@geticonsultnord=
+ic.com>
+> [karo@geticonsultnordic.com]> wrote:
+>=20
+> > Hi Fabio,
+> >=20
+> > I tried reaching you regarding this a while back but didn't hear back f=
+rom you, so thought I'd try reaching you again.
+> >=20
+> > My name is Karo and I'm a freelance business development consultant fro=
+m Sweden. I help IT companies generate new business in Scandinavia & Wester=
+n Europe. Previously, I worked with IT companies whom I collectively genera=
+ted 7-figure opportunities for.
+> >=20
+> > I'm currently looking for a new company to be hired by and wanted to co=
+ntact you to ask whether Codeminer42 would be interested in hiring me to ha=
+ndle business development in Scandinavia & Western Europe? I can work on a =
+salary + commission basis or a flat salary.
+> >=20
+> > If you are interested I'd love to jump on a call to discuss further!
+> >=20
+> > P.S. there was just a very interesting market report released on the Sw=
+edish IT market, I'd be more than happy to share it if you want to have a l=
+ook?
+> >=20
+> > Best regards
+> >=20
+> > Karo Hajrapetian
+> > CEO & Founder
+> > iConsultNordic
+> >=20
+> > Just let me know if you don't find this interesting and don't want to h=
+ear from me anymore.
+> >

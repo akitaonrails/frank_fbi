@@ -1,0 +1,182 @@
+Delivered-To: fabio.akita@codeminer42.com
+Received: by 2002:a05:6500:c045:b0:2f6:ba91:416a with SMTP id g5csp69741lqi;
+        Thu, 5 Mar 2026 10:27:24 -0800 (PST)
+X-Received: by 2002:a05:6122:20a3:b0:566:363c:c52c with SMTP id 71dfb90a1353d-56b02f8d226mr363875e0c.15.1772735244286;
+        Thu, 05 Mar 2026 10:27:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772735244; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UuRgJmnDU3+z35/v4+UhOK8xhShyfQtDAoZgPTCDc/YRe0fw2zNZhqtj+J0CDz659x
+         LyspSf3TEpBtjSCkCOilnTFdN8Xawvc9EGqhZpQyusjSHx6f+h+TmrDdFcXSDXuRFiyJ
+         IbQQmb2zmzrW6wL6r+rV1p47CbmQ+6/GYQ3WQLqHu2VnjfcpxghG6rvSYLTuex3s/MMG
+         o381Pm6PbtIAwmymDyKqLHzhgqjZGssKqIZxhmqS61pKJ1dwsZk9mmxwLYjhqaX9q4ot
+         Rz6TkJlHVFuY6eF1JBQu9AfpeER/ncBWFm+I/eeRtoImUGyPRfu9il3feT3RKNjJEAnR
+         Q6MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=message-id:feedback-id:precedence:list-unsubscribe:mime-version
+         :subject:to:reply-to:from:date:dkim-signature;
+        bh=CSzBpzX4dDoJZQ185TAFgHN4uEi/YcHnkwvuDUgptS0=;
+        fh=89TqPo42mAxJqfAhlcmgIkx2NvnBS1R4PWTKFCAr/eE=;
+        b=WyfoSq7Si3e86XU7YPuo/Ys0FNqIYPaUUwx6AJ2MLnf5lBTu6wqd8FoCBSHkXbS0r3
+         xSRLhkJDZuqYgbmD1uZQDWEQ9vfv8nw2R8FDYMceZMYjSvEIDH4Iy03V176OEQ0BR+nC
+         lGIGH6Ery+S8ROHBhgROXyEUhqwlqBW1EQzY7cjmOU+WC1jAgh3LNZQbpqQbTs374Nw1
+         Udbx4DmwlFehON8m4MWzLcZVlx0DoFlqYSWt3DTQToFlAmzoT0gQYqzY8vEumOuFhExq
+         HB2RMS26SNA18sEAZtrfoEtCuGxJUrOa1Qu5ohB013w6u1NOzH0RHW87tToPyaUsatHI
+         cHdg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@envios.tramiteconsultoria.com.br header.s=emkt header.b="urGx60P/";
+       spf=pass (google.com: domain of 120471@envios.tramiteconsultoria.com.br designates 200.234.214.26 as permitted sender) smtp.mailfrom=120471@envios.tramiteconsultoria.com.br;
+       dmarc=pass (p=QUARANTINE sp=NONE dis=NONE) header.from=envios.tramiteconsultoria.com.br
+Return-Path: <120471@envios.tramiteconsultoria.com.br>
+Received: from mail21426.delibird-emkt0001.lwdlv.com.br (mail21426.delibird-emkt0001.lwdlv.com.br. [200.234.214.26])
+        by mx.google.com with ESMTP id a1e0cc1a2514c-94df6655da6si4376890241.206.2026.03.05.10.27.23
+        for <fabio.akita@codeminer42.com>;
+        Thu, 05 Mar 2026 10:27:24 -0800 (PST)
+Received-SPF: pass (google.com: domain of 120471@envios.tramiteconsultoria.com.br designates 200.234.214.26 as permitted sender) client-ip=200.234.214.26;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@envios.tramiteconsultoria.com.br header.s=emkt header.b="urGx60P/";
+       spf=pass (google.com: domain of 120471@envios.tramiteconsultoria.com.br designates 200.234.214.26 as permitted sender) smtp.mailfrom=120471@envios.tramiteconsultoria.com.br;
+       dmarc=pass (p=QUARANTINE sp=NONE dis=NONE) header.from=envios.tramiteconsultoria.com.br
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=emkt;
+ d=envios.tramiteconsultoria.com.br;
+ h=Date:From:Reply-To:To:Subject:Mime-Version:Content-Type:List-Unsubscribe:
+ Message-ID;
+ bh=CSzBpzX4dDoJZQ185TAFgHN4uEi/YcHnkwvuDUgptS0=;
+ b=urGx60P/xYYlFEsx+VZTUUogRad/52naIe4ZpAZ6WxoUS1I3dmKV2LLq5bkeOZRdLcSEgyLG6f5Z
+   P+ClodbHtcve3MMAIQDgFjTi7/J/36FH+V3OVynHIHrAX/kcxSoGQT61NBvFUZgGqHtsoDrbQ+BD
+   ubU1cT9BLKrRcpte/Fk=
+Received: from localhost (191.252.190.5) by mail21426.delibird-emkt0001.lwdlv.com.br id hl75da2n8lgp for <fabio.akita@codeminer42.com>; Thu, 5 Mar 2026 15:26:28 -0300 (envelope-from <120471@envios.tramiteconsultoria.com.br>)
+Date: Thu, 5 Mar 2026 15:26:28 -0300
+From: =?UTF-8?B?U3VlbGxlbiBFc3Bpbm96YSB8IFRyw6JtaXRlIFNlZ3Vyb3M=?= <suellen@envios.tramiteconsultoria.com.br>
+Reply-To: suellen@tramiteconsultoria.com.br
+To: fabio.akita@codeminer42.com
+Subject: =?UTF-8?Q?Cota=C3=A7=C3=A3o_plano_de_sa=C3=BAde_empresarial_-?=
+ =?UTF-8?Q?_Redu=C3=A7=C3=A3o_de_Custo?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_69a9cae85bd13_11cae3fd3d0ff024c1503399";
+ charset=UTF-8
+List-Unsubscribe: <mailto:3lkn-1luuc-lt-kf-8c33a61a349cb02db225f62f7b4c519eb56db23c@unsubscribes.mktnaweb.com>,
+ <http://emailmarketing.tramiteconsultoria.com.br/accounts/120471/unsubscribes/701/1768396?emkt_c=1689011021&emkt_v=ZmFiaW8uYWtpdGFAY29kZW1pbmVyNDIuY29t&envelope_id=655>
+Precedence: bulk
+x-account-id: 120471
+x-contact-id: 1768396
+x-envelope-id: 655
+x-message-id: 701
+x-locaweb-id: QzCJVwWNmnS8QT7C4fuW9PJWqn299mJNE69Y1rDNdZ0L7vBog4Qo2PWxtbbIej2hyjujTsnlRAziCf82sD45LE0pkR934rqQeLFB9r7hTDQtXiO3iBoWYCGBj628NefnkwAHFes8ZVN6JtbvBX8x1_GdvZ70o5tzVqWi6Ud2KiJr8LnOTZBqNo733rZ7IDgz
+x-locaweb-id2: NTM3NTY1NmM2YzY1NmUyMDQ1NzM3MDY5NmU2ZjdhNjEyMDdjMjA1NDcyYzNhMjZkNjk3NDY1MjA1MzY1Njc3NTcyNmY3MzIwM2M3Mzc1NjU2YzZjNjU2ZTQwNjU2ZTc2Njk2ZjczMmU3NDcyNjE2ZDY5NzQ2NTYzNmY2ZTczNzU2Yzc0NmY3MjY5NjEyZTYzNmY2ZDJlNjI3MjNl
+Feedback-ID: 120471:701:c:emktlw
+Message-ID: <0.5.0.C2.1DCACCD954CDCA2.967BC@mail21426.delibird-emkt0001.lwdlv.com.br>
+
+
+----==_mimepart_69a9cae85bd13_11cae3fd3d0ff024c1503399
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Prezados, boa tarde. Tudo bem?=0D
+Estou em contato para verificar a possibilidade de apresentarmos uma prop=
+osta de redu=C3=A7=C3=A3o de custos no plano de sa=C3=BAde da sua empresa=
+.=0D
+Somos parceiros das principais operadoras e estamos com uma condi=C3=A7=C3=
+=A3o comercial excelente na Porto Seguro, Amil e Sulam=C3=A9rica que pode=
+ gerar uma economia significativa para o seu neg=C3=B3cio.=0D
+Posso te apresentar uma simula=C3=A7=C3=A3o sem compromisso? =0D
+Se sim, por favor, me informe o n=C3=BAmero do CNPJ e a lista de idades d=
+os benefici=C3=A1rios. Se houver um hospital espec=C3=ADfico de interesse=
+, me informe tamb=C3=A9m.=0D
+Suellen Espinoza=0D
+11 96770-3938 | WhatsApp=0D
+suellen@tramiteseguros.com.br=0D
+@tramiteconsultoria=0D
+www.tramiteconsultoria.com.br=0D
+https://www.linkedin.com/in/suellen-espinoza-08193246/=0D
+Se voc=C3=AA n=C3=A3o deseja mais receber nossos e-mails, cancele sua ins=
+cri=C3=A7=C3=A3o atrav=C3=A9s do link %{link}=
+
+----==_mimepart_69a9cae85bd13_11cae3fd3d0ff024c1503399
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www=
+.w3.org/TR/REC-html40/loose.dtd">=0D
+<html xmlns=3D"http://www.w3.org/1999/xhtml">=0D
+<head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DU=
+TF-8" />=0D
+</head>=0D
+<body>=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><span style=3D"color:#002060">Prezados, boa tarde. Tudo b=
+em?</span></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><span style=3D"color:#002060">Estou em contato para verif=
+icar a possibilidade de apresentarmos uma proposta de <b>redu=C3=A7=C3=A3=
+o de custos</b> no plano de sa=C3=BAde da sua empresa.</span></span></spa=
+n></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><span style=3D"color:#002060">Somos parceiros das princip=
+ais operadoras e estamos com uma condi=C3=A7=C3=A3o comercial excelente n=
+a <b>Porto Seguro, Amil e Sulam=C3=A9rica</b> que pode gerar uma economia=
+ significativa para o seu neg=C3=B3cio.</span></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><span style=3D"color:#002060">Posso te apresentar uma sim=
+ula=C3=A7=C3=A3o sem compromisso? </span></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><span style=3D"color:#002060">Se sim, por favor, me infor=
+me o n=C3=BAmero do CNPJ e a lista de idades dos benefici=C3=A1rios. Se h=
+ouver um hospital espec=C3=ADfico de interesse, me informe tamb=C3=A9m.</=
+span></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><b><span style=3D"color:#002060">Suellen Espinoza</span><=
+/b></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><b><a href=3D"http://emailmarketing.tramiteconsultoria.co=
+m.br/accounts/120471/messages/701/clicks/1768396/1990?envelope_id=3D655"><sp=
+an style=3D"color:#000080;">11 96770-3938 </span></a><span style=3D"color=
+:#000080;"> | </span><a href=3D"http://emailmarketing.tramiteconsultoria.=
+com.br/accounts/120471/messages/701/clicks/1768396/1990?envelope_id=3D655"><=
+span style=3D"color:#000080;">WhatsApp</span></a></b></span></span></p>=0D=
+
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><a href=3D"http://emailmarketing.tramiteconsultoria.com.b=
+r/accounts/120471/messages/701/clicks/1768396/1991?envelope_id=3D655" target=
+=3D"_blank"><span style=3D"color:#000080;">suellen@tramiteseguros.com.br<=
+/span></a></span></span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><a href=3D"http://emailmarketing.tramiteconsultoria.com.b=
+r/accounts/120471/messages/701/clicks/1768396/1992?envelope_id=3D655"><span =
+style=3D"color:#000080;">@tramiteconsultoria</span></a></span></span></p>=
+=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><a href=3D"http://emailmarketing.tramiteconsultoria.com.b=
+r/accounts/120471/messages/701/clicks/1768396/1993?envelope_id=3D655"><span =
+style=3D"color:#000080;">www.tramiteconsultoria.com.br</span></a></span><=
+/span></p>=0D
+=0D
+<p><span style=3D"font-size:11px;"><span style=3D"font-family:Tahoma,Gene=
+va,sans-serif;"><a href=3D"http://emailmarketing.tramiteconsultoria.com.b=
+r/accounts/120471/messages/701/clicks/1768396/1994?envelope_id=3D655"><span =
+style=3D"color:#000080;">https://www.linkedin.com/in/suellen-espinoza-081=
+93246/</span></a></span></span></p>=0D
+<div style=3D"text-align:center;"><p><span style=3D"font-family:arial,hel=
+vetica,sans-serif;">Se voc=C3=AA n=C3=A3o deseja mais receber nossos e-ma=
+ils, <a href=3D"http://emailmarketing.tramiteconsultoria.com.br/accounts/=
+120471/unsubscribes/701/1768396?emkt_c=3D1689011021&amp;emkt_v=3DZmFiaW8uYWtpdGFAY29kZW1pbmVyNDIuY29t&amp;=
+envelope_id=3D655">cancele a sua inscri=C3=A7=C3=A3o.</a></span></p></div=
+><img src=3D"http://emailmarketing.tramiteconsultoria.com.br/accounts/120=
+471/messages/701/openings/1768396?envelope_id=3D655" width=3D"1" height=3D"1=
+" border=3D"0" alt=3D"" /></body>=0D
+<html xmlns=3D"http://www.w3.org/1999/xhtml"><title></title>=0D
+</html></html>=0D
+
+----==_mimepart_69a9cae85bd13_11cae3fd3d0ff024c1503399--

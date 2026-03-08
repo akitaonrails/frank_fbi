@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+# Enable jemalloc for reduced memory usage
+if [ -f /usr/local/lib/libjemalloc.so ]; then
+  export LD_PRELOAD=/usr/local/lib/libjemalloc.so
+fi
+
+# If running the rails server then create or migrate existing database
+if [ "${*}" == *"server"* ]; then
+  ./bin/rails db:prepare
+fi
+
+exec "${@}"

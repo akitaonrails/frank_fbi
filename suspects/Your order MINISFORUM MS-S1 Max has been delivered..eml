@@ -1,0 +1,467 @@
+Delivered-To: boss@akitaonrails.com
+Received: by 2002:a05:6022:b217:b0:ee:2339:557b with SMTP id bg23csp2465104lab;
+        Tue, 3 Mar 2026 09:22:14 -0800 (PST)
+X-Received: by 2002:a05:620a:480e:b0:8c7:c25:9e53 with SMTP id af79cd13be357-8cbc8e0d7a5mr2036879985a.59.1772558533980;
+        Tue, 03 Mar 2026 09:22:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772558533; cv=none;
+        d=google.com; s=arc-20240605;
+        b=W2Z2BSLY87UemcgUOqgBKM5wcWIU8JjO2ofBU9jJdENSvMc3aYIcjtNsYT1EnBfxkB
+         edsn2AWhuZ0lcjxOb2B5A5iuVBpAvqCRP1i0axI3P9s4tM6Vnjis8VDFJXMm7M0oT0b/
+         pOMZ5qA8ajR+KAUE/ITcBGT33FGwb242oi5Yx1a/tyAvKo0efnYPTDNV+DXvOqoWTQjG
+         a4mNoXNunx6ddeT/yXurkSr/x8l8VQUe/nNzk5kgXmjmxCzYWvdXXQ+PRsHn58d/bho2
+         VoO+xsvJ66KTON0DNW3rZJDGYJunP9HclOW55VS24+TxhZTI5uiB0fcVnXpdppqXB236
+         OAlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:message-id:reply-to:to:from:subject
+         :mime-version:date:sender:dkim-signature;
+        bh=Wlm20fXCnXasUFSMogbr8WXUYLBnLdCbk8W916BmIvE=;
+        fh=uzI8zvmhbc7iAiyr5NNxlDebfhBPjWVNlmyh0rFsJu4=;
+        b=SftbExR59ZbLMbUAmK2H/HbiPZCWu7lb1FkCBo2m8MDqS4b1NW6Ap2RTQqGOIA2vX+
+         RAeSkLM6XLq1zgw+QwnAct/TOE9vd1beJl25nT3G5i8aUoP0QarfuO5bNPZHWm9si10O
+         1o8LSBksd3ixpB3hB/6hvdzSvf7G4HpC74XUQbDCv95l6yrDeiaPEnfATeVAFeajAvvf
+         w6EnG6MBPKGxbNSWFhmtSre/jcyinPMlSf8qEeJdNs5J/SzgRMT8zHo8x5n1nA3S0Vn2
+         2rKqtjNnWCFi15xqIaNy6w4LUgr9QvUCeD/P+Qv0XDW7mLe5HaS/BdYCERKzKW2afgjq
+         kJVQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@bounce.17track.net header.s=mailo header.b=FsxGZyoe;
+       spf=pass (google.com: domain of bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net designates 159.112.246.9 as permitted sender) smtp.mailfrom="bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=bounce.17track.net
+Return-Path: <bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net>
+Received: from v59.v5f246a16.use4.send.mailgun.net (v59.v5f246a16.use4.send.mailgun.net. [159.112.246.9])
+        by mx.google.com with UTF8SMTPS id af79cd13be357-8cbbf732ba6si1642850685a.393.2026.03.03.09.22.13
+        for <boss@akitaonrails.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2026 09:22:13 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net designates 159.112.246.9 as permitted sender) client-ip=159.112.246.9;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@bounce.17track.net header.s=mailo header.b=FsxGZyoe;
+       spf=pass (google.com: domain of bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net designates 159.112.246.9 as permitted sender) smtp.mailfrom="bounce+94b52f.9a4e32-boss=akitaonrails.com@bounce.17track.net";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=bounce.17track.net
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=bounce.17track.net; q=dns/txt; s=mailo; t=1772558533; x=1772565733;
+ h=Content-Transfer-Encoding: Content-Type: Message-Id: Reply-To: To: To: From: From: Subject: Subject: Mime-Version: Date: Sender: Sender;
+ bh=Wlm20fXCnXasUFSMogbr8WXUYLBnLdCbk8W916BmIvE=;
+ b=FsxGZyoeEld5gDhrojbQOOUfJ2I0C9t/JeMyU3yaCtGrHM6TKFBZ0UOCg6YMCf1akh3JvroFxQh2aqwT5aWKDGvlXXBZoWkXivRArMu89QJfQHKfTL8MMIKu9kwbmG6gPCNizGxnlFmC4ZxfWjxdbSDgR0iEgetS3oW0BBi6+Rg=
+X-Mailgun-Sid: WyJiNjMwZCIsImJvc3NAYWtpdGFvbnJhaWxzLmNvbSIsIjlhNGUzMiJd
+Received: by 7be2466e4e7b1d68498767e82a790ad2e616a6b3a9d53b0b93b5ce0622be1a93 with HTTP
+ id 69a718c4849111483857ca33; Tue, 03 Mar 2026 17:22:12 GMT
+X-Mailgun-Sending-Ip: 159.112.246.9
+Sender: no-reply@bounce.17track.net
+Date: Tue, 03 Mar 2026 17:22:12 +0000
+Mime-Version: 1.0
+Subject: Your order MINISFORUM MS-S1 Max has been delivered.
+From: 17TRACK <no-reply@bounce.17track.net>
+To: boss@akitaonrails.com
+X-Mailgun-Tag: new_service
+Reply-To: MINISFORUM <hi@minisforum.com>
+Message-Id: <20260303172212.70f5bbabefc56f29@bounce.17track.net>
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<body>
+ <title></title>
+ <style type=3D"text/css">
+     =20
+      @media only screen and (min-width: 620px) {
+        .u-row {
+          width: 600px !important;
+        }
+
+        .u-row .u-col {
+          vertical-align: top;
+        }
+
+       =20
+            .u-row .u-col-100 {
+              width: 600px !important;
+            }
+         =20
+      }
+
+      @media only screen and (max-width: 620px) {
+        .u-row-container {
+          max-width: 100% !important;
+          padding-left: 0px !important;
+          padding-right: 0px !important;
+        }
+
+        .u-row {
+          width: 100% !important;
+        }
+
+        .u-row .u-col {
+          display: block !important;
+          width: 100% !important;
+          min-width: 320px !important;
+          max-width: 100% !important;
+        }
+
+        .u-row .u-col > div {
+          margin: 0 auto;
+        }
+
+
+        .u-row .u-col img {
+          max-width: 100% !important;
+        }
+
+}
+   =20
+body table,td,tr p .ie-container table,.mso-container table * a[x-apple-dat=
+a-detectors=3Dtrue]=20
+
+
+table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: =
+underline; }
+    </style>
+ <table id=3D"u_body" style=3D"border-collapse: collapse;table-layout: fixe=
+d;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-al=
+ign: top;min-width: 320px;Margin: 0 auto;background-color: #f6f6f7;width:10=
+0%" cellpadding=3D"0" cellspacing=3D"0">
+  <tbody>
+   <tr style=3D"vertical-align: top">
+    <td style=3D"word-break: break-word;border-collapse: collapse !importan=
+t;vertical-align: top">
+     <div class=3D"u-row-container" style=3D"padding: 0px;background-color:=
+ transparent">
+      <div class=3D"u-row" style=3D"margin: 0 auto;min-width: 320px;max-wid=
+th: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break=
+-word;background-color: transparent;">
+       <div style=3D"border-collapse: collapse;display: table;width: 100%;h=
+eight: 100%;background-color: transparent;">
+        <div class=3D"u-col u-col-100" style=3D"max-width: 320px;display: t=
+able-cell;vertical-align: top;">
+         <div style=3D"background-color: rgb(255,255,255);height: 100%;widt=
+h: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-bord=
+er-radius: 0px;">
+          <div style=3D"box-sizing: border-box; height: 100%; padding: 0px;=
+border-top: 0px solid transparent;border-left: 0px solid transparent;border=
+-right: 0px solid transparent;border-bottom: 0px solid transparent;border-r=
+adius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:10px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bo=
+rder=3D"0">
+                <tbody>
+                 <tr>
+                  <td style=3D"padding-right: 0px;padding-left: 0px;" align=
+=3D"center"><img align=3D"center" border=3D"0" src=3D"https://shopify-asset=
+=2E17track.net/shopify/email/7311322456=
+396869773/20251231/6458_minisforum_log=
+o.png" alt=3D"" title=3D"" style=3D"outline: none;text-decoration: none;-ms=
+-interpolation-mode: bicubic;clear: both;display: inline-block !important;b=
+order: none;height: auto;float: none;width: 40%;max-width: 232px;"></td>
+                 </tr>
+                </tbody>
+               </table></td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class=3D"u-row-container" style=3D"padding: 0px;background-color:=
+ transparent">
+      <div class=3D"u-row" style=3D"margin: 0 auto;min-width: 320px;max-wid=
+th: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break=
+-word;background-color: rgb(255,255,255);">
+       <div style=3D"border-collapse: collapse;display: table;width: 100%;h=
+eight: 100%;background-color: transparent;">
+        <div class=3D"u-col u-col-100" style=3D"max-width: 320px;display: t=
+able-cell;vertical-align: top;">
+         <div style=3D"height: 100%;width: 100% !important;border-radius: 0=
+px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <div style=3D"box-sizing: border-box; height: 100%; padding: 20px=
+ 16px 16px;border-top: 0px solid transparent;border-left: 0px solid transpa=
+rent;border-right: 0px solid transparent;border-bottom: 0px solid transpare=
+nt;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"=
+>
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:20px 0px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <h1 style=3D"margin: 0px; line-height: 100%; text-align: cen=
+ter; word-wrap: break-word; font-family: arial,helvetica,sans-serif; font-s=
+ize: 18px; font-weight: 400;">
+                <div>
+                 <strong>=F0=9F=A5=B3 Your order has been delivered.</stron=
+g>
+                </div></h1></td>
+             </tr>
+            </tbody>
+           </table>
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:0px 0px 16px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <div style=3D"font-size: 14px; line-height: 150%; text-align=
+: left; word-wrap: break-word;">
+                <div style=3D"font-size: 14px; line-height: 150%; text-alig=
+n: center;">
+                 Hi FABIO AKITA,
+                </div>
+                <div style=3D"font-size: 14px; line-height: 150%; text-alig=
+n: center;">
+                 Your parcel has been delivered successfully. We would real=
+ly appreciate it if you could take just a few moments to leave a feedback f=
+or us. Thanks for shopping on Minisforum.
+                </div>
+               </div></td>
+             </tr>
+            </tbody>
+           </table>
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:16px 0px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <div align=3D"center"> <a href=3D"https://trace.bounce.17tra=
+ck.net/c/eJwUzM1qAyEQAOCn0VsXHX9m9-ChUPbaS6HQSxndkUiyGtSkr1_yAN93hI0sG5AcNC=
+I4tzpj5CW4Y0VHTD4njB6ziTrmjbw6Uk6KoiwBFHhllNEIoGFBlV2MFDkn5zNswqrYHjXxonF2S=
+tel8pS3cJnzPoR5F7AL2MdsnZez1DJy649zSe0UsNP9PgTsXy_39tkP7sLs9XEOYT70z2rxG1cL=
+GmGzm3eyh9jGEFbRtUxqtVO5jVclZ6j89zu4P0ti-QzwHwAA__95ZkqA" target=3D"_blank"=
+ class=3D"v-button" style=3D"box-sizing: border-box;display: inline-block;t=
+ext-decoration: none;-webkit-text-size-adjust: none;text-align: center;colo=
+r: #FFFFFF; background-color: #4e8dff; border-radius: 4px;-webkit-border-ra=
+dius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wr=
+ap: break-word; word-break: break-word; word-wrap:break-word; mso-border-al=
+t: none;font-size: 14px;"> <span style=3D"display:block;padding:12px 16px;l=
+ine-height:150%;"><strong><span style=3D"font-size: 14px; line-height: 21px=
+;">Track your order</span></strong></span> </a>
+               </div></td>
+             </tr>
+            </tbody>
+           </table>
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:0px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <div style=3D"font-size: 14px; line-height: 150%; text-align=
+: left; word-wrap: break-word;">
+                <div style=3D"font-size: 14px; line-height: 150%; text-alig=
+n: center;">
+                 Tracking number: 1Z847W784217294965
+                </div>
+                <div style=3D"font-size: 14px; line-height: 150%; text-alig=
+n: center;">
+                 Carrier: UPS
+                </div>
+                <div style=3D"font-size: 14px; line-height: 150%; text-alig=
+n: center;">
+                 Carrier phone: +1 (800) 742-5877
+                </div>
+               </div></td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class=3D"u-row-container" style=3D"padding: 0px;background-color:=
+ transparent">
+      <div class=3D"u-row" style=3D"margin: 0 auto;min-width: 320px;max-wid=
+th: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break=
+-word;background-color: rgb(255,255,255);">
+       <div style=3D"border-collapse: collapse;display: table;width: 100%;h=
+eight: 100%;background-color: transparent;">
+        <div class=3D"u-col u-col-100" style=3D"max-width: 320px;display: t=
+able-cell;vertical-align: top;">
+         <div style=3D"height: 100%;width: 100% !important;border-radius: 0=
+px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <div style=3D"box-sizing: border-box; height: 100%; padding: 0px;=
+border-top: 0px solid transparent;border-left: 0px solid transparent;border=
+-right: 0px solid transparent;border-bottom: 0px solid transparent;border-r=
+adius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:0px 16px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <table height=3D"0px" align=3D"center" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse: collap=
+se;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rs=
+pace: 0pt;vertical-align: top;border-top: 1px solid #BBBBBB;-ms-text-size-a=
+djust: 100%;-webkit-text-size-adjust: 100%">
+                <tbody>
+                 <tr style=3D"vertical-align: top">
+                  <td style=3D"word-break: break-word;border-collapse: coll=
+apse !important;vertical-align: top;font-size: 0px;line-height: 0px;mso-lin=
+e-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust:=
+ 100%"><span>&nbsp;</span></td>
+                 </tr>
+                </tbody>
+               </table></td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class=3D"u-row-container" style=3D"padding: 0px;background-color:=
+ transparent">
+      <div class=3D"u-row" style=3D"margin: 0 auto;min-width: 320px;max-wid=
+th: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break=
+-word;background-color: rgb(255,255,255);">
+       <div style=3D"border-collapse: collapse;display: table;width: 100%;h=
+eight: 100%;background-color: transparent;">
+        <div class=3D"u-col u-col-100" style=3D"max-width: 320px;display: t=
+able-cell;vertical-align: top;">
+         <div style=3D"height: 100%;width: 100% !important;border-radius: 0=
+px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+          <div style=3D"box-sizing: border-box; height: 100%; padding: 20px=
+ 16px;border-top: 0px solid transparent;border-left: 0px solid transparent;=
+border-right: 0px solid transparent;border-bottom: 0px solid transparent;bo=
+rder-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:0px 0px 4px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <div style=3D"font-size: 14px; line-height: 150%; text-align=
+: left; word-wrap: break-word;">
+                <div style=3D"font-size: 14px; line-height: 150%;">
+                 <strong>What's inside</strong>
+                </div>
+               </div></td>
+             </tr>
+            </tbody>
+           </table>
+           <table style=3D"font-family:'Montserrat',sans-serif;" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0">
+            <tbody>
+             <tr>
+              <td style=3D"overflow-wrap:break-word;word-break:break-word;p=
+adding:4px 0px 0px;font-family:'Montserrat',sans-serif;" align=3D"left">
+               <div style=3D"font-size: 14px; line-height: 150%; text-align=
+: left; word-wrap: break-word;">
+                <table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" b=
+order=3D"0">
+                 <tbody>
+                  <tr>
+                   <td width=3D"60" style=3D"padding:5px 0;" align=3D"left"=
+>
+                    <div style=3D"width: 40px; height: 40px; border: 1px so=
+lid #ccc; border-radius: 4px; overflow: hidden;margin:0;">
+                     <img align=3D"center" border=3D"0" src=3D"https://cdn.=
+shopify.com/s/files/1/0401/1032/5921/files/1cf6e09de711b851d69c3273db6f49e8=
+_914e8e6f-1c09-45b9-a9f1-ba1388232473.png?v=3D1761879205" alt=3D"" title=3D=
+"" style=3D"outline: none;text-decoration: none;-ms-interpolation-mode: bic=
+ubic;clear: both;display: inline-block !important;border: none;height: auto=
+;float: none;width: 100%;max-width: 100px;" width=3D"100">
+                    </div></td>
+                   <td style=3D"overflow-wrap:break-word;word-break:break-w=
+ord;padding:5px 0;font-family:'Montserrat',sans-serif;" align=3D"left">
+                    <div style=3D"font-size: 14px; line-height: 20px;font-w=
+eight: 500;">
+                     MINISFORUM MS-S1 Max
+                    </div>
+                    <div style=3D"font-size: 14px; line-height: 20px;font-w=
+eight: 400;color: #4D4D4D;">
+                     AMD Ryzen=E2=84=A2 AI Max+ 395 / 128GB RAM + 2TB SSD /=
+ US
+                    </div></td>
+                   <td style=3D"overflow-wrap:break-word;word-break:break-w=
+ord;padding:5px 0;font-family:'Montserrat',sans-serif;" align=3D"left">
+                    <div style=3D"line-height: 140%; text-align: left; word=
+-wrap: break-word; min-width: 90px;">
+                     <div style=3D"font-size: 14px; line-height: 140%; text=
+-align: right;">
+                      $2,959.00
+                     </div>
+                    </div>
+                    <div style=3D"line-height: 140%; text-align: left; word=
+-wrap: break-word;">
+                     <div style=3D"font-size: 14px; line-height: 140%; text=
+-align: right;">
+                      =C3=971
+                     </div>
+                    </div></td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div></td>
+             </tr>
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div></td>
+   </tr>
+  </tbody>
+ </table>
+ <div style=3D"padding: 32px 16px;margin: 0 auto;background: rgba(30, 30, 3=
+0, 0.04)">
+  <div style=3D"
+          max-width: 600px;
+          box-sizing: border-box;
+          padding: 16px;
+          background-color: #fff;
+          border-radius: 12px;
+          text-align: center;
+          margin: 0 auto;
+          border: 1px solid #ebebeb;
+        ">
+   <p style=3D"
+            font-size: 14px;
+            line-height: 20px;
+            color: #242424;
+            font-weight: 600;
+            margin: 0;
+          ">Use Apple Wallet to receive order status</p><a href=3D"https://=
+trace.bounce.17track.net/c/eJxMyj1y6yAQAODTQGcNLH9SQfEarvFmgSVmJAsGiD25fdr0=
+X_YHalLAyUvnwJjdKMWfXu9aynjY6HaxS3NgLjJrExWVnFBnXj0IsEIJJR2AhM2JYmLESCUZW-B=
+gWsT2fSfapFsD07ndtPjln2v1ydQ_BoFBmM_Wa_n5axgE7P2BvTIIH7wuWo82Mo1Hx3TiFzEI9M=
+J6MQhOK9i1s_aQh9JW2V0wCHITfPjY5mRa4FkXtntgveaW2osvf9Pn_6Txron428NvAAAA__8X1=
+E6i" style=3D"
+            display: block;
+            max-width: max-content;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: rgb(0, 0, 0);
+            border-radius: 8px;
+            padding: 0 16px;
+            text-decoration: none;
+            margin: 8px auto;
+          "> <img src=3D"https://res.17track.net/asset/imgs/shopify/integra=
+tion/apple_wallet_logo.png" alt=3D"" style=3D"width: 37px; height: 27px; ve=
+rtical-align: middle"> <span style=3D"font-size: 14px; color: rgb(255, 255,=
+ 255); margin-left: 8px">Track with Apple Wallet</span> </a>
+   <p style=3D"
+            font-size: 12px;
+            line-height: 16px;
+            color: #686868;
+            margin: 0;
+          ">To add this order to Apple Wallet open this email on your iphon=
+e,iPad,or Mac running the latest OS version.</p>
+  </div>
+ </div>
+<img width=3D"1" height=3D"1" alt=3D"" src=3D"https://trace.bounce.17track.=
+net/o/eJwEwMFtxSAMANBpwhGBgTg5MEtlbKOitCABTdf_T_JNUQMYzR4RUrpSCOY7sxBXDyJRL=
+kSuwBBFbuHIVGNF0zI4OF1wwSOAB4uuplKoaOV0VriP6Mr466zW457Ej-26zcxlrHVER0_bNPqk=
+9rMsj1-zc9f_r6XzbazmzfAJAAD__4LWL8E"></body>

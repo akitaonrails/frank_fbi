@@ -1,0 +1,1290 @@
+Delivered-To: boss@akitaonrails.com
+Received: by 2002:a05:6022:b217:b0:ee:2339:557b with SMTP id bg23csp2439508lab;
+        Tue, 3 Mar 2026 08:42:29 -0800 (PST)
+X-Received: by 2002:a53:ee55:0:b0:649:ef06:15f4 with SMTP id 956f58d0204a3-64cc2077417mr11307948d50.15.1772556148873;
+        Tue, 03 Mar 2026 08:42:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772556148; cv=none;
+        d=google.com; s=arc-20240605;
+        b=V+PCGkZUaz8BzzuCL78Zta5FCyZinox+OeSL37DdS3BFX2oSZBgUhtqcBXP3/qXGBn
+         dA4Kd5Ssm6GDzKC1GOEbUinI94TKc3IMzYrKfk3R2mbRq35ZH/RjRtr/K5YHAbnMOZPk
+         p5sbbLiXIyYyFofqXhCYAJcj5jByxc4ivI7ZLEr4H9T0lQYiywHFNp8XcCs+68j+v3a6
+         ZybppnzvWYxpyHQyzqgdHIokesXSNBHumy8vdlNziduJzlqDPa7FNJMGFqKsxwfkIyUm
+         FTqFt1WLC/ESzLlaCCKNwZ8I8yhcxpx/FucunpO1D5NDpGbGNZ0oU0yvxfmVqmrQXtSB
+         wwoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=message-id:date:mime-version:subject:to:from:dkim-signature;
+        bh=84L7SdinsvkORC91oBaUWOUTzgHko1JXALHk1WERBy8=;
+        fh=uzI8zvmhbc7iAiyr5NNxlDebfhBPjWVNlmyh0rFsJu4=;
+        b=SA2QDw4pDfKUBmx/DQVCI/jEWPGihr2fZbbruevDpCLkSTvZ+w5FQJICn5/DeWs2My
+         qE85Rin/dDehNQG4rvNNjiWthwhZ7OvdZsA/q8F5QVSoJo/cgYHBYKppkXB/gTggAxII
+         fFhUfWMNKYWHwqGxcLBED8kwVhXZH+sZzaf7pmTPdeQTI7+aqIgM2nUU5Ht+IMMu0Lr6
+         YJfb/TQ93HaDYL2bJjd2lIuJiTIzHYTNCrMNX10l8A8WEDXCES3h4gKHW9q6pYrxpjcD
+         kPw9SwSIBeGTMUR/J33ygqM6GLur8oRh+s8yZHz3obtr2Rno5iJeAhXicjIOF0+5MzqH
+         tKOg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ups.com header.s=nespps1 header.b=S65PkSM4;
+       spf=pass (google.com: domain of noreply@ups.com designates 148.163.140.242 as permitted sender) smtp.mailfrom=noreply@ups.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=ups.com
+Return-Path: <noreply@ups.com>
+Received: from mx0b-002b8002.pphosted.com (mx0b-002b8002.pphosted.com. [148.163.140.242])
+        by mx.google.com with ESMTPS id 956f58d0204a3-64cb7682936si13740320d50.242.2026.03.03.08.42.28
+        for <boss@akitaonrails.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 08:42:28 -0800 (PST)
+Received-SPF: pass (google.com: domain of noreply@ups.com designates 148.163.140.242 as permitted sender) client-ip=148.163.140.242;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@ups.com header.s=nespps1 header.b=S65PkSM4;
+       spf=pass (google.com: domain of noreply@ups.com designates 148.163.140.242 as permitted sender) smtp.mailfrom=noreply@ups.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=ups.com
+Received: from pps.filterd (m0425508.ppops.net [127.0.0.1])
+	by mx0a-002b8002.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 623GOUul3430893
+	for <boss@akitaonrails.com>; Tue, 3 Mar 2026 11:42:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ups.com; h=
+	content-type:date:from:message-id:mime-version:subject:to; s=
+	nespps1; bh=84L7SdinsvkORC91oBaUWOUTzgHko1JXALHk1WERBy8=; b=S65P
+	kSM4Cj+V3bBfrJuL4DiddQcd8CuFNJhI4E3hnYZZT3iMe7vZGk4qUKal+ycOwTlM
+	1RAjo+YfmMSthURFLK8fSTZW0FHCqjhrCbc7pXa1qgLx1gRADBMyCFKmjcIJbAti
+	MwHQg23GdBsi1drhrAuBIkI5JiCI4A7jWNoNEKZHyfCv15pncJKtEuEY/05qCKHD
+	8lKg2T9GIXrDkD9rsSAT1RFACG2X9fuLS4a2ZI0zvyWcL3hbh6g1rQUKbDZGzZQN
+	k++9ZyUge78BzP0ozKqOdSmwkcguFiAKyOhnbzrxucPMcnx3eHAai+Y3QoXM8Y8l
+	M4TX7ersuz1BaxYQng==
+Received: from gappsappsagent10.ups.com (gappsappsagent10.ups.com [153.2.235.26])
+	by mx0a-002b8002.pphosted.com (PPS) with ESMTPS id 4cmgjtwmxh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <boss@akitaonrails.com>; Tue, 03 Mar 2026 11:42:28 -0500 (EST)
+Received: from pps.filterd (gappsappsagent10.ups.com [127.0.0.1])
+	by gappsappsagent10.ups.com (8.18.1.2/8.18.1.2) with ESMTP id 623G9alV028471
+	for <boss@akitaonrails.com>; Tue, 3 Mar 2026 11:42:27 -0500
+Received: from nscore-7d46f859dc-rkdzc (lsvrocpp40133.linux.us.ups.com [10.127.129.196])
+	by gappsappsagent10.ups.com (PPS) with ESMTPS id 4cmer54fu2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <boss@akitaonrails.com>; Tue, 03 Mar 2026 11:42:27 -0500
+From: "UPS" <mcinfo@ups.com>
+To: boss@akitaonrails.com
+Subject: Seu Pacote UPS foi entregue
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=----NextPart_1772556147617.0000471611
+Date: Tue, 3 Mar 2026 11:42:27 -0500 (EST)
+Message-ID: <1811463461.920037.1772556147636.JavaMail.1001@winsmtpappspp.ups.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11718
+ signatures=596818
+
+------NextPart_1772556147617.0000471611
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<!--time_1-14-0 w/ multi-language-->
+<html>
+  <head>
+
+    <title>UPS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style type="text/css">
+  /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+  table {
+        border-spacing: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        margin: 0 auto !important;
+        border: none !important;
+  }
+  table table table {
+        table-layout: auto;
+  }
+  /* What it does: Uses a better rendering method when resizing images in IE. */
+
+  </style>
+  <style type="text/css">
+
+        /* Media Queries */
+        @media screen and (max-width: 600px) {
+            /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
+            .fluid,
+            .fluid-centered {
+                max-width: 100% !important;
+                height: auto !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            /* And center justify these ones. */
+            .fluid-centered {
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            /* What it does: Forces table cells into full-width rows. */
+            .stack-column,
+            .stack-column-center {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                direction: ltr !important;
+            }
+            /* And center justify these ones. */
+            .stack-column-center {
+                text-align: center !important;
+            }
+
+            /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+            .center-on-narrow {
+                text-align: center !important;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                float: none !important;
+            }
+            table.center-on-narrow {
+                display: inline-block !important;
+            }
+
+        }
+
+  </style>
+    <style type="text/css">
+        *
+        {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        }
+
+        table,
+        td
+        {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        }
+
+        img
+        {
+        -ms-interpolation-mode: bicubic;
+        }
+
+        img
+        {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        }
+
+        table
+        {
+        border-collapse: collapse !important;
+        }
+
+        body
+        {
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background-color: #ededed;
+        }
+
+        a[x-apple-data-detectors]
+        {
+        color: inherit !important;
+        text-decoration: none !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+        }
+
+        body
+        {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        }
+
+        .fallback-text
+        {
+        font-family: arial, sans-serif;
+        }
+
+        @media only screen and (max-width: 479px)
+        {
+
+        body
+        {
+          width: auto !important;
+          padding-top: 0px !important;
+          padding-bottom: 0px !important;
+        }
+        }
+
+        @media screen and (max-width: 525px)
+        {
+        body
+        {
+          padding-top: 0px !important;
+          padding-bottom: 0px !important;
+        }
+
+        #WrapperTable
+        {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+
+        .wrapper
+        {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .logo img
+        {
+          margin: 0 auto !important;
+        }
+
+        .img-max
+        {
+          max-width: 100% !important;
+          width: 100% !important;
+          height: auto !important;
+        }
+
+        .responsive-table,
+        .responsivetable
+        {
+          width: 100% !important;
+        }
+
+        .paddingTop
+        {
+          padding: 20px 50px 20px 50px !important;
+        }
+
+        .paddingBanner
+        {
+          padding: 5px 0px 5px 0px !important;
+        }
+
+        .padding
+        {
+          padding: 0px 50px 20px 50px !important;
+        }
+
+        .padding-sides
+        {
+          padding: 0 10px 0 10px;
+        }
+
+        .padding-copy
+        {
+          padding: 0px 15px 20px 15px !important;
+          text-align: center !important;
+        }
+
+        .padding-copy8
+        {
+          padding: 0px 50px 8px 50px !important;
+        }
+
+        .padding-copy14
+        {
+          padding: 0px 50px 14px 50px !important;
+        }
+
+        .padding-copy16
+        {
+          padding: 0px 50px 16px 50px !important;
+        }
+
+        .padding-copy18
+        {
+          padding: 0px 50px 18px 50px !important;
+        }
+
+        .padding-copy24
+        {
+          padding: 0px 50px 24px 50px !important;
+        }
+
+        .padding-copy28
+        {
+          padding: 0px 50px 28px 50px !important;
+        }
+
+
+        .pcta-btn
+        {
+          margin: 0 auto;
+          width: 100% !important;
+          max-width: 100% !important;
+
+        }
+
+        .pcta-btn a
+        {
+          text-decoration: none;
+        }
+
+        .mobile-button
+        {
+          padding: 8px 0 !important;
+          border: 0 !important;
+          font-size: 18px !important;
+          text-align: center;
+        }
+        }
+
+        .mobile-button:hover
+        {
+        color: black !important;
+        }
+
+        .pcta-btn .mobile-button
+        {
+        color: #121212;
+        }
+
+        .pcta-btn .mobile-button:hover,
+        .pcta-btn .mobile-button:visited
+        {
+        color: #121212 !important;
+        }
+
+        .pcta-btn:hover
+        {
+        background-color: #FFC400 !important;
+        border-radius: 30px !important;
+        }
+
+        .mobile-button-container:hover
+        {
+        background-color: #FFC400 !important;
+        border-radius: 30px !important;
+        }
+
+        .mobile-button-container-transparent:hover
+        {
+        background-color: transparent !important;
+        border-radius: 30px !important;
+        }
+
+        div[style*="margin: 16px 0;"]
+        {
+        margin: 0 !important;
+        }
+
+        @font-face
+        {
+        font-family: 'Roboto';
+        src: url('https://www.ups.com/assets/resources/styles/fonts/Roboto-Regular.woff2')format('woff2');
+        font-weight: normal;
+        font-style: normal;
+        }
+
+        @font-face
+        {
+        font-family: 'Roboto';
+        src: url('https://www.ups.com/assets/resources/styles/fonts/Roboto-Medium.woff')format('woff');
+        font-weight: bold;
+        font-style: normal;
+        }
+
+        @font-face
+        {
+        font-family: 'Roboto';
+        src: url('https://www.ups.com/assets/resources/styles/fonts/Roboto-Bold.woff2')format('woff2');
+        font-weight: 900;
+        font-style: normal;
+        }
+
+        a.button
+        {
+        font-size: 16px !important;
+        font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
+        color: #121212 !important;
+        text-decoration: none !important;
+        text-decoration: none !important;
+        border-radius: 8px;
+        padding: 15px 25px;
+        border: 1px solid #FFC400;
+        display: inline-block !important;
+        font-weight: bold !important;
+        }
+
+        .btn a
+        {
+        font-size: 16px !important;
+        font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
+        text-decoration: none !important;
+        text-decoration: none !important;
+        border-radius: 8px;
+        padding: 15px 25px !important;
+        display: inline-block !important;
+        font-weight: bold !important;
+        }
+
+        strong
+        {
+        font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important;
+        font-weight: bold !important;
+        }
+
+        ul li
+        {
+        font-size: 16px;
+        font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif;
+        }
+
+        ul li strong
+        {
+        font-size: 16px;
+        font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif;
+        }
+
+        ol li
+        {
+        font-size: 16px;
+        font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif;
+        }
+
+        ol li strong
+        {
+        font-size: 16px;
+        font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif;
+        }
+
+        .mobile-button-container a:visited
+        {
+        color: #121212 !important;
+        }
+
+        .mobile-button-container-transparent
+        {
+        color: #0662BB !important;
+        }
+
+        a
+        {
+        color: #0662BB;
+        font-weight: bold;
+        }
+
+        a:hover
+        {
+        color: #105497 !important;
+        }
+
+        a:visited
+        {
+        color: inherit !important;
+        }
+
+        .links a
+        {
+        color: #0662BB;
+        font-weight: bold;
+        }
+
+        .links a:hover
+        {
+        color: #105497 !important;
+        }
+
+        .links a:visited
+        {
+        color: #0662BB !important;
+        }
+
+        a.black
+        {
+        color: #121212;
+        font-weight: normal;
+        }
+
+        a.black:hover
+        {
+        color: #121212 !important;
+        }
+
+        a.black:visited
+        {
+        color: #121212;
+        }
+
+        a.notbold
+        {
+        font-weight: normal;
+        }
+
+        #WrapperTable
+        {
+        padding-bottom: 20px;
+        }
+
+        sup
+        {
+        line-height: 0;
+        font-size: 70%;
+        mso-text-raise: 60%;
+        }
+
+        p,
+        div
+        {
+        margin: 0 !important;
+        }
+    </style>
+    <!--[if mso]>
+        <style type=?text/css?>
+            body {
+              text-align:center;
+            }
+            body, table, td {font-family: Tahoma, Arial, Helvetica, sans-serif !important;}
+            .fallback-font {
+              font-family: Tahoma, Arial, sans-serif;
+            }
+            strong {
+              font-family:  Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+            ul li {
+              font-family: Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+
+            ul li strong {
+              font-family:  Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+
+            ol li {
+              font-family:   Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+
+            ol li strong {
+            font-family: Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+             p, span {
+              font-family: Tahoma, Arial, Helvetica, sans-serif !important;
+            }
+            td {
+              font-family: Tahoma, Arial, Helvetica, sans-serif !important;
+
+            }
+            a {
+            color: #0662BB ;
+            font-weight: bold ;
+            }
+            a:hover {
+                color: #0662BB ;
+            }
+            a:visited {
+            color: #0662BB ;
+            }
+
+            .links a {
+              color: #0662BB !important;
+              font-weight: bold !important;
+            }
+
+            .links a:hover{
+              color: #0662BB !important;
+            }
+
+            .links a:visited{
+              color: #0662BB !important;
+            }
+
+            a.black  {
+              color: #121212;
+              font-weight: normal;
+            }
+
+            a.black:hover {
+              color: #121212;
+            }
+
+            a.black:visited {
+              color: #121212;
+            }
+        </style>
+    <![endif]-->
+    </head>
+    <body style="margin-bottom: 0; -webkit-text-size-adjust: 100%; padding-bottom: 0; min-width: 100%; margin-top: 0; margin-right: 0; -ms-text-size-adjust: 100%; margin-left: 0; padding-top: 0; padding-right: 0; padding-left: 0; width: 100%; background-color: #ededed;">
+
+        <!--##EmailBodyStart##-->
+
+        <a id="##LangAnchor##" name="##LangAnchor##"></a>
+
+        <table role="presentation"  border="0" bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="600" class="mktoContainer container responsive-table" id="WrapperTable" style="-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; border-collapse: collapse;margin:20px auto; background-color: #ffffff; padding-bottom: 20px;">
+
+            <tr id="upsLogo" title="UPS.com">
+                <td bgcolor="#ffffff" align="center" class="paddingTop" style="padding-top:20px; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="wrapper">
+                        <tr>
+                            <td align="center" valign="top" style="padding:0;" class="logo">
+                                <a href="https://www.ups.com" target="_blank">
+                                    <img src="https://www.ups.com/assets/resources/images/UPS_logo.png" alt="UPS" width="71" height="71" border="0" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- ##varStartMultiLanguage##
+            <tr id="multiLanguage">
+                <td bgcolor="#ffffff" align="center" class="padding-copy16" style="padding-top:0px; padding-bottom:16px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: normal; color: #121212; line-height:1;">
+                                    <a href="###varLangText1##" class="##LangStyle1##" id="langText1">##varLangText1##</a> |
+                                    <a href="###varLangText2##" class="##LangStyle2##" id="langText2">##varLangText2##</a>
+                                    ##lang3startComment## |
+                                        <a href="###varLangText3##" class="##LangStyle3##" id="langText3">##varLangText3##</a>
+                                    ##lang3endComment##
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            ##varEndMultilanguage## -->
+
+            <tr id="salutationRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy16" style="padding-top:0px; padding-bottom:16px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="salutation">Olá Fabio,</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="headlineRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:28px; font-weight: bold; color: #121212; line-height:normal;">
+                                    <span id="headline" style="line-height:normal;">Seu pacote foi entregue.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="shipperAndArrivalRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="shipperAndArrival" style="line-height:1;">De <strong>EBAY INC</strong> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+
+
+            <!--ns removed
+            <tr id="alertMessageRow">
+                <td bgcolor="#FFC400" align="center" class="paddingBanner" style="padding-top:5px; padding-bottom:5px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding:10px 5px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1.25;">
+                                    <span id="alertMessage" style="line-height:1;">  &nbsp;<a href=" " style="padding:0; font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 16px; font-weight: bold; line-height: 1.25; color: #121212; text-decoration: underline;" target="_blank"> </a> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="spacerRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:28px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; " class="responsive-table">
+                    <tbody>
+                      <tr>
+                        <td align="center" valign="top" style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:0; font-weight: bold; color: #838383; line-height:1;"> &nbsp; </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+            </tr>
+            removed -->
+
+
+            <tr id="deliveryDateTimeLabelRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy8" style="padding-top:0px; padding-bottom:8px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:20px; font-weight: bold; color: #121212; line-height:1;">
+                                    <span id="deliveryDateTimeLabel" style="line-height:1;">Entregue</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="deliveryDateTimeRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:28px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:24px; font-weight: bold; color: #121212; line-height:1.25;">
+                                    <span id="deliveryDateTime" style="line-height:1;">Terça-feira 03/03/2026<br> 10:16</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+
+            <!--ns removed
+            <tr id="deliveryPhotographRow">
+                <td align="center" class="padding-copy24" style="padding-top:0px; padding-bottom:24px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:12px; font-weight: normal; color: #0662BB; text-decoration: underline; line-height:1;">
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="240px" height="25px" style="max-width: 240px; max-height:240px">
+                                    <tbody>
+                                        <tr>
+                                            <td align="center" valign="top" style="padding-left:0px; padding-right:0px;">
+                                                    <img src=" "  alt="##varPhotoAltText##" border="0"  style="display: block;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+            removed -->
+
+
+
+             
+            <tr id="ctaRow">
+                <td bgcolor="#ffffff" align="center" style="padding-top:0px; padding-bottom:24px;" class="padding-sides">
+
+             
+
+                <!--[if (gte mso 9)|(IE)]>
+                <table role="presentation"  align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+                <tr>
+                <td align="center" valign="top" width="500" style="padding-top:10px; padding-bottom:10px;" class="padding-sides">
+                <![endif]-->
+
+                     
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="font-size: 16px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-weight: bold; color: #ffffff;  border-radius: 30px; line-height:normal;">
+                                    <table role="presentation"  width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tbody>
+                                          <tr>
+                                            <td align="center">
+
+                                              <table role="presentation"  width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="center" style="padding-top:10px;padding-bottom:0px">
+                                                            <table role="presentation"  border="0" cellspacing="0" cellpadding="0" class="pcta-btn" width="240">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td align="center" bgcolor="#FFC400" style="border-radius: 30px; padding: 0px; max-width: 240px;min-width: 240px;border: 1 solid transparent;">
+                     
+
+                                                                        <!--[if mso]>
+                                                                        <center>
+                                                                        <table role="presentation" ><tr><td width="240" style="max-width: 240px;padding: 5px 0 7px 0;">
+                                                                        <![endif]-->
+
+                                                                         
+                                                                            <div class="mktoText pcta-btn" id="cta" style="margin:0 auto; text-align: center; padding: 5px 0; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; font-weight: bold; border: 1px solid #FFC400; border-radius:30px; background-color:#FFC400">
+                                                                                <a href="https://www.ups.com/track?loc=pt_BR&Requester=SBN&tracknum=1Z14V49EYW33075114&AgreeToTermsAndConditions=yes&WT.z_eCTAid=ct1_eml_Tracking__ct1_eml_tra_eml_sb_resi_3mde&WT.z_edatesent=03032026" style="display: block; color: #121212; text-decoration: none; padding: 5px 0;" class="mobile-button" target="_blank">Rastreie seu pacote&nbsp;&#8250;</a>
+                                                                            </div>
+                                                                         
+                                                                        <!--[if mso]>
+                                                                        </td></tr></table>
+                                                                        </center>
+                                                                        <![endif]-->
+
+                     
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     
+
+               <!--[if (gte mso 9)|(IE)]>
+                </td>
+                </tr>
+                </table>
+                <![endif]-->
+
+             
+                </td>
+           </tr>
+             
+
+
+            <!-- ##varStartSecondary_CTA_AccessibilityIcons##
+            <tr id="secCTAAccessibilityIconsRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:8px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: bold; line-height:1; color:#0662BB"
+? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ><span id="secCTAAccessibilityIcons"
+  ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ><img src="https://www.ups.com/assets/resources/webcontent/images/accessible.png" alt="Accessibility" width="40" height="40" border="0" style="display: inline-block; padding-left: 8px; padding-right: 8px; width: 40px; height: 40px;"
+  ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ><img src="https://www.ups.com/assets/resources/webcontent/images/ear-sound.png" alt="Hearing Impaired" width="40" height="40" border="0" style="display: inline-block; padding-left: 8px; padding-right: 8px; width: 40px; height: 40px;"
+  ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ><img src="https://www.ups.com/assets/resources/webcontent/images/pregnant-woman.png" alt="Pregnancy" width="40" height="40" border="0" style="display: inline-block; padding-left: 8px; padding-right: 8px; width: 40px; height: 40px;"
+  ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ><img src="https://www.ups.com/assets/resources/webcontent/images/settings-accessibility.png" alt="Wheelchair" width="40" height="40" border="0" style="display: inline-block; padding-left: 8px; padding-right: 8px; width: 40px; height: 40px;"
+  ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            ##varEndSecondary_CTA_AccessibilityIcons## -->
+
+
+            <!--ns removed
+            <tr id="secCTARow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:28px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: bold; line-height:1; color:#0662BB">
+                                    <span id="secCTA"><a href=" " style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; font-size:16px; font-weight: 700; color: #0662BB; line-height:1; text-decoration: underline; "> </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            removed -->
+
+            <!-- ::Missing thumbs text and/or URL
+            <tr id="rateDeliveryTextRow">
+                <td bgcolor="#F5F5F5" align="center" class="padding-copy14" style="padding-top:18px; padding-bottom:14px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; " class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1;">
+                               
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="RateDeliveryRow">
+                <td bgcolor="#F5F5F5" align="center" class="padding-copy18" style="padding-top:0px; padding-bottom:18px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; " class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="right" valign="top" style="padding-top:0; padding-bottom:0; padding-left:20px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                              <a href=" " target="_blank"><img src="https://www.ups.com/assets/resources/images/icons/icon_26x26_Thumbs-up_b.png" alt="Ótimo" width="26" height="26" border="0" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;"></a>
+                            </td>
+                              <td align="left" valign="top" style="padding-top:0; padding-bottom:0; padding-left:10px; padding-right:20px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                              <a href=" "><img src="https://www.ups.com/assets/resources/images/icons/icon_26x26_Thumbs-down_b.png" alt="Não é tão bom" width="26" height="26"  border="0" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr id="spacer">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; " class="responsive-table">
+                    <tbody>
+                      <tr>
+                        <td align="center" valign="top" style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:0; font-weight: bold; color: #838383; line-height:1;"> &nbsp; </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            -->
+
+
+
+
+             
+            <tr id="rateDeliveryTextRow">
+                <td bgcolor="#F5F5F5" align="center" class="padding-copy8" style="padding-top:5px; padding-bottom:8px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 700px; " class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:0px; padding-right:0px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1;">
+
+                                <a href="https://customerfeedback.ups.com/jfe/form/SV_bC2kQlNfK1b33QG?z=MVoxNFY0OUVZVzMzMDc1MTE0&locale=pt_BR" style="display: block; color: #121212; text-decoration: none; padding:15px 0 8px 0;" target="_blank">Como foi sua entrega hoje?</a>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:0px; padding-right:0px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1;">
+
+                                <span id="secCTA">
+                                <a href="https://customerfeedback.ups.com/jfe/form/SV_bC2kQlNfK1b33QG?z=MVoxNFY0OUVZVzMzMDc1MTE0&locale=pt_BR" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; font-size:16px; font-weight: 700; color: #0662BB; line-height:1; text-decoration: underline; padding: 0 0 8px 0;" target="_blank">Adoraríamos receber seu feedback&nbsp;&#8250;</a>
+
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:0px; padding-right:0px;font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1;">
+
+                           <a href="https://customerfeedback.ups.com/jfe/form/SV_bC2kQlNfK1b33QG?z=MVoxNFY0OUVZVzMzMDc1MTE0&locale=pt_BR" style="display: block; color: #121212; text-decoration: none; padding:0 0 15px 0;" target="_blank"> </a>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="spacer">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; " class="responsive-table">
+                    <tbody>
+                      <tr>
+                        <td align="center" valign="top" style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:0; font-weight: bold; color: #838383; line-height:1;"> &nbsp; </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+             
+
+
+            <!--ns removed
+            <tr id="shipToRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy8" style="padding-top:0px; padding-bottom:8px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: 900; color: #121212; line-height:1;">
+                                    <span id="shipTo" style="line-height:1;"> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            removed -->
+
+            <!--ns removed
+            <tr id="deliveryLocationRow">
+                <td bgcolor="#ffffff" align="center"class="padding-copy"  style="padding-top:0px; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="deliveryLocation" style="line-height:1;"> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            removed -->
+
+
+             
+            <tr id="serviceNameRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy8" style="padding-top:0px; padding-bottom:8px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="serviceName" style="line-height:1;">UPS Ground Saver</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+             
+
+             
+            <tr id="trackingNumberRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="trackingNumber" style="line-height:1;">1Z14V49EYW33075114</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+             
+
+            <!-- ##testStartA##
+            <tr id="inlineMessage1Row">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="90%" style="max-width: 480px; border: none;border-collapse: separate !important;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left:20px; padding-right:20px; padding-top:12px; padding-bottom:12px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; line-height:1;background-color:#E6EFF8;  border: 1px solid #064D93;border-left:6px solid #064D93;border-radius: 4px;">
+                                    <p style="font-size:16px; color:#064D93; padding-bottom:8px;"><strong>##varInlineMessageTitle##</strong></p>
+                                    <p style="font-size:16px; color:#064D93; padding-bottom:8px;">##varInlineMessageBodyCopy##</p>
+                                    <a href=" " style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; font-size:16px; font-weight: 400; color: #0662BB; line-height:1; text-decoration: underline; padding: 0 0 8px 0;" target="_blank">##varInlineMessageCTACopy##</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            ##testEndA## -->
+
+            <!-- ##testStartB##
+            <tr id="inlineMessage2Row">
+                <td dir="ltr" align="center" valign="top"  style="padding: 10px;">
+                      <table align="center" border="0" cellpadding="0" cellspacing="0" >
+                        <tr>
+                          <td width="15%" class="stack-column-center" style="vertical-align: top; text-align: center;">
+                            <table valign="top" border="0" cellpadding="0" cellspacing="0" width="100%">
+                              <tr style="vertical-align: top; text-align: center;">
+                                <td dir="ltr" valign="top" style="padding-top: 10px;"><img src="##varInlineMessageICON##" height="72" width="72" alt="##varInlineMessageICON_ALT_Text##" border="0"  valign="top" style="padding-top:12px; padding-bottom:12px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;" class="center-on-narrow">
+                                   </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="85%" class="stack-column-center">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                              <tr>
+                                <td dir="ltr" valign="top" style=" padding-top:12px; padding-bottom:12px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; line-height:1;width: 100%; padding: 10px;" class="center-on-narrow">
+                              <p style="font-size:16px;padding-bottom:8px;"><strong>##varInlineMessageTitle##</strong></p>
+                              <p style="font-size:16px;padding-bottom:8px;">##varInlineMessageBodyCopy##</p>
+                              <a href=" " style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; font-size:16px; font-weight: 400; color: #0662BB; line-height:1; text-decoration: underline; padding: 0 0 8px 0;" target="_blank">##varInlineMessageCTACopy##</a>
+                            </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+            </tr>
+            ##testEndB## -->
+
+             
+            <tr id="dcrMarketingTextRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy8" style="padding-top:0px; padding-bottom:8px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="dcrMarketingText" style="line-height:1;">Receba atualizações sobre a entrega por texto e e-mail.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+             
+
+             
+            <tr id="dcrLoginMessageRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:28px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="dcrLoginMessage" style="line-height:1;"><a href="https://wwwapps.ups.com/ppc/ppc.html/preferencePage/mychoicePreference/deliveryalerts?loc=pt_BR" id="" title="Link de Alerta" style="padding:0; font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 14px; font-weight: normal; line-height: 1; color: #0662BB; text-decoration: underline;" target="_blank">Conecte-se</a> para atualizar suas preferências.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+             
+
+            <!--ns removed
+            <tr id="legalTextRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy28" style="padding-top:0px; padding-bottom:28px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="legalText" style="line-height:1;"> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            removed -->
+
+
+
+            <!--ns removed
+            <tr id="3rdPartyImage">
+                <td bgcolor="#ffffff" align="center" class="fullbleed" style="padding-top:0; padding-bottom:0;">
+                         
+                </td>
+            </tr>
+
+            <tr id="spacer">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; " class="responsive-table">
+                    <tbody>
+                      <tr>
+                        <td align="center" valign="top" style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:0; font-weight: bold; color: #838383; line-height:1;"> &nbsp; </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+            </tr>
+            removed -->
+
+
+
+
+            <!-- ##varStartDownloadApp##
+            <tr id="downloadAppTextRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy14" style="padding-top:18px; padding-bottom:14px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; " class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:16px; font-weight: bold; color: #121212; line-height:1;">
+                              Download the UPS&reg; Mobile App
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="downloadAppRow">
+                <td bgcolor="#ffffff" align="center" class="padding-copy18" style="padding-top:0px; padding-bottom:18px;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; " class="responsive-table">
+                    <tbody>
+                        <tr>
+                            <td align="right" valign="top" style="padding-top:0; padding-bottom:0; padding-left:20px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                              <a href="https://apps.apple.com/us/app/ups-mobile/id336377331" target="_blank"><img src="https://www.ups.com/assets/resources/webcontent/images/en_US/App-Store-x1.png" alt="Download on the App Store" width="113" height="33" border="0" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;"></a>
+                            </td>
+                              <td align="left" valign="top" style="padding-top:0; padding-bottom:0; padding-left:10px; padding-right:20px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:14px; font-weight: normal; color: #121212; line-height:1;">
+                              <a href="https://play.google.com/store/apps/details?id=com.ups.mobile.android"><img src="https://www.ups.com/assets/resources/webcontent/images/en_US/Google-Play-x1.png" alt="Get it on Google Play" width="113" height="33"  border="0" style="display: block; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif !important; color: #0662BB; font-size: 16px;"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr id="spacer">
+                <td bgcolor="#ffffff" align="center" class="padding-copy" style="padding-top:0px; padding-bottom:20px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; " class="responsive-table">
+                    <tbody>
+                      <tr>
+                        <td align="center" valign="top" style="font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:0; font-weight: bold; color: #838383; line-height:1;"> &nbsp; </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+            </tr>
+            ##varEndDownloadApp## -->
+
+
+
+            <tr id="footerLegalCopyRow">
+                <td bgcolor="#F5F5F5" align="center" class="paddingBanner" style="padding-top:10px; padding-bottom:5px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:10px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="footerLegalCopy" style="line-height:1;">©2026 United Parcel Service of America, Inc. UPS, a marca UPS e a cor marrom são marcas registradas da United Parcel Service of America, Inc. Todos os direitos reservados.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="footerLegalTrademarkRow">
+                <td bgcolor="#F5F5F5" align="center" class="paddingBanner" style="padding-top:10px; padding-bottom:5px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:10px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="footerLegalTrademark" style="line-height:1;">Não responda a esse e-mail.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr id="footerLinksRow">
+                <td bgcolor="#F5F5F5" align="center" class="paddingBanner" style="padding-top:10px; padding-bottom:5px;">
+                    <table role="presentation"  border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" class="responsive-table">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top" style="padding-left:10px; padding-right:10px; font-family: 'Roboto', Tahoma, Arial, Helvetica, sans-serif; font-size:10px; font-weight: normal; color: #121212; line-height:1;">
+                                    <span id="footerLinks" style="line-height:1;">
+                                         
+                                        <a href="https://wwwapps.ups.com/ppc/ppc.html/preferencePage/mychoicePreference?loc=pt_BR" class="fallback-font" style="font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 10px; line-height: 14px; color: #121212; text-decoration: underline; font-weight: normal;" target="_blank">Gerenciar alertas de entrega</a>
+                                         
+                                         
+                                        |
+                                        <a href="https://www.ups.com/br/pt/support/shipping-support/legal-terms-conditions/privacy-notice" class="fallback-font" style="font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 10px; line-height: 14px; color: #121212; text-decoration: underline; font-weight: normal;" target="_blank">Políticas de Privacidade</a>
+                                         
+                                         
+                                        |
+                                        <a href="https://www.ups.com/br/pt/support/shipping-support/legal-terms-conditions" class="fallback-font" style="font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 10px; line-height: 14px; color: #121212; text-decoration: underline; font-weight: normal;" target="_blank">Termos do Serviço</a>
+                                         
+                                        <!-- no footer slot 4
+                                        |
+                                        <a href=" " class="fallback-font" style="font-family: 'Roboto', Arial, Helvetica, sans-serif !important; font-size: 10px; line-height: 14px; color: #121212; text-decoration: underline; font-weight: normal;" target="_blank"> </a>
+                                        --> 
+                                    </span>
+                                    <br/>
+                                    <img src="https://unitedparcelservice.sc.omtrdc.net/b/ss/upsprod/1?AQB=1&v14=%2F&v49=email_rpt.ups.com&pgf_Site=Country&c6=BR&c5=pt&v56=03032026&ch=E-mail&c33=Tracking&c1=ct1_eml_tra_eml_sb_resi_3mde&v57=1772556147617&pe=lnk_o&pev2=E-mail+Template&AQE=1">  
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!--##EmailBodyEnd##-->
+        <!--##AppendMultiLanguage##-->
+
+    </body>
+</html>
+
+------NextPart_1772556147617.0000471611--
