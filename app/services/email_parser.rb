@@ -36,15 +36,20 @@ class EmailParser
 
   private
 
-  # Detect forwarded emails and extract the original sender.
+  # Detect the original sender from forwarded emails or contact form submissions.
   # When a user forwards a spam email, mail.from is the forwarder (the submitter),
-  # not the original sender we want to analyze.
+  # not the original sender we want to analyze. Similarly, contact form emails
+  # come from a system address but embed the actual sender's email in the body.
   def detect_forwarded_sender
     text = [extract_body_text, extract_body_html].compact.join("\n")
 
-    # Gmail: "---------- Forwarded message ---------\nFrom: Name <email@domain>"
-    # Outlook: "-------- Original Message --------\nFrom: Name <email@domain>"
-    # Generic: "From: Name <email@domain>" after a forwarding marker
+    detect_forwarded_message(text) || detect_contact_form_sender(text)
+  end
+
+  # Gmail: "---------- Forwarded message ---------\nFrom: Name <email@domain>"
+  # Outlook: "-------- Original Message --------\nFrom: Name <email@domain>"
+  # Generic: "From: Name <email@domain>" after a forwarding marker
+  def detect_forwarded_message(text)
     patterns = [
       /[-]+\s*Forwarded message\s*[-]+.*?From:\s*(?:(.+?)\s+)?<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/mi,
       /[-]+\s*Original Message\s*[-]+.*?From:\s*(?:(.+?)\s+)?<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/mi,
@@ -58,9 +63,41 @@ class EmailParser
       address = match[2]&.downcase&.strip
       name = match[1]&.strip&.gsub(/^["']|["']$/, "")
 
-      # Skip if the extracted address is the same as the envelope From (not actually forwarded)
       next if address == extract_from_address
 
+      return { address: address, name: name.presence }
+    end
+
+    nil
+  end
+
+  # Contact form emails embed the sender's email in the body with labels like:
+  #   "Email: scammer@evil.com", "E-mail: ...", "From: ...", "Reply email: ..."
+  #   "Sender: ...", "Contact email: ...", or HTML form fields
+  def detect_contact_form_sender(text)
+    patterns = [
+      /^[\s>]*(?:e[\-\s]?mail|reply[\-\s]?(?:to[\-\s]?)?e?mail|sender(?:'s)?\s+e?mail|contact\s+e?mail|from)\s*[:=]\s*<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?\s*$/mi,
+      /\b(?:e[\-\s]?mail|reply[\-\s]?(?:to[\-\s]?)?e?mail|sender(?:'s)?\s+e?mail|contact\s+e?mail)\s*[:=]\s*<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/mi
+    ]
+
+    # Also check for common HTML form field patterns: <td>Email</td><td>value@email.com</td>
+    html_patterns = [
+      %r{<(?:td|th|dt|span|div|label)[^>]*>\s*(?:e[\-\s]?mail|sender)\s*:?\s*</(?:td|th|dt|span|div|label)>\s*<(?:td|dd|span|div)[^>]*>\s*<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?\s*</}mi
+    ]
+
+    all_patterns = patterns + html_patterns
+
+    # Also try "Name: ... \n Email: ..." pattern common in contact forms
+    name_match = text.match(/^[\s>]*(?:name|full[\-\s]?name|sender(?:'s)?\s+name|nome|nombre)\s*[:=]\s*(.+?)$/mi)
+
+    all_patterns.each do |pattern|
+      match = text.match(pattern)
+      next unless match
+
+      address = match[1]&.downcase&.strip
+      next if address == extract_from_address
+
+      name = name_match ? name_match[1]&.strip&.gsub(/^["']|["']$/, "") : nil
       return { address: address, name: name.presence }
     end
 

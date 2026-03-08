@@ -7,10 +7,11 @@ class EmailParserTest < ActiveSupport::TestCase
     result = parser.parse
 
     assert_match(/YOUR ATM CARD COMPENSATION PAYMENT/, result[:subject])
-    assert_equal "info@asume.gov", result[:from_address]
-    assert_equal "FBI", result[:from_name]
+    # The body contains "Email: lawyergeraddave00@hotmail.com" — the parser
+    # correctly extracts this as the embedded sender (contact form pattern)
+    assert_equal "lawyergeraddave00@hotmail.com", result[:from_address]
     assert_equal "lawyergeraddave00@hotmail.com", result[:reply_to_address]
-    assert_equal "asume.gov", result[:sender_domain]
+    assert_equal "hotmail.com", result[:sender_domain]
     assert result[:raw_headers].present?
     assert result[:body_text].present?
   end
@@ -63,5 +64,153 @@ class EmailParserTest < ActiveSupport::TestCase
     result = parser.parse
 
     assert result[:message_id].present?
+  end
+
+  # --- Forwarded email detection ---
+
+  test "extracts original sender from Gmail forwarded message" do
+    raw = <<~EML
+      From: trusted@example.com
+      Subject: Fwd: You won a prize
+      Message-ID: <fwd-test@example.com>
+
+      ---------- Forwarded message ---------
+      From: Scammer Guy <scammer@evil.com>
+      Date: Mon, 1 Jan 2026
+      Subject: You won a prize
+
+      Click here to claim your prize!
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "scammer@evil.com", result[:from_address]
+    assert_equal "Scammer Guy", result[:from_name]
+    assert_equal "evil.com", result[:sender_domain]
+  end
+
+  test "extracts original sender from Outlook forwarded message" do
+    raw = <<~EML
+      From: trusted@example.com
+      Subject: FW: Urgent payment
+      Message-ID: <outlook-fwd@example.com>
+
+      -------- Original Message --------
+      From: Phisher <phisher@badsite.net>
+      Sent: Tuesday, January 2, 2026
+
+      Please wire $5000 immediately.
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "phisher@badsite.net", result[:from_address]
+    assert_equal "Phisher", result[:from_name]
+    assert_equal "badsite.net", result[:sender_domain]
+  end
+
+  # --- Contact form detection ---
+
+  test "extracts sender from contact form with Email: label" do
+    raw = <<~EML
+      From: contact@mywebsite.com
+      Subject: New contact form submission
+      Message-ID: <form-1@mywebsite.com>
+
+      Name: John Doe
+      Email: suspicious@spammer.org
+      Message: I have an amazing business opportunity for you!
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "suspicious@spammer.org", result[:from_address]
+    assert_equal "John Doe", result[:from_name]
+    assert_equal "spammer.org", result[:sender_domain]
+  end
+
+  test "extracts sender from contact form with E-mail: label" do
+    raw = <<~EML
+      From: noreply@mysite.com
+      Subject: Contact form
+      Message-ID: <form-2@mysite.com>
+
+      Full Name: Jane Smith
+      E-mail: jane@suspicious-domain.com
+      Phone: 555-1234
+      Message: Buy our products now!
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "jane@suspicious-domain.com", result[:from_address]
+    assert_equal "Jane Smith", result[:from_name]
+    assert_equal "suspicious-domain.com", result[:sender_domain]
+  end
+
+  test "extracts sender from contact form with Reply email: label" do
+    raw = <<~EML
+      From: forms@website.com
+      Subject: New inquiry
+      Message-ID: <form-3@website.com>
+
+      Reply email: fraud@scamsite.net
+      Subject: Partnership opportunity
+      Body: We want to partner with your company...
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "fraud@scamsite.net", result[:from_address]
+    assert_equal "scamsite.net", result[:sender_domain]
+  end
+
+  test "skips contact form extraction when email matches envelope From" do
+    raw = <<~EML
+      From: contact@mysite.com
+      Subject: Test
+      Message-ID: <form-4@mysite.com>
+
+      Email: contact@mysite.com
+      Message: Hello
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "contact@mysite.com", result[:from_address]
+    assert_equal "mysite.com", result[:sender_domain]
+  end
+
+  test "extracts sender from real-world contact form with Nome/Email fields" do
+    raw = <<~EML
+      From: contact@mywebsite.com
+      Subject: Mensagem de Larissa
+      Message-ID: <form-real@mywebsite.com>
+
+      Nome: Larissa
+      Email: l6103933@gmail.com
+      Telefone: +55 (11) 99374-4770
+      Empresa: Nenhuma
+      Como nos conheceu: Google
+      Mensagem: Eu queria vender produtos variados
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "l6103933@gmail.com", result[:from_address]
+    assert_equal "Larissa", result[:from_name]
+    assert_equal "gmail.com", result[:sender_domain]
+  end
+
+  test "forwarded message takes priority over contact form pattern" do
+    raw = <<~EML
+      From: trusted@example.com
+      Subject: Fwd: Spam from form
+      Message-ID: <priority-test@example.com>
+
+      ---------- Forwarded message ---------
+      From: Real Spammer <spammer@evil.com>
+      Date: Mon, 1 Jan 2026
+
+      Email: decoy@other.com
+      Message: This is spam
+    EML
+    result = EmailParser.new(raw).parse
+
+    assert_equal "spammer@evil.com", result[:from_address]
+    assert_equal "Real Spammer", result[:from_name]
   end
 end
