@@ -26,19 +26,21 @@ class MailFetcher
     Rails.logger.info("MailFetcher: Starting IMAP IDLE loop")
 
     while @running
-      run_idle_session
-      @consecutive_failures = 0
-    rescue Net::IMAP::NoResponseError, Net::IMAP::ByeResponseError => e
-      handle_reconnect("IMAP server said goodbye: #{e.message}")
-    rescue Net::IMAP::Error => e
-      handle_reconnect("IMAP error: #{e.message}")
-    rescue IOError, Errno::ECONNRESET, Errno::EPIPE, Errno::ETIMEDOUT,
-           Errno::ECONNREFUSED, Errno::ENETUNREACH, Errno::EHOSTUNREACH => e
-      handle_reconnect("Network error: #{e.class} - #{e.message}")
-    rescue OpenSSL::SSL::SSLError => e
-      handle_reconnect("SSL error: #{e.message}")
-    rescue => e
-      handle_reconnect("Unexpected error: #{e.class} - #{e.message}")
+      begin
+        run_idle_session
+        @consecutive_failures = 0
+      rescue Net::IMAP::NoResponseError, Net::IMAP::ByeResponseError => e
+        handle_reconnect("IMAP server said goodbye: #{e.message}")
+      rescue Net::IMAP::Error => e
+        handle_reconnect("IMAP error: #{e.message}")
+      rescue IOError, Errno::ECONNRESET, Errno::EPIPE, Errno::ETIMEDOUT,
+             Errno::ECONNREFUSED, Errno::ENETUNREACH, Errno::EHOSTUNREACH => e
+        handle_reconnect("Network error: #{e.class} - #{e.message}")
+      rescue OpenSSL::SSL::SSLError => e
+        handle_reconnect("SSL error: #{e.message}")
+      rescue => e
+        handle_reconnect("Unexpected error: #{e.class} - #{e.message}")
+      end
     end
 
     Rails.logger.info("MailFetcher: Stopped")
