@@ -5,7 +5,6 @@ services:
     env_file: .env
     environment:
       - RAILS_ENV=production
-      - SECRET_KEY_BASE_DUMMY=1
     volumes:
       - frank_fbi_db:/rails/db
       - frank_fbi_storage:/rails/storage
@@ -24,6 +23,12 @@ services:
     depends_on:
       setup:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     restart: unless-stopped
 
   worker:
@@ -52,13 +57,10 @@ services:
       - frank_fbi_storage:/rails/storage
     depends_on:
       app:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   frank_fbi_db:
-    external: true
   frank_fbi_storage:
-    external: true
   frank_fbi_emails:
-    external: true
