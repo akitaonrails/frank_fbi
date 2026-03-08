@@ -124,6 +124,22 @@ class AdminCommandProcessorTest < ActiveSupport::TestCase
     assert_includes result.body_text, "Completed: 1"
   end
 
+  test "add command rejects admin email address" do
+    ENV["ADMIN_EMAIL"] = @admin
+
+    result = AdminCommandProcessor.new(
+      subject: "add",
+      body: "admin@example.com\nvalid@example.com",
+      admin_email: @admin
+    ).process
+
+    assert result.success
+    # valid@example.com should be added, admin@example.com should be rejected
+    assert AllowedSender.authorized?("valid@example.com")
+    assert_not AllowedSender.find_by(email_address: "admin@example.com")
+    assert_includes result.body_text, "Rejected"
+  end
+
   test "unknown command returns help message" do
     result = AdminCommandProcessor.new(
       subject: "foobar",

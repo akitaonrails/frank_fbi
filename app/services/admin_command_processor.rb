@@ -28,13 +28,17 @@ class AdminCommandProcessor
 
     added = []
     already_existed = []
+    rejected = []
 
     emails.each do |email|
       sender = AllowedSender.find_or_initialize_by(email_address: email)
       if sender.new_record?
         sender.added_by = @admin_email
-        sender.save!
-        added << email
+        if sender.save
+          added << email
+        else
+          rejected << "#{email} (#{sender.errors.full_messages.join(', ')})"
+        end
       elsif !sender.active?
         sender.update!(active: true, added_by: @admin_email)
         added << email
@@ -46,6 +50,7 @@ class AdminCommandProcessor
     lines = []
     lines << "Added: #{added.join(', ')}" if added.any?
     lines << "Already existed: #{already_existed.join(', ')}" if already_existed.any?
+    lines << "Rejected: #{rejected.join(', ')}" if rejected.any?
     body = lines.join("\n")
 
     Result.new(
@@ -53,7 +58,7 @@ class AdminCommandProcessor
       success: true,
       subject: "Re: Senders Added (#{added.size} new, #{already_existed.size} existing)",
       body_text: body,
-      body_html: "<p>#{body.gsub("\n", "<br>")}</p>"
+      body_html: "<p>#{ERB::Util.html_escape(body).gsub("\n", "<br>")}</p>"
     )
   end
 
@@ -84,7 +89,7 @@ class AdminCommandProcessor
       success: true,
       subject: "Re: Senders Removed (#{removed.size} removed)",
       body_text: body,
-      body_html: "<p>#{body.gsub("\n", "<br>")}</p>"
+      body_html: "<p>#{ERB::Util.html_escape(body).gsub("\n", "<br>")}</p>"
     )
   end
 
@@ -156,8 +161,6 @@ class AdminCommandProcessor
   end
 
   def extract_emails
-    @body.scan(/[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+/i).flatten
-    # The scan with groups returns groups, use a different approach
     @body.to_enum(:scan, /[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+/i).map { Regexp.last_match[0] }
       .map(&:downcase)
       .map(&:strip)

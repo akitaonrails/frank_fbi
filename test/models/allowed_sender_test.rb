@@ -41,6 +41,19 @@ class AllowedSenderTest < ActiveSupport::TestCase
     assert AllowedSender.authorized?("  User@Example.COM  ")
   end
 
+  test "cannot add admin email as allowed sender" do
+    ENV["ADMIN_EMAIL"] = "admin@example.com"
+    sender = AllowedSender.new(email_address: "admin@example.com", added_by: "someone")
+    assert_not sender.valid?
+    assert_includes sender.errors[:email_address], "cannot be the admin email — admin access is managed separately"
+  end
+
+  test "cannot add admin email case-insensitively" do
+    ENV["ADMIN_EMAIL"] = "admin@example.com"
+    sender = AllowedSender.new(email_address: "Admin@Example.COM", added_by: "someone")
+    assert_not sender.valid?
+  end
+
   test "encrypts email_address" do
     sender = create(:allowed_sender, email_address: "secret@example.com")
     raw_value = AllowedSender.connection.select_value(
