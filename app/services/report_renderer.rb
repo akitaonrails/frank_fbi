@@ -174,7 +174,7 @@ class ReportRenderer
             <span>#{h v.provider.capitalize} (#{h v.model_id})</span>
             <span class="layer-score" style="color: #{color};">#{v.score}/100</span>
           </div>
-          <div class="layer-explanation">#{h v.reasoning&.truncate(200)}</div>
+          <div class="layer-explanation">#{h v.reasoning}</div>
         </div>
       HTML
     end.join

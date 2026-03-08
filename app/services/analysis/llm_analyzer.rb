@@ -4,9 +4,9 @@ module Analysis
     WEIGHT = AnalysisLayer::WEIGHTS[LAYER_NAME]
 
     MODELS = {
-      "anthropic" => "anthropic/claude-sonnet-4-6",
-      "openai" => "openai/gpt-4o",
-      "xai" => "x-ai/grok-3-mini-beta"
+      "anthropic" => "anthropic/claude-sonnet-4.6",
+      "openai" => "openai/gpt-5.4",
+      "xai" => "x-ai/grok-4"
     }.freeze
 
     def initialize(email)

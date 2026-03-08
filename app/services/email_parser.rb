@@ -13,13 +13,17 @@ class EmailParser
   end
 
   def parse
+    forwarded = detect_forwarded_sender
+    from_addr = forwarded&.dig(:address) || extract_from_address
+    from_nm = forwarded&.dig(:name) || extract_from_name
+
     {
       message_id: extract_message_id,
       subject: mail.subject&.strip,
-      from_address: extract_from_address,
-      from_name: extract_from_name,
+      from_address: from_addr,
+      from_name: from_nm,
       reply_to_address: extract_reply_to,
-      sender_domain: extract_sender_domain,
+      sender_domain: from_addr&.split("@")&.last,
       body_text: extract_body_text,
       body_html: extract_body_html,
       raw_headers: extract_raw_headers,
@@ -31,6 +35,37 @@ class EmailParser
   end
 
   private
+
+  # Detect forwarded emails and extract the original sender.
+  # When a user forwards a spam email, mail.from is the forwarder (the submitter),
+  # not the original sender we want to analyze.
+  def detect_forwarded_sender
+    text = [extract_body_text, extract_body_html].compact.join("\n")
+
+    # Gmail: "---------- Forwarded message ---------\nFrom: Name <email@domain>"
+    # Outlook: "-------- Original Message --------\nFrom: Name <email@domain>"
+    # Generic: "From: Name <email@domain>" after a forwarding marker
+    patterns = [
+      /[-]+\s*Forwarded message\s*[-]+.*?From:\s*(?:(.+?)\s+)?<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/mi,
+      /[-]+\s*Original Message\s*[-]+.*?From:\s*(?:(.+?)\s+)?<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/mi,
+      /^>?\s*From:\s*(?:(.+?)\s+)?<?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?\s*$/mi
+    ]
+
+    patterns.each do |pattern|
+      match = text.match(pattern)
+      next unless match
+
+      address = match[2]&.downcase&.strip
+      name = match[1]&.strip&.gsub(/^["']|["']$/, "")
+
+      # Skip if the extracted address is the same as the envelope From (not actually forwarded)
+      next if address == extract_from_address
+
+      return { address: address, name: name.presence }
+    end
+
+    nil
+  end
 
   def extract_message_id
     mid = mail.message_id

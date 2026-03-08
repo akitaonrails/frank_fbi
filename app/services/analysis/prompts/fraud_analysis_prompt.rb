@@ -37,7 +37,7 @@ module Analysis
           - **score**: integer 0-100 (0 = certainly legitimate, 100 = certainly fraudulent)
           - **verdict**: one of "legitimate", "suspicious_likely_ok", "suspicious_likely_fraud", "fraudulent"
           - **confidence**: float 0.0-1.0 (how confident you are in your verdict)
-          - **reasoning**: a 2-3 sentence explanation of your verdict
+          - **reasoning**: a short, direct conclusion justifying your verdict (1-3 sentences, no filler)
           - **key_findings**: array of strings, the top 3-5 most important findings that support your verdict
 
           Respond ONLY with the JSON object, no other text.
