@@ -51,9 +51,9 @@ class EmailTest < ActiveSupport::TestCase
     assert_equal email.id, found.id
   end
 
-  test "fully_analyzed? returns true when all 6 layers completed" do
+  test "fully_analyzed? returns true when all pipeline layers completed" do
     email = create(:email)
-    AnalysisLayer::LAYER_NAMES.each do |name|
+    email.pipeline_layer_names.each do |name|
       create(:analysis_layer, :completed, email: email, layer_name: name, weight: AnalysisLayer.default_weight(name))
     end
     assert email.fully_analyzed?

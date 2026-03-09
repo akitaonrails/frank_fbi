@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_123110) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_125741) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -96,6 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_123110) do
     t.string "from_address"
     t.string "from_name"
     t.string "message_id", null: false
+    t.string "pipeline_type", default: "fraud_analysis", null: false
     t.text "raw_headers"
     t.text "raw_source"
     t.datetime "received_at"
@@ -109,6 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_123110) do
     t.text "verdict_explanation"
     t.index ["from_address"], name: "index_emails_on_from_address"
     t.index ["message_id"], name: "index_emails_on_message_id", unique: true
+    t.index ["pipeline_type"], name: "index_emails_on_pipeline_type"
     t.index ["sender_domain"], name: "index_emails_on_sender_domain"
     t.index ["status"], name: "index_emails_on_status"
     t.index ["submitter_email"], name: "index_emails_on_submitter_email"

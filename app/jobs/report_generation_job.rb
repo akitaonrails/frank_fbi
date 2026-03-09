@@ -3,7 +3,7 @@ class ReportGenerationJob < ApplicationJob
 
   def perform(email_id)
     email = Email.find(email_id)
-    renderer = ReportRenderer.new(email)
+    renderer = email.messenger_triage? ? Triage::ReportRenderer.new(email) : ReportRenderer.new(email)
 
     report = email.analysis_report || email.build_analysis_report
     report.update!(

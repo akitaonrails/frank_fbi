@@ -6,6 +6,9 @@ class AnalysisLayer < ApplicationRecord
     external_api
     entity_verification
     llm_analysis
+    triage_url_scan
+    triage_file_scan
+    triage_llm
   ].freeze
 
   WEIGHTS = {
@@ -14,7 +17,10 @@ class AnalysisLayer < ApplicationRecord
     "content_analysis" => 0.15,
     "external_api" => 0.15,
     "entity_verification" => 0.10,
-    "llm_analysis" => 0.30
+    "llm_analysis" => 0.30,
+    "triage_url_scan" => 0.40,
+    "triage_file_scan" => 0.30,
+    "triage_llm" => 0.30
   }.freeze
 
   belongs_to :email

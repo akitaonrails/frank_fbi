@@ -98,6 +98,44 @@ namespace :frank_fbi do
     end
   end
 
+  desc "Process a local .eml file through the messenger triage pipeline"
+  task :triage_eml, [:file_path, :submitter_email] => :environment do |_t, args|
+    file_path = args[:file_path]
+    submitter = args[:submitter_email] || "test@example.com"
+
+    abort("File not found: #{file_path}") unless File.exist?(file_path)
+
+    raw_source = File.read(file_path)
+    parser = EmailParser.new(raw_source)
+    parsed = parser.parse
+
+    email = Email.create!(
+      message_id: parsed[:message_id] || SecureRandom.uuid,
+      submitter_email: submitter,
+      pipeline_type: "messenger_triage",
+      subject: parsed[:subject],
+      from_address: parsed[:from_address],
+      from_name: parsed[:from_name],
+      reply_to_address: parsed[:reply_to_address],
+      sender_domain: parsed[:sender_domain],
+      body_text: parsed[:body_text],
+      body_html: parsed[:body_html],
+      raw_headers: parsed[:raw_headers],
+      raw_source: raw_source,
+      extracted_urls: parsed[:extracted_urls],
+      extracted_emails: parsed[:extracted_emails],
+      attachments_info: parsed[:attachments_info],
+      received_at: parsed[:received_at],
+      status: "analyzing"
+    )
+
+    puts "Created Email ##{email.id}: #{email.subject} (messenger_triage)"
+    puts "Starting triage pipeline..."
+
+    Triage::PipelineOrchestrator.new(email).start_from_beginning
+    puts "Triage jobs enqueued. Run the worker to process."
+  end
+
   desc "Smoke test: process a known spam email and verify high score"
   task smoke_test: :environment do
     spam_file = Rails.root.join("suspects/YOUR ATM CARD COMPENSATION PAYMENT !!!!.eml")

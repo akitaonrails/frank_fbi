@@ -27,6 +27,10 @@ class AnalysisReportMailer < ApplicationMailer
     else "[ANALISADO]"
     end
 
-    "Re: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"
+    if @email.messenger_triage?
+      "Triagem: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"
+    else
+      "Re: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"
+    end
   end
 end

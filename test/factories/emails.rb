@@ -49,6 +49,13 @@ FactoryBot.define do
       end
     end
 
+    trait :messenger_triage do
+      pipeline_type { "messenger_triage" }
+      subject { "WhatsApp: link suspeito" }
+      body_text { "Olha esse link que recebi no WhatsApp: https://wa.me/551199999999 e também https://evil-phishing.com/login" }
+      extracted_urls { ["https://wa.me/551199999999", "https://evil-phishing.com/login"] }
+    end
+
     trait :legitimate do
       subject { "Fale Conosco - Gabriel Delfiol" }
       from_address { "contact@codeminer42.com" }

@@ -1,7 +1,25 @@
 class ApplicationMailbox < ActionMailbox::Base
   ADMIN_COMMANDS = %w[add remove list stats].freeze
 
+  MESSENGER_URL_PATTERNS = %w[
+    wa.me wa.link chat.whatsapp.com
+    t.me telegram.me
+    signal.group signal.me
+  ].freeze
+
+  MESSENGER_SUBJECT_KEYWORDS = %w[whatsapp telegram signal zap].freeze
+
+  FORWARD_MARKERS = [
+    "---------- Forwarded message ---------",
+    "---------- Mensagem encaminhada ----------",
+    "Begin forwarded message",
+    "-------- Original Message --------",
+    "-------- Mensagem Original --------"
+  ].freeze
+
   routing ->(inbound_email) { admin_command?(inbound_email) } => :admin_command
+  routing ->(inbound_email) { allowed_sender?(inbound_email) && forwarded_email?(inbound_email) } => :fraud_analysis
+  routing ->(inbound_email) { allowed_sender?(inbound_email) && messenger_triage?(inbound_email) } => :messenger_triage
   routing ->(inbound_email) { admin_email?(inbound_email) || allowed_sender?(inbound_email) } => :fraud_analysis
   routing :all => :rejection
 
@@ -42,6 +60,31 @@ class ApplicationMailbox < ActionMailbox::Base
     end
 
     true
+  end
+
+  def self.forwarded_email?(inbound_email)
+    body = inbound_email.mail.body.to_s
+
+    # Check for forwarding markers in body
+    return true if FORWARD_MARKERS.any? { |marker| body.include?(marker) }
+
+    # Check for attached .eml files
+    inbound_email.mail.attachments.any? { |att| att.filename.to_s.downcase.end_with?(".eml") }
+  end
+
+  def self.messenger_triage?(inbound_email)
+    # Must NOT be a forwarded email
+    return false if forwarded_email?(inbound_email)
+
+    body = inbound_email.mail.body.to_s.downcase
+    subject = inbound_email.mail.subject.to_s.downcase
+
+    # Check for messenger platform URLs in body
+    has_messenger_url = MESSENGER_URL_PATTERNS.any? { |pattern| body.include?(pattern) }
+    return true if has_messenger_url
+
+    # Check for messenger app names in subject
+    MESSENGER_SUBJECT_KEYWORDS.any? { |keyword| subject.include?(keyword) }
   end
 
   # Verify SPF/DKIM via the Authentication-Results header added by the receiving MTA (Gmail).

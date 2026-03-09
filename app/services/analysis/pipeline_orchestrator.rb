@@ -85,7 +85,7 @@ module Analysis
     end
 
     def all_layers_completed?
-      AnalysisLayer::LAYER_NAMES.all? { |name| layer_finished?(name) }
+      @email.pipeline_layer_names.all? { |name| layer_finished?(name) }
     end
 
     def enqueue_if_ready(layer_name)

@@ -35,11 +35,14 @@ class AnalysisLayerTest < ActiveSupport::TestCase
     assert_equal 0.10, AnalysisLayer.default_weight("entity_verification")
   end
 
-  test "LAYER_NAMES contains all 6 layers" do
-    assert_equal 6, AnalysisLayer::LAYER_NAMES.size
+  test "LAYER_NAMES contains all fraud and triage layers" do
+    assert_equal 9, AnalysisLayer::LAYER_NAMES.size
     assert_includes AnalysisLayer::LAYER_NAMES, "header_auth"
     assert_includes AnalysisLayer::LAYER_NAMES, "content_analysis"
     assert_includes AnalysisLayer::LAYER_NAMES, "entity_verification"
     assert_includes AnalysisLayer::LAYER_NAMES, "llm_analysis"
+    assert_includes AnalysisLayer::LAYER_NAMES, "triage_url_scan"
+    assert_includes AnalysisLayer::LAYER_NAMES, "triage_file_scan"
+    assert_includes AnalysisLayer::LAYER_NAMES, "triage_llm"
   end
 end
