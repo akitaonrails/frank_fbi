@@ -34,9 +34,6 @@ module Analysis
         )
       end
 
-      # These run outside the lock — they update other records
-      update_reputation_records(verdict)
-
       { score: final_score, verdict: verdict }
     end
 
@@ -114,10 +111,5 @@ module Analysis
       lines.join("\n")
     end
 
-    def update_reputation_records(verdict)
-      # Local reputation needs confirmed labels, not feedback from the model itself.
-      # We still keep KnownDomain/KnownSender records for caching and operator workflows,
-      # but the automated verdict is not written back as truth.
-    end
   end
 end

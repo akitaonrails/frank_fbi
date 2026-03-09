@@ -50,14 +50,11 @@ module Analysis
       @headers ||= @email.raw_headers.to_s
     end
 
-    def outer_mail
-      @outer_mail ||= Mail.new(@email.raw_source.to_s)
-    rescue
-      nil
-    end
-
     def outer_from_address
-      outer_mail&.from&.first&.downcase&.strip
+      @outer_from_address ||= begin
+        match = headers.match(/^From:\s*(?:.+<)?([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})>?/i)
+        match ? match[1].downcase.strip : nil
+      end
     end
 
     def indirect_sender_context?

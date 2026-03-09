@@ -66,14 +66,22 @@ class LlmConsultationJob < ApplicationJob
 
     # Try to find JSON inside ```json ... ``` blocks first
     if text =~ /```json\s*(.*?)```/mi
-      return JSON.parse($1.strip)
+      begin
+        return JSON.parse($1.strip)
+      rescue JSON::ParserError
+        # Fall through to next strategy
+      end
     end
 
     # Find the first { and match to the last }
     start_idx = text.index("{")
     end_idx = text.rindex("}")
     if start_idx && end_idx && end_idx > start_idx
-      return JSON.parse(text[start_idx..end_idx])
+      begin
+        return JSON.parse(text[start_idx..end_idx])
+      rescue JSON::ParserError
+        # Fall through to last resort
+      end
     end
 
     # Last resort: try parsing the whole thing

@@ -153,7 +153,7 @@ module Analysis
     end
 
     def detail_value(layer, key)
-      return nil unless layer.details
+      return nil unless layer.details.is_a?(Hash)
 
       layer.details[key.to_s] || layer.details[key.to_sym]
     end

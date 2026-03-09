@@ -1,0 +1,141 @@
+MIME-Version: 1.0
+Date: Mon, 9 Mar 2026 08:50:04 -0300
+Message-ID: <CACQYiC0EkLyJTpUZAOrR0Ue47GCn=00jM7uPaV_1jy_QSSK3Ow@mail.gmail.com>
+Subject: 
+From: Fabio Akita <boss@akitaonrails.com>
+To: Scam Scanner <fbi@akitaonrails.com>
+Content-Type: multipart/mixed; boundary="000000000000efd642064c96000f"
+
+--000000000000efd642064c96000f
+Content-Type: multipart/alternative; boundary="000000000000efd640064c96000d"
+
+--000000000000efd640064c96000d
+Content-Type: text/plain; charset="UTF-8"
+
+-- 
+===========================
+Fabio Akita - boss@akitaonrails.com
+www.akitaonrails.com
+
+--000000000000efd640064c96000d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><br clear=3D"all"></div><div><br></div><span class=3D=
+"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_sign=
+ature" data-smartmail=3D"gmail_signature">=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<br>Fabio Akita - <a href=
+=3D"mailto:boss@akitaonrails.com" target=3D"_blank">boss@akitaonrails.com</=
+a><br><a href=3D"http://www.akitaonrails.com" target=3D"_blank">www.akitaon=
+rails.com</a></div></div>
+
+--000000000000efd640064c96000d--
+--000000000000efd642064c96000f
+Content-Type: message/rfc822; name="Andamento Processual Ref: 15098.eml"
+Content-Disposition: attachment; 
+	filename="Andamento Processual Ref: 15098.eml"
+X-Attachment-Id: f_mmj4cwus0
+Content-ID: <f_mmj4cwus0>
+
+Delivered-To: boss@akitaonrails.com
+Received: by 2002:a05:6022:b217:b0:ee:2339:557b with SMTP id bg23csp3691138lab;
+        Thu, 5 Mar 2026 07:53:54 -0800 (PST)
+X-Received: by 2002:a05:690c:c4e9:b0:798:6042:12f8 with SMTP id 00721157ae682-798da558a0cmr2746137b3.55.1772726034462;
+        Thu, 05 Mar 2026 07:53:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772726034; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dmaVk4rHIFfOnH+HHoGSjKcuw8QpJD2rQqw1gPNIbgvpXLBzdXBVoMPEleIbZ+RX2U
+         CsG418GlAbNBOMBwcFf7c1RjfUq960RDYqh4fnef46YY/1R++aF2SRvkEJhcDjWbEwTS
+         AgTqrPVXUon+ZAxFZNOldVRbMgU5xcPg1M//ocFLQ0f+dHjHNj9cAY3O+5YftuclJLRU
+         XXqiDKzWLt4/G6ev4mfcuOb09wz4WaBVbLRVqIaN6OZ191kStfHkobqYjHd+9xw2Z94+
+         ESZTEYQLsOBX9CCG0Mc+2R9rYCUgWrIjlVXILju2zZKf037OZnhMuDdvAoc8OOsy/+JA
+         pbdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=message-id:subject:date:reply-to:mime-version:to:from;
+        bh=cTXpv0J26loTqgSpx4PB/HSzYh0/8utst2l+xJPiq9k=;
+        fh=uzI8zvmhbc7iAiyr5NNxlDebfhBPjWVNlmyh0rFsJu4=;
+        b=KlHZM1X9L+F4erm1fAIhwqgojf5RVQb29rz4slKs5o7WXp0EwaqBpA+uIiOKdEvYDo
+         2NjtXZ8fD4lTsZ4igS4JE4gybspgIHNYdnzmkVDKan6kjS/R1oKIsdXjuHl4nyUwtA2i
+         AcUpETqUyg/MRUqYGtoRPAUiir/OX5ewLijA6yfDiYsDvJZyxWFC8b9sHbweKKqd2dkx
+         mxxBSte5ci3dspqXzVMmuea4G1zv0Fve+E4bAwvbgIgB8Jf7zkVN/fSmdz7hp3UnHNz7
+         BDOqUJEC7Af06uqI2Y6vsKK4BfvUSR6ww9x8PiRFCkUG9QlmBXvLwgrq4Bbz7DsgEcZT
+         r94g==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=fail (google.com: domain of suporte-pje-123@pje.jus.br does not designate 192.175.23.125 as permitted sender) smtp.mailfrom=suporte-pje-123@pje.jus.br
+Return-Path: <suporte-pje-123@pje.jus.br>
+Received: from e9.purelist.qpon ([192.175.23.125])
+        by mx.google.com with ESMTPS id 00721157ae682-79876ad4f03si192038497b3.55.2026.03.05.07.53.54
+        for <boss@akitaonrails.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 07:53:54 -0800 (PST)
+Received-SPF: fail (google.com: domain of suporte-pje-123@pje.jus.br does not designate 192.175.23.125 as permitted sender) client-ip=192.175.23.125;
+Authentication-Results: mx.google.com;
+       spf=fail (google.com: domain of suporte-pje-123@pje.jus.br does not designate 192.175.23.125 as permitted sender) smtp.mailfrom=suporte-pje-123@pje.jus.br
+From: "Suporte-Pje" <suporte-pje-123@pje.jus.br>
+To: boss@akitaonrails.com
+Content-Type: multipart/alternative; boundary="A9A=_KftR4ThUMu3N5MugHVXc4O8MD4oAu"
+MIME-Version: 1.0
+Reply-To: y0jludsl@pje.jus.br
+Date: Thu, 5 Mar 2026 12:53:01 -0300
+Subject: Andamento Processual Ref: 15098
+Message-Id: <20260305155301.D388F65DA0@e9.purelist.qpon>
+
+This is a multi-part message in MIME format
+
+--A9A=_KftR4ThUMu3N5MugHVXc4O8MD4oAu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+An HTML viewer is required to see this message
+
+--A9A=_KftR4ThUMu3N5MugHVXc4O8MD4oAu
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+PGh0bWw+PGhlYWQ+Cgk8L2hlYWQ+Cgk8Ym9keT4KCQk8ZGl2IGlkPSIzMCIgaWQ9IjQyOCIgaWQ9
+IjY1ODMiIGlkPSI0Mzc5MSIgaWQ9IjkyMzEzMiIgIGlkPSI0ODY5MzQ4IiBuYW1lPSJqWGtUaU1N
+eGlKcWZQVWFDeGhwc2FRR1FqVmUiICBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyI+CgkJCTxk
+aXYgaWQ9IjM5IiBpZD0iNzcyIiBpZD0iOTU5OSIgaWQ9IjM5MTIxIiBpZD0iMDcyMDczIiAgaWQ9
+IjY5ODAxMDkiIG5hbWU9IkZqWkZ0WGJtdzE4azFmeWp4b0NQMHZERHU2dyIgIHN0eWxlPSJmb250
+LWZhbWlseTogYXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogc21hbGw7Ij4KCQkJCTx0YWJs
+ZSBhbGlnbj0iY2VudGVyIiBiZ2NvbG9yPSIjRkZGRkZGIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5n
+PSIwIiBjZWxsc3BhY2luZz0iMCIgc3R5bGU9Im1hcmdpbi1sZWZ0OiBhdXRvOyBtYXJnaW4tcmln
+aHQ6IGF1dG87IGZvbnQtZmFtaWx5OiBBcmlhbCwgJnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LCBI
+ZWx2ZXRpY2E7IiB3aWR0aD0iNjIwIj4KCQkJCQk8dGJvZHk+CgkJCQkJCQoJCQkJCQk8dHI+CgkJ
+CQkJCQk8dGQgc3R5bGU9ImZvbnQtZmFtaWx5OiBhcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
+OiAxNnB4OyBwYWRkaW5nOiAzMHB4IDIwcHg7Ij4KCQkJCQkJCQk8cCBpZD0iNjQiIGlkPSI3MTYi
+IGlkPSIwMzU3IiBpZD0iMDI1NTYiIGlkPSI2NzU2OTciICBpZD0iNjA4NDMwOSIgbmFtZT0ieDZN
+RHFQek5WcTZHT1dMSUZ3Q01kbFBWc0FZIiA+CgkJCQkJCQkJCTxiPlRSSUJVTkFMIFJFR0lPTkFM
+IERPIFRSQUJBTEhPIERBIDImIzE3MDsgUkVHSSYjMTk1O088L2I+PGJyPjxicj5QSmUgUHVzaCAt
+IFNlcnZpJiMyMzE7byBkZSBBY29tcGFuaGFtZW50byBhdXRvbSYjMjI1O3RpY28gZGUgcHJvY2Vz
+c29zPGJyPjxicj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFByZXphZG8o
+YSkgYm9zc0Bha2l0YW9ucmFpbHMuY29tLCA8YnI+PGJyPkluZm9ybWFtb3MgcXVlIG8gcHJvY2Vz
+c28gYSBzZWd1aXIgc29mcmV1IG1vdmltZW50YSYjMjMxOyYjMjI3O286PGJyPgogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgTiYjMjUwO21lcm8gZG8gUHJvY2Vzc286IDkyMjA1
+NzQtMTguMTU4OC41LjAyLjMyMDxicj5DbGFzc2UgSnVkaWNpYWw6IEEmIzE5OTsmIzE5NTtPIFRS
+QUJBTEhJU1RBIC0gUklUTyBTVU1BUiYjMjA1O1NTSU1PPGJyPgogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgJiMyMTE7cmcmIzIyNztvOiAzJiMxNzA7IFZhcmEgZG8gVHJhYmFs
+aG88YnI+RGF0YSBkZSBBdXR1YSYjMjMxOyYjMjI3O286IDA1LzAzLzIwMjY8YnI+VGlwbyBkZSBE
+aXN0cmlidWkmIzIzMTsmIzIyNztvOiA8YnI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBBc3N1bnRvOiBBdmlzbyBQciYjMjMzO3Zpbzxicj48YnI+CgogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgUkVDTEFNQU5URShTKSBhY2Vzc2FyIG8gbGluazogPGEg
+aWQ9IjM2IiBpZD0iNTEzIiBpZD0iMDYyNCIgaWQ9IjQ1MDc3IiBpZD0iMzE4ODg3IiAgaWQ9IjI5
+Mjk1OTAiIG5hbWU9InVpQmFSWHN6azh6NTFEU0NQQkJ3eHFZeWo4dyIgaHJlZj0iSHR0UHM6Ly8x
+MTIuMTgwLjE1My4xNjAuaG9zdC5zZWN1cmVzZXJ2ZXIubmV0L0wwMzhkNTUvVTF4alVkY0lVeDI1
+YXlkYjhCNC9FWnNYQTd0ZGw5dzRJcGxvbWFnNGdHZmdxVmlQUGh2Y1pvU1dDSVJSNjlKL0wxOTM4
+NjQ2MjE2IiB0YXJnZXQ9Il9ibGFuayI+UHJvY2Vzc286IDIyMTQyNDYtODQuMDkyMy41LjAyLjMw
+NDwvYT48YnI+PGJyPjxiPkFURU4mIzE5OTsmIzE5NTtPOiBlc3RlIGUtbWFpbCAmIzIzMzsgZ2Vy
+YWRvIGRlIGZvcm1hIGF1dG9tYXRpemFkYSwgcG9yIGdlbnRpbGV6YSwgbiYjMjI3O28gbyByZXNw
+b25kYS48L2I+CgoKCQkJCQkJCTwvcD48L3RkPgoJCQkJCQk8L3RyPgoJCQkJCQkKCQkJCQkJCgkJ
+CQkJPC90Ym9keT4KCQkJCTwvdGFibGU+CgkJCTwvZGl2PgoJCQkKCQk8L2Rpdj4KCQk8cCBpZD0i
+MjMiIGlkPSI4ODQiIGlkPSI4MjY1IiBpZD0iMDc1MzUiIGlkPSIzODk2MzciICBpZD0iMzc5MTg2
+NSIgbmFtZT0iQnZmU1hRdHM2S214WnhjeVVrRkhONnNtRjJlIiA+CgkJCSZuYnNwOzwvcD4KCQoK
+PC9ib2R5PjwvaHRtbD4K
+
+--A9A=_KftR4ThUMu3N5MugHVXc4O8MD4oAu--
+
+
+--000000000000efd642064c96000f--

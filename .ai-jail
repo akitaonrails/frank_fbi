@@ -2,6 +2,9 @@
 # https://github.com/akitaonrails/ai-jail
 # Edit freely. Regenerate with: ai-jail --clean --init
 
-command = ["claude"]
+command = [
+    "codex",
+    "resume",
+]
 rw_maps = []
 ro_maps = []
