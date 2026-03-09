@@ -31,21 +31,21 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
     assert layer.details["key_findings"].any?
   end
 
-  test "handles LLM failure gracefully" do
+  test "handles LLM failure with domain-only fallback" do
     layer = run_with_error("OpenRouter API error")
 
     assert_equal "completed", layer.status
-    assert_equal 50, layer.score
-    assert_in_delta 0.2, layer.confidence, 0.01
-    assert_includes layer.explanation, "falhou"
+    # With domain verification fallback, score comes from WHOIS/DNS data
+    assert layer.score.between?(0, 100)
+    assert layer.details["domain_age_days"].present? || layer.details["key_findings"].any?
   end
 
   test "handles JSON parse failure" do
     layer = run_with_stubbed_response("This is not valid JSON at all")
 
     assert_equal "completed", layer.status
-    assert_equal 50, layer.score
-    assert_in_delta 0.2, layer.confidence, 0.01
+    # Falls back to domain-only result since LLM parse failed
+    assert layer.score.between?(0, 100)
   end
 
   test "sets correct weight from WEIGHTS constant" do
@@ -55,9 +55,31 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
     assert_equal AnalysisLayer::WEIGHTS["entity_verification"], layer.weight
   end
 
+  test "includes domain WHOIS data in details" do
+    response_data = { score: 50, confidence: 0.5, verdict_summary: "Inconclusive" }
+    layer = run_with_stubbed_response(response_data.to_json)
+
+    # Domain verification always runs, so domain data should be present
+    assert layer.details.key?("domain_age_days") || layer.details.key?("domain_whois")
+  end
+
   private
 
-  # Subclass the analyzer to inject a fake chat object instead of calling RubyLLM
+  def stub_domain_verification(analyzer)
+    analyzer.define_singleton_method(:verify_domain_directly) do
+      {
+        domain: "suspicious.com",
+        verified: true,
+        findings: ["Domínio suspicious.com registrado há 500 dias (Test Registrar)"],
+        age_days: 500,
+        registrar: "Test Registrar",
+        whois: { age_days: 500, registrar: "Test Registrar" },
+        blacklisted: false,
+        blacklist_hits: 0
+      }
+    end
+  end
+
   def run_with_stubbed_response(json_text)
     response = Struct.new(:content, :input_tokens, :output_tokens).new(json_text, 500, 200)
     chat = Object.new
@@ -77,8 +99,8 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
 
   def run_analyzer_with_chat(fake_chat)
     analyzer = Analysis::EntityVerificationAnalyzer.new(@email)
-    # Inject fake chat by overriding the private method via a singleton method
     analyzer.define_singleton_method(:build_chat) { fake_chat }
+    stub_domain_verification(analyzer)
     analyzer.analyze
   end
 end

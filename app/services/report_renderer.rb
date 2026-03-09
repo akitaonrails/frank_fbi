@@ -135,6 +135,14 @@ class ReportRenderer
       domain_v = details["domain_verified"]
       lines << "  Remetente verificado: #{verification_text(sender_v)}"
       lines << "  Domínio verificado: #{verification_text(domain_v)}"
+      domain_age = details["domain_age_days"]
+      domain_registrar = details["domain_registrar"]
+      if domain_age
+        domain_line = "  Domínio: #{domain_age} dias"
+        domain_line += " — #{domain_registrar}" if domain_registrar.present?
+        domain_line += " [EM LISTA NEGRA]" if details["domain_blacklisted"]
+        lines << domain_line
+      end
       mismatches = details["entity_mismatches"] || []
       if mismatches.any?
         lines << "  Divergências:"
@@ -271,7 +279,27 @@ class ReportRenderer
     mismatches = details["entity_mismatches"] || []
     ev_findings = details["key_findings"] || []
     search_summary = details["search_summary"]
+    domain_age = details["domain_age_days"]
+    domain_registrar = details["domain_registrar"]
+    domain_blacklisted = details["domain_blacklisted"]
     color = score_color(ev_layer.score)
+
+    # Domain info line
+    domain_info_html = ""
+    domain_parts = []
+    if domain_age
+      domain_parts << "#{domain_age} dias"
+    end
+    if domain_registrar.present?
+      domain_parts << h(domain_registrar)
+    end
+    if domain_parts.any?
+      domain_info_html = "<p style=\"font-size:13px;color:#4b5563;margin:4px 0 0;\"><strong>Domínio:</strong> #{domain_parts.join(' — ')}"
+      if domain_blacklisted
+        domain_info_html += " &nbsp;<span class=\"verification-badge badge-fail\">Em lista negra</span>"
+      end
+      domain_info_html += "</p>"
+    end
 
     mismatch_html = ""
     if mismatches.any?
@@ -306,6 +334,7 @@ class ReportRenderer
             &nbsp;&nbsp;
             Domínio: #{verification_badge(domain_v, "Verificado", "Não verificado")}
           </p>
+          #{domain_info_html}
           <div class="layer-explanation">#{h ev_layer.explanation}</div>
           #{mismatch_html}
           #{findings_html}
