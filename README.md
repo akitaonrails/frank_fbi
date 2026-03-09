@@ -4,6 +4,10 @@ A headless Rails 8 application that analyzes suspicious emails through 6 layers 
 
 Forward a suspicious email to a dedicated Gmail account. Frank FBI parses it, runs it through the analysis pipeline, and replies on the same thread with a verdict and breakdown.
 
+| Suspicious email (40/100) | Legitimate email (80/100) |
+|:---:|:---:|
+| ![Suspicious report](docs/suspect-email.png) | ![Legitimate report](docs/ok-email.png) |
+
 ## Best Way To Forward
 
 If you use Gmail, prefer **Forward as attachment** instead of the normal inline forward.
@@ -199,6 +203,8 @@ OSINT-based verification of the sender's claimed identity. Depends on Layers 1 +
 - Entity mismatches found
 - Reference links to verified sources (company websites, LinkedIn, etc.)
 - Website screenshots of reference links (captured via headless Chrome, inline in report)
+
+![Entity verification section](docs/verificacao-identidade.png)
 
 **Screenshot capture** runs in parallel with LLM analysis after entity verification completes. Uses ferrum (headless Chromium) with stealth configuration. Screenshots are resized to 560px width, JPEG quality 60, and embedded as base64 thumbnails in the HTML report. The pipeline waits for screenshots before generating the report, with graceful fallback if capture fails.
 
