@@ -12,23 +12,29 @@ module Analysis
     end
 
     def aggregate
-      layers = @email.analysis_layers.where(status: "completed")
-      return nil if layers.empty?
+      final_score = nil
+      verdict = nil
 
-      final_score = calculate_weighted_score(layers)
-      verdict = score_to_verdict(final_score)
+      @email.with_lock do
+        # Prevent double aggregation from concurrent ScoreAggregationJobs
+        return { score: @email.final_score, verdict: @email.verdict } if @email.final_score.present?
 
-      @email.update!(
-        final_score: final_score,
-        verdict: verdict,
-        verdict_explanation: build_verdict_explanation(layers, final_score, verdict),
-        analyzed_at: Time.current
-      )
+        layers = @email.analysis_layers.where(status: "completed")
+        return nil if layers.empty?
 
-      # Update known domain and sender records with verdict
+        final_score = calculate_weighted_score(layers)
+        verdict = score_to_verdict(final_score)
+
+        @email.update!(
+          final_score: final_score,
+          verdict: verdict,
+          verdict_explanation: build_verdict_explanation(layers, final_score, verdict),
+          analyzed_at: Time.current
+        )
+      end
+
+      # These run outside the lock — they update other records
       update_reputation_records(verdict)
-
-      # Apply conditional encryption for legitimate emails
       encrypt_if_legitimate(verdict)
 
       { score: final_score, verdict: verdict }

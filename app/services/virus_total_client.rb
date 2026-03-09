@@ -107,6 +107,14 @@ class VirusTotalClient
       scan_details: result,
       expires_at: CACHE_TTL.from_now
     )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    UrlScanResult.find_by(url: url, source: "virustotal")&.update(
+      domain: domain,
+      malicious: result[:malicious],
+      detection_count: result[:detection_count],
+      scan_details: result,
+      expires_at: CACHE_TTL.from_now
+    )
   end
 
   def cached_to_result(cached)
@@ -149,6 +157,14 @@ class VirusTotalClient
 
   def cache_file_result(cache_key, result)
     UrlScanResult.find_or_initialize_by(url: cache_key, source: "virustotal_file").update!(
+      domain: nil,
+      malicious: result[:malicious],
+      detection_count: result[:detection_count],
+      scan_details: result,
+      expires_at: CACHE_TTL.from_now
+    )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    UrlScanResult.find_by(url: cache_key, source: "virustotal_file")&.update(
       domain: nil,
       malicious: result[:malicious],
       detection_count: result[:detection_count],

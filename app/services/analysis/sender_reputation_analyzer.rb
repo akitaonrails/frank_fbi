@@ -162,6 +162,8 @@ module Analysis
           s.emails_analyzed = 0
         end
       end
+    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+      # Race condition: another job created the record first — safe to ignore
     end
 
     def build_no_domain_result

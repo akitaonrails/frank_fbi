@@ -80,6 +80,14 @@ class UrlhausClient
       scan_details: result,
       expires_at: CACHE_TTL.from_now
     )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    UrlScanResult.find_by(url: url, source: "urlhaus")&.update(
+      domain: domain,
+      malicious: result[:malicious],
+      detection_count: result[:malicious] ? 1 : 0,
+      scan_details: result,
+      expires_at: CACHE_TTL.from_now
+    )
   end
 
   def cached_to_result(cached)

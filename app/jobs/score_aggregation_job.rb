@@ -3,6 +3,10 @@ class ScoreAggregationJob < ApplicationJob
 
   def perform(email_id)
     email = Email.find(email_id)
+
+    # Skip if already scored (idempotency guard)
+    return if email.final_score.present?
+
     Analysis::ScoreAggregator.new(email).aggregate
     ReportGenerationJob.perform_later(email.id)
   rescue => e

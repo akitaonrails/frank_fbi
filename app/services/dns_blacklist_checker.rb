@@ -73,8 +73,17 @@ class DnsBlacklistChecker
   end
 
   def cache_results(results)
-    known_domain = KnownDomain.find_or_initialize_by(domain: @domain)
+    known_domain = KnownDomain.find_or_create_by!(domain: @domain) do |d|
+      d.times_seen = 0
+    end
     known_domain.update!(
+      blacklist_results: results,
+      blacklist_checked_at: Time.current
+    )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    # Race condition: another job created the record first — retry find
+    known_domain = KnownDomain.find_by(domain: @domain)
+    known_domain&.update(
       blacklist_results: results,
       blacklist_checked_at: Time.current
     )

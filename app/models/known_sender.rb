@@ -9,12 +9,13 @@ class KnownSender < ApplicationRecord
   end
 
   def record_analysis(verdict)
-    increment!(:emails_analyzed)
+    counters = { emails_analyzed: 1 }
     case verdict
     when "fraudulent", "suspicious_likely_fraud"
-      increment!(:fraud_count)
+      counters[:fraud_count] = 1
     when "legitimate", "suspicious_likely_ok"
-      increment!(:legit_count)
+      counters[:legit_count] = 1
     end
+    self.class.update_counters(id, **counters)
   end
 end

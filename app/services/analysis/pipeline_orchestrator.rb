@@ -5,7 +5,8 @@ module Analysis
     # 2. sender_reputation: depends on header_auth (for sender IP)
     # 3. content_analysis: no dependencies (can start with header_auth)
     # 4. external_api: depends on content_analysis (for extracted URLs)
-    # 5. llm_analysis: depends on all of 1-4
+    # 6. entity_verification: depends on header_auth + content_analysis (for sender info + entities)
+    # 5. llm_analysis: depends on all of 1-4 + 6
 
     def self.advance(email)
       new(email).advance
@@ -16,12 +17,14 @@ module Analysis
     end
 
     def advance
-      return if @email.status == "completed" || @email.status == "failed"
-      return unless @email.status == "analyzing"
+      @email.with_lock do
+        return if @email.status == "completed" || @email.status == "failed"
+        return unless @email.status == "analyzing"
 
-      start_initial_layers
-      start_dependent_layers
-      check_completion
+        start_initial_layers
+        start_dependent_layers
+        check_completion
+      end
     end
 
     def start_from_beginning
@@ -48,14 +51,20 @@ module Analysis
         enqueue_if_ready("external_api") { ExternalApiAnalysisJob.perform_later(@email.id) }
       end
 
-      # Layer 5 (llm_analysis) needs all of 1-4
-      if layers_1_to_4_completed?
+      # Layer 6 (entity_verification) needs Layers 1 + 3
+      if layer_completed?("header_auth") && layer_completed?("content_analysis")
+        enqueue_if_ready("entity_verification") { EntityVerificationJob.perform_later(@email.id) }
+      end
+
+      # Layer 5 (llm_analysis) needs all pre-LLM layers
+      if pre_llm_layers_completed?
         enqueue_if_ready("llm_analysis") { LlmAnalysisJob.perform_later(@email.id) }
       end
     end
 
     def check_completion
       return unless all_layers_completed?
+      return if @email.final_score.present? # Already scored, don't re-enqueue
 
       # All layers done — aggregate score and generate report
       ScoreAggregationJob.perform_later(@email.id)
@@ -65,8 +74,8 @@ module Analysis
       @email.analysis_layers.exists?(layer_name: name, status: "completed")
     end
 
-    def layers_1_to_4_completed?
-      %w[header_auth sender_reputation content_analysis external_api].all? do |name|
+    def pre_llm_layers_completed?
+      %w[header_auth sender_reputation content_analysis external_api entity_verification].all? do |name|
         layer_completed?(name)
       end
     end
@@ -88,6 +97,8 @@ module Analysis
       )
 
       yield
+    rescue ActiveRecord::RecordNotUnique
+      # Another concurrent advance already created this layer — safe to skip
     end
   end
 end

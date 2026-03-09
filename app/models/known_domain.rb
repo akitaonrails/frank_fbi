@@ -24,12 +24,13 @@ class KnownDomain < ApplicationRecord
   end
 
   def record_analysis(verdict)
-    increment!(:times_seen)
+    counters = { times_seen: 1 }
     case verdict
     when "fraudulent", "suspicious_likely_fraud"
-      increment!(:times_flagged_fraud)
+      counters[:times_flagged_fraud] = 1
     when "legitimate", "suspicious_likely_ok"
-      increment!(:times_flagged_legit)
+      counters[:times_flagged_legit] = 1
     end
+    self.class.update_counters(id, **counters)
   end
 end

@@ -32,17 +32,22 @@ module Analysis
       verdicts = email.llm_verdicts.where.not(score: nil)
       return unless verdicts.size >= 2 # Need at least 2 responses
 
-      consensus = LlmConsensusBuilder.new(verdicts).build
+      email.with_lock do
+        # Re-check inside lock to prevent double finalization
+        layer = email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
+        return if layer.status == "completed"
 
-      layer = email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
-      layer.update!(
-        score: consensus[:score],
-        weight: WEIGHT,
-        confidence: consensus[:confidence],
-        details: consensus[:details],
-        explanation: consensus[:explanation],
-        status: "completed"
-      )
+        consensus = LlmConsensusBuilder.new(verdicts.reload).build
+
+        layer.update!(
+          score: consensus[:score],
+          weight: WEIGHT,
+          confidence: consensus[:confidence],
+          details: consensus[:details],
+          explanation: consensus[:explanation],
+          status: "completed"
+        )
+      end
 
       PipelineOrchestrator.advance(email)
     end
