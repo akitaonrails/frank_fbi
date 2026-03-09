@@ -191,12 +191,17 @@ module Contact
       info.compact_blank
     end
 
+    # Invert internal score (high=fraud) to display score (high=safe)
+    def display_score(internal_score)
+      internal_score.present? ? (100 - internal_score) : nil
+    end
+
     def score_color(score)
       case score
-      when 0..20 then "#22c55e"
-      when 21..50 then "#f59e0b"
-      when 51..75 then "#f97316"
-      else "#ef4444"
+      when 80..100 then "#22c55e"  # green (safe)
+      when 50..79 then "#f59e0b"   # yellow (caution)
+      when 25..49 then "#f97316"   # orange (suspicious)
+      else "#ef4444"               # red (dangerous)
       end
     end
 
@@ -320,7 +325,7 @@ module Contact
       return "" unless url_layer
 
       details = url_layer.details || {}
-      color = score_color(url_layer.score)
+      color = score_color(display_score(url_layer.score))
 
       url_items = []
 
@@ -348,10 +353,10 @@ module Contact
           <div class="layer">
             <table class="layer-header"><tr>
               <td>URLs Verificadas</td>
-              <td class="layer-score" style="color: #{color};">#{url_layer.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(url_layer.score)}/100</td>
             </tr></table>
             <div class="score-bar">
-              <div class="score-fill" style="width: #{url_layer.score}%; background: #{color};"></div>
+              <div class="score-fill" style="width: #{display_score(url_layer.score)}%; background: #{color};"></div>
             </div>
             <div class="layer-explanation">#{h url_layer.explanation}</div>
             #{urls_html}
@@ -365,7 +370,7 @@ module Contact
       return "" unless file_layer
 
       details = file_layer.details || {}
-      color = score_color(file_layer.score)
+      color = score_color(display_score(file_layer.score))
 
       file_items = Array(details["attachments"] || details[:attachments]).map do |att|
         filename = att["filename"] || att[:filename]
@@ -387,10 +392,10 @@ module Contact
           <div class="layer">
             <table class="layer-header"><tr>
               <td>Arquivos Verificados</td>
-              <td class="layer-score" style="color: #{color};">#{file_layer.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(file_layer.score)}/100</td>
             </tr></table>
             <div class="score-bar">
-              <div class="score-fill" style="width: #{file_layer.score}%; background: #{color};"></div>
+              <div class="score-fill" style="width: #{display_score(file_layer.score)}%; background: #{color};"></div>
             </div>
             <div class="layer-explanation">#{h file_layer.explanation}</div>
             #{files_html}

@@ -102,7 +102,7 @@ module Triage
       lines << "=" * 50
       lines << ""
       lines << "VEREDITO: #{VERDICT_LABELS[@email.verdict] || @email.verdict&.upcase}"
-      lines << "PONTUAÇÃO: #{@email.final_score}/100"
+      lines << "PONTUAÇÃO: #{display_score(@email.final_score)}/100"
 
       # Safety recommendation
       recommendation = extract_safety_recommendation
@@ -129,7 +129,7 @@ module Triage
       if url_layer
         lines << ""
         lines << "--- Verificação de URLs ---"
-        lines << "  Pontuação: #{url_layer.score}/100"
+        lines << "  Pontuação: #{display_score(url_layer.score)}/100"
         lines << "  #{url_layer.explanation}"
         urls_detail = url_layer.details || {}
         Array(urls_detail["urlhaus"] || urls_detail[:urlhaus]).each do |entry|
@@ -151,7 +151,7 @@ module Triage
       if file_layer
         lines << ""
         lines << "--- Verificação de Arquivos ---"
-        lines << "  Pontuação: #{file_layer.score}/100"
+        lines << "  Pontuação: #{display_score(file_layer.score)}/100"
         lines << "  #{file_layer.explanation}"
       end
 
@@ -160,7 +160,7 @@ module Triage
         lines << ""
         lines << "--- Avaliação por IA ---"
         @llm_verdicts.each do |v|
-          lines << "  #{v.score}/100 — #{v.reasoning}"
+          lines << "  #{display_score(v.score)}/100 — #{v.reasoning}"
         end
       end
 
@@ -168,7 +168,7 @@ module Triage
       lines << ""
       lines << "--- Detalhamento ---"
       @layers.each do |layer|
-        lines << "  #{layer_label(layer.layer_name)}: #{layer.score}/100 (confiança: #{(layer.confidence * 100).round}%)"
+        lines << "  #{layer_label(layer.layer_name)}: #{display_score(layer.score)}/100 (confiança: #{(layer.confidence * 100).round}%)"
       end
 
       lines << ""
@@ -211,12 +211,17 @@ module Triage
       "#{url[0...prefix_len]}...#{url[-suffix_len..]}"
     end
 
+    # Invert internal score (high=fraud) to display score (high=safe)
+    def display_score(internal_score)
+      internal_score.present? ? (100 - internal_score) : nil
+    end
+
     def score_color(score)
       case score
-      when 0..20 then "#22c55e"
-      when 21..50 then "#f59e0b"
-      when 51..75 then "#f97316"
-      else "#ef4444"
+      when 80..100 then "#22c55e"  # green (safe)
+      when 50..79 then "#f59e0b"   # yellow (caution)
+      when 25..49 then "#f97316"   # orange (suspicious)
+      else "#ef4444"               # red (dangerous)
       end
     end
 
@@ -226,7 +231,7 @@ module Triage
 
       <<~HTML
         <div class="banner" style="background: #{color};">
-          <div class="score-big">#{@email.final_score}/100</div>
+          <div class="score-big">#{display_score(@email.final_score)}/100</div>
           <div class="verdict-label">#{label}</div>
         </div>
       HTML
@@ -299,7 +304,7 @@ module Triage
       return "" unless url_layer
 
       details = url_layer.details || {}
-      color = score_color(url_layer.score)
+      color = score_color(display_score(url_layer.score))
 
       url_items = []
 
@@ -329,10 +334,10 @@ module Triage
           <div class="layer">
             <table class="layer-header"><tr>
               <td>URLs Verificadas</td>
-              <td class="layer-score" style="color: #{color};">#{url_layer.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(url_layer.score)}/100</td>
             </tr></table>
             <div class="score-bar">
-              <div class="score-fill" style="width: #{url_layer.score}%; background: #{color};"></div>
+              <div class="score-fill" style="width: #{display_score(url_layer.score)}%; background: #{color};"></div>
             </div>
             <div class="layer-explanation">#{h url_layer.explanation}</div>
             #{urls_html}
@@ -346,7 +351,7 @@ module Triage
       return "" unless file_layer
 
       details = file_layer.details || {}
-      color = score_color(file_layer.score)
+      color = score_color(display_score(file_layer.score))
 
       file_items = Array(details["attachments"] || details[:attachments]).map do |att|
         filename = att["filename"] || att[:filename]
@@ -368,10 +373,10 @@ module Triage
           <div class="layer">
             <table class="layer-header"><tr>
               <td>Arquivos Verificados</td>
-              <td class="layer-score" style="color: #{color};">#{file_layer.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(file_layer.score)}/100</td>
             </tr></table>
             <div class="score-bar">
-              <div class="score-fill" style="width: #{file_layer.score}%; background: #{color};"></div>
+              <div class="score-fill" style="width: #{display_score(file_layer.score)}%; background: #{color};"></div>
             </div>
             <div class="layer-explanation">#{h file_layer.explanation}</div>
             #{files_html}
@@ -384,12 +389,12 @@ module Triage
       return "" if @llm_verdicts.empty?
 
       rows = @llm_verdicts.map do |v|
-        color = score_color(v.score || 0)
+        color = score_color(display_score(v.score || 0))
         <<~HTML
           <div class="layer">
             <table class="layer-header"><tr>
               <td>Avalia&ccedil;&atilde;o por IA</td>
-              <td class="layer-score" style="color: #{color};">#{v.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(v.score)}/100</td>
             </tr></table>
             <div class="layer-explanation">#{h v.reasoning}</div>
           </div>
@@ -406,12 +411,12 @@ module Triage
 
     def score_breakdown_html
       rows = @layers.map do |layer|
-        color = score_color(layer.score)
+        color = score_color(display_score(layer.score))
         <<~HTML
           <div class="layer">
             <table class="layer-header"><tr>
               <td>#{h layer_label(layer.layer_name)}</td>
-              <td class="layer-score" style="color: #{color};">#{layer.score}/100</td>
+              <td class="layer-score" style="color: #{color};">#{display_score(layer.score)}/100</td>
             </tr></table>
             <div class="layer-explanation">Confian&ccedil;a: #{(layer.confidence * 100).round}% | Peso: #{(layer.weight * 100).round}%</div>
           </div>

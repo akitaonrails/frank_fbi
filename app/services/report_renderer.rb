@@ -115,7 +115,7 @@ class ReportRenderer
     lines << "=" * 50
     lines << ""
     lines << "VEREDITO: #{VERDICT_LABELS[@email.verdict] || @email.verdict&.upcase}"
-    lines << "PONTUAÇÃO: #{@email.final_score}/100"
+    lines << "PONTUAÇÃO: #{display_score(@email.final_score)}/100"
 
     # Critical alerts right after score
     alerts = collect_critical_alerts
@@ -148,7 +148,7 @@ class ReportRenderer
       lines << ""
       lines << "--- Opinião da IA ---"
       @llm_verdicts.each do |v|
-        lines << "  #{v.provider.capitalize}: #{v.score}/100 — #{v.reasoning}"
+        lines << "  #{v.provider.capitalize}: #{display_score(v.score)}/100 — #{v.reasoning}"
       end
     end
 
@@ -177,7 +177,7 @@ class ReportRenderer
     if ev_layer
       lines << ""
       lines << "--- Verificação de Identidade ---"
-      lines << "  Pontuação: #{ev_layer.score}/100"
+      lines << "  Pontuação: #{display_score(ev_layer.score)}/100"
       details = ev_layer.details || {}
       sender_v = details["sender_verified"]
       domain_v = details["domain_verified"]
@@ -218,7 +218,7 @@ class ReportRenderer
       next unless layer
       lines << ""
       lines << "--- #{layer_label(name)} ---"
-      lines << "  #{layer.score}/100 (confiança: #{(layer.confidence * 100).round}%)"
+      lines << "  #{display_score(layer.score)}/100 (confiança: #{(layer.confidence * 100).round}%)"
       lines << "  #{layer.explanation}"
     end
 
@@ -228,11 +228,11 @@ class ReportRenderer
     %w[header_auth sender_reputation].each do |name|
       layer = find_layer(name)
       next unless layer
-      lines << "  #{layer_label(name)}: #{layer.score}/100 — #{layer.explanation}"
+      lines << "  #{layer_label(name)}: #{display_score(layer.score)}/100 — #{layer.explanation}"
     end
     llm_layer = find_layer("llm_analysis")
     if llm_layer
-      lines << "  #{layer_label('llm_analysis')}: #{llm_layer.score}/100 — #{llm_layer.explanation}"
+      lines << "  #{layer_label('llm_analysis')}: #{display_score(llm_layer.score)}/100 — #{llm_layer.explanation}"
     end
 
     if @email.verdict_explanation.present?
@@ -399,7 +399,7 @@ class ReportRenderer
 
     <<~HTML
       <div class="banner" style="background: #{color};">
-        <div class="score-big">#{@email.final_score}/100</div>
+        <div class="score-big">#{display_score(@email.final_score)}/100</div>
         <div class="verdict-label">#{label}</div>
       </div>
     HTML
@@ -409,12 +409,12 @@ class ReportRenderer
     return "" if @llm_verdicts.empty?
 
     rows = @llm_verdicts.map do |v|
-      color = score_color(v.score || 0)
+      color = score_color(display_score(v.score || 0))
       <<~HTML
         <div class="layer">
           <table class="layer-header"><tr>
             <td>#{h v.provider.capitalize} (#{h v.model_id})</td>
-            <td class="layer-score" style="color: #{color};">#{v.score}/100</td>
+            <td class="layer-score" style="color: #{color};">#{display_score(v.score)}/100</td>
           </tr></table>
           <div class="layer-explanation">#{h v.reasoning}</div>
         </div>
@@ -485,7 +485,7 @@ class ReportRenderer
     domain_age = details["domain_age_days"]
     domain_registrar = details["domain_registrar"]
     domain_blacklisted = details["domain_blacklisted"]
-    color = score_color(ev_layer.score)
+    color = score_color(display_score(ev_layer.score))
 
     # Domain info line
     domain_info_html = ""
@@ -545,10 +545,10 @@ class ReportRenderer
         <div class="layer">
           <table class="layer-header"><tr>
             <td>Verificação de Identidade</td>
-            <td class="layer-score" style="color: #{color};">#{ev_layer.score}/100</td>
+            <td class="layer-score" style="color: #{color};">#{display_score(ev_layer.score)}/100</td>
           </tr></table>
           <div class="score-bar">
-            <div class="score-fill" style="width: #{ev_layer.score}%; background: #{color};"></div>
+            <div class="score-fill" style="width: #{display_score(ev_layer.score)}%; background: #{color};"></div>
           </div>
           <p style="margin:8px 0 4px; font-size:13px;">
             Remetente: #{verification_badge(sender_v, "Verificado", "Não verificado")}
@@ -572,15 +572,15 @@ class ReportRenderer
     return "" if layers.empty?
 
     rows = layers.map do |layer|
-      color = score_color(layer.score)
+      color = score_color(display_score(layer.score))
       <<~HTML
         <div class="layer">
           <table class="layer-header"><tr>
             <td>#{h layer_label(layer.layer_name)}</td>
-            <td class="layer-score" style="color: #{color};">#{layer.score}/100</td>
+            <td class="layer-score" style="color: #{color};">#{display_score(layer.score)}/100</td>
           </tr></table>
           <div class="score-bar">
-            <div class="score-fill" style="width: #{layer.score}%; background: #{color};"></div>
+            <div class="score-fill" style="width: #{display_score(layer.score)}%; background: #{color};"></div>
           </div>
           <div class="layer-explanation">#{h layer.explanation}</div>
         </div>
@@ -601,12 +601,12 @@ class ReportRenderer
     return "" if layers.empty?
 
     rows = layers.map do |layer|
-      color = score_color(layer.score)
+      color = score_color(display_score(layer.score))
       <<~HTML
         <div class="layer">
           <table class="layer-header"><tr>
             <td>#{h layer_label(layer.layer_name)}</td>
-            <td class="layer-score" style="color: #{color};">#{layer.score}/100</td>
+            <td class="layer-score" style="color: #{color};">#{display_score(layer.score)}/100</td>
           </tr></table>
           <div class="layer-explanation">#{h layer.explanation}</div>
         </div>
@@ -693,12 +693,17 @@ class ReportRenderer
     end
   end
 
+  # Invert internal score (high=fraud) to display score (high=safe)
+  def display_score(internal_score)
+    internal_score.present? ? (100 - internal_score) : nil
+  end
+
   def score_color(score)
     case score
-    when 0..20 then "#22c55e"
-    when 21..50 then "#f59e0b"
-    when 51..75 then "#f97316"
-    else "#ef4444"
+    when 80..100 then "#22c55e"  # green (safe)
+    when 50..79 then "#f59e0b"   # yellow (caution)
+    when 25..49 then "#f97316"   # orange (suspicious)
+    else "#ef4444"               # red (dangerous)
     end
   end
 end

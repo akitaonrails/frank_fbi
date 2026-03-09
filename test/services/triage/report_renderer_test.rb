@@ -64,7 +64,7 @@ class Triage::ReportRendererTest < ActiveSupport::TestCase
     renderer = Triage::ReportRenderer.new(@email)
     html = renderer.to_html
 
-    assert_includes html, "45/100"
+    assert_includes html, "55/100"
     assert_includes html, "PROVAVELMENTE SEGURO"
   end
 
@@ -87,7 +87,7 @@ class Triage::ReportRendererTest < ActiveSupport::TestCase
     renderer = Triage::ReportRenderer.new(@email)
     text = renderer.to_text
 
-    assert_includes text, "45/100"
+    assert_includes text, "55/100"
     assert_includes text, "PROVAVELMENTE SEGURO"
     assert_includes text, "TRIAGEM DE MENSAGEM"
   end
