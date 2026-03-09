@@ -1,0 +1,61 @@
+services:
+  setup:
+    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    command: ["./bin/rails", "db:prepare"]
+    env_file: /home/akitaonrails/frank_fbi/.env
+    environment:
+      - RAILS_ENV=production
+    volumes:
+      - /home/akitaonrails/frank_fbi/db:/rails/db
+      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+
+  app:
+    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    ports:
+      - "3000:3000"
+    env_file: /home/akitaonrails/frank_fbi/.env
+    environment:
+      - RAILS_ENV=production
+    volumes:
+      - /home/akitaonrails/frank_fbi/db:/rails/db
+      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+      - /home/akitaonrails/frank_fbi/emails:/rails/emails
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  worker:
+    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    command: ["./bin/jobs"]
+    env_file: /home/akitaonrails/frank_fbi/.env
+    environment:
+      - RAILS_ENV=production
+    volumes:
+      - /home/akitaonrails/frank_fbi/db:/rails/db
+      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  mail_fetcher:
+    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    command: ["./bin/rails", "frank_fbi:fetch_mail"]
+    env_file: /home/akitaonrails/frank_fbi/.env
+    environment:
+      - RAILS_ENV=production
+      - APP_HOST=http://app:3000
+    volumes:
+      - /home/akitaonrails/frank_fbi/db:/rails/db
+      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REGISTRY="192.168.0.145:3007"
+IMAGE="${REGISTRY}/akitaonrails/frank_fbi"
+TAG="${1:-latest}"
+
+echo "==> Building image..."
+docker build -t "${IMAGE}:${TAG}" .
+
+echo "==> Pushing to ${REGISTRY}..."
+docker push "${IMAGE}:${TAG}"
+
+echo "==> Done. On the server, run:"
+echo "    cd /home/akitaonrails/docker"
+echo "    docker compose -f frank_fbi.yml pull"
+echo "    docker compose -f frank_fbi.yml up -d"
