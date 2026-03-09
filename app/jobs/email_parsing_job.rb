@@ -10,7 +10,7 @@ class EmailParsingJob < ApplicationJob
     parser = EmailParser.new(email.raw_source)
     parsed = parser.parse
 
-    email.update!(
+    attrs = {
       subject: parsed[:subject],
       from_address: parsed[:from_address],
       from_name: parsed[:from_name],
@@ -24,13 +24,28 @@ class EmailParsingJob < ApplicationJob
       attachments_info: parsed[:attachments_info],
       received_at: parsed[:received_at],
       status: "analyzing"
-    )
+    }
+
+    if trusted_domain?(parsed[:sender_domain])
+      attrs[:pipeline_type] = "contact_triage"
+    end
+
+    email.update!(attrs)
 
     # Start analysis pipeline
-    Analysis::PipelineOrchestrator.advance(email)
+    email.pipeline_orchestrator.advance(email)
   rescue => e
     email&.update(status: "failed")
     Rails.logger.error("EmailParsingJob failed for email #{email_id}: #{e.message}")
     raise
+  end
+
+  private
+
+  def trusted_domain?(domain)
+    return false if domain.blank?
+
+    trusted = ENV.fetch("TRUSTED_DOMAINS", "").split(",").map(&:strip).reject(&:blank?)
+    trusted.any? { |d| domain.downcase == d.downcase }
   end
 end

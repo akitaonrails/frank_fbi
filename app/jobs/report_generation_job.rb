@@ -3,7 +3,11 @@ class ReportGenerationJob < ApplicationJob
 
   def perform(email_id)
     email = Email.find(email_id)
-    renderer = email.messenger_triage? ? Triage::ReportRenderer.new(email) : ReportRenderer.new(email)
+    renderer = case email.pipeline_type
+    when "messenger_triage" then Triage::ReportRenderer.new(email)
+    when "contact_triage" then Contact::ReportRenderer.new(email)
+    else ReportRenderer.new(email)
+    end
 
     report = email.analysis_report || email.build_analysis_report
     report.update!(

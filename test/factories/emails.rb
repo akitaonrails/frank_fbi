@@ -56,6 +56,16 @@ FactoryBot.define do
       extracted_urls { ["https://wa.me/551199999999", "https://evil-phishing.com/login"] }
     end
 
+    trait :contact_triage do
+      pipeline_type { "contact_triage" }
+      subject { "Fale Conosco - João Silva" }
+      from_address { "contact@codeminer42.com" }
+      from_name { "João Silva" }
+      sender_domain { "codeminer42.com" }
+      body_text { "Nome: João Silva\nE-mail: joao@empresa.com\nTelefone: (11) 99999-0000\nMensagem: Gostaria de saber mais sobre os serviços de vocês." }
+      extracted_urls { [] }
+    end
+
     trait :legitimate do
       subject { "Fale Conosco - Gabriel Delfiol" }
       from_address { "contact@codeminer42.com" }
