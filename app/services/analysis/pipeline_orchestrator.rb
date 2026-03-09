@@ -56,6 +56,11 @@ module Analysis
         enqueue_if_ready("entity_verification") { EntityVerificationJob.perform_later(@email.id) }
       end
 
+      # Screenshot capture runs after entity_verification (parallel with LLM)
+      if layer_finished?("entity_verification")
+        enqueue_screenshot_capture
+      end
+
       # Layer 5 (llm_analysis) needs all pre-LLM layers
       if pre_llm_layers_completed?
         enqueue_if_ready("llm_analysis") { LlmAnalysisJob.perform_later(@email.id) }
@@ -64,6 +69,7 @@ module Analysis
 
     def check_completion
       return unless all_layers_completed?
+      return if screenshots_pending?
       return if @email.final_score.present? # Already scored, don't re-enqueue
 
       # All layers done — aggregate score and generate report
@@ -86,6 +92,25 @@ module Analysis
 
     def all_layers_completed?
       @email.pipeline_layer_names.all? { |name| layer_finished?(name) }
+    end
+
+    def enqueue_screenshot_capture
+      ev_layer = @email.analysis_layers.find_by(layer_name: "entity_verification")
+      return unless ev_layer
+
+      details = ev_layer.details || {}
+      reference_links = details["reference_links"] || []
+      return if reference_links.empty?
+      return if details["screenshots_status"].present? # already enqueued or done
+
+      ev_layer.update!(details: details.merge("screenshots_status" => "pending"))
+      ScreenshotCaptureJob.perform_later(@email.id)
+    end
+
+    def screenshots_pending?
+      ev_layer = @email.analysis_layers.find_by(layer_name: "entity_verification")
+      return false unless ev_layer
+      ev_layer.details&.dig("screenshots_status") == "pending"
     end
 
     def enqueue_if_ready(layer_name)

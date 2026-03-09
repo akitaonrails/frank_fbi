@@ -518,11 +518,18 @@ class ReportRenderer
 
     links_html = ""
     if reference_links.any?
+      screenshots = details["screenshots"] || {}
       items = reference_links.map do |link|
         label = link["label"] || link[:label]
         platform = link["platform"] || link[:platform]
         url = link["url"] || link[:url]
-        %(<li><a href="#{h url}" target="_blank" rel="noopener noreferrer nofollow">#{h label}</a>#{platform.present? ? " <span style=\"color:#6b7280;\">(#{h platform})</span>" : ""}</li>)
+        screenshot_base64 = screenshots[url]
+        screenshot_html = if screenshot_base64.present?
+          %(<br><img src="data:image/jpeg;base64,#{screenshot_base64}" alt="#{h label}" style="max-width:560px;width:100%;border:1px solid #e5e7eb;border-radius:6px;margin:6px 0;" />)
+        else
+          ""
+        end
+        %(<li><a href="#{h url}" target="_blank" rel="noopener noreferrer nofollow">#{h label}</a>#{platform.present? ? " <span style=\"color:#6b7280;\">(#{h platform})</span>" : ""}#{screenshot_html}</li>)
       end.join
       links_html = "<p style=\"font-size:13px;color:#4b5563;margin:4px 0 0;\"><strong>Links verificados:</strong></p><ul class=\"findings\">#{items}</ul>"
     end
