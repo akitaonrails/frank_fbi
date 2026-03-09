@@ -30,23 +30,35 @@ module Analysis
 
     def self.finalize(email)
       verdicts = email.llm_verdicts.where.not(score: nil)
-      return unless verdicts.size >= 2 # Need at least 2 responses
 
       email.with_lock do
         # Re-check inside lock to prevent double finalization
         layer = email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
         return if layer.status == "completed"
 
-        consensus = LlmConsensusBuilder.new(verdicts.reload).build
+        if verdicts.size >= 2
+          consensus = LlmConsensusBuilder.new(verdicts.reload).build
 
-        layer.update!(
-          score: consensus[:score],
-          weight: WEIGHT,
-          confidence: consensus[:confidence],
-          details: consensus[:details],
-          explanation: consensus[:explanation],
-          status: "completed"
-        )
+          layer.update!(
+            score: consensus[:score],
+            weight: WEIGHT,
+            confidence: consensus[:confidence],
+            details: consensus[:details],
+            explanation: consensus[:explanation],
+            status: "completed"
+          )
+        elsif email.llm_verdicts.count >= MODELS.size
+          layer.update!(
+            score: 50,
+            weight: WEIGHT,
+            confidence: 0.0,
+            details: { error: "Insufficient valid LLM responses", providers_attempted: email.llm_verdicts.pluck(:provider) },
+            explanation: "As consultas de IA não produziram consenso utilizável. Camada tratada como indisponível.",
+            status: "completed"
+          )
+        else
+          return
+        end
       end
 
       PipelineOrchestrator.advance(email)

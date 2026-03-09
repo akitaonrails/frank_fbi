@@ -14,8 +14,9 @@ class FullPipelineTest < ActiveSupport::TestCase
     # Content should flag this heavily
     assert content_layer.score >= 50, "Content score should be >= 50 for ATM spam, got #{content_layer.score}"
 
-    # Header auth should find issues (Reply-To mismatch, auth issues)
-    assert header_layer.score >= 20, "Header score should flag some issues, got #{header_layer.score}"
+    # For forwarded/contact-form spam, outer auth headers belong to the forwarder/system.
+    assert_equal 0, header_layer.score
+    assert_in_delta 0.1, header_layer.confidence, 0.001
   end
 
   test "deterministic layers score legitimate email lower" do

@@ -16,6 +16,10 @@ module Analysis
     end
 
     def analyze
+      if indirect_sender_context?
+        return build_indeterminate_result
+      end
+
       parse_authentication_results
       check_spf
       check_dkim
@@ -44,6 +48,22 @@ module Analysis
 
     def headers
       @headers ||= @email.raw_headers.to_s
+    end
+
+    def outer_mail
+      @outer_mail ||= Mail.new(@email.raw_source.to_s)
+    rescue
+      nil
+    end
+
+    def outer_from_address
+      outer_mail&.from&.first&.downcase&.strip
+    end
+
+    def indirect_sender_context?
+      return false if outer_from_address.blank? || @email.from_address.blank?
+
+      outer_from_address != @email.from_address.downcase
     end
 
     def parse_authentication_results
@@ -176,12 +196,7 @@ module Analysis
       received_headers = headers.scan(/Received:\s*from\s+(\S+)/i).flatten
       @details[:received_chain_length] = received_headers.size
       @details[:received_hosts] = received_headers.first(5)
-
-      # Check for suspicious sender IP in last Received header
-      ip_match = headers.match(/Received:.*?from.*?\[(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\]/m)
-      if ip_match
-        @details[:sender_ip] = ip_match[1]
-      end
+      @details[:sender_ip] = extract_sender_ip
     end
 
     def calculate_score
@@ -193,6 +208,44 @@ module Analysis
       auth_signals = [:spf, :dkim, :dmarc].count { |k| @details[k] && @details[k] != "missing" }
       base = 0.5 + (auth_signals * 0.15)
       [base, 1.0].min
+    end
+
+    def extract_sender_ip
+      received_blocks = headers.scan(/Received:.*?(?=\n\S|\z)/mi)
+      ips = received_blocks.flat_map { |block| block.scan(/\b(?:\d{1,3}\.){3}\d{1,3}\b/) }
+
+      ips.reverse.find { |ip| public_ipv4?(ip) }
+    end
+
+    def public_ipv4?(ip)
+      octets = ip.split(".").map(&:to_i)
+      return false unless octets.size == 4 && octets.all? { |octet| octet.between?(0, 255) }
+
+      return false if octets[0] == 10
+      return false if octets[0] == 127
+      return false if octets[0] == 169 && octets[1] == 254
+      return false if octets[0] == 172 && octets[1].between?(16, 31)
+      return false if octets[0] == 192 && octets[1] == 168
+      return false if octets[0] >= 224
+
+      true
+    end
+
+    def build_indeterminate_result
+      layer = @email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
+      layer.update!(
+        score: 0,
+        weight: WEIGHT,
+        confidence: 0.1,
+        details: {
+          outer_from_address: outer_from_address,
+          claimed_sender: @email.from_address,
+          indirect_sender_context: true
+        },
+        explanation: "E-mail encaminhado ou reenvelopado: os cabeçalhos de autenticação pertencem ao encaminhador, não ao remetente alegado. Camada tratada como indeterminada.",
+        status: "completed"
+      )
+      layer
     end
 
     def build_explanation

@@ -20,11 +20,11 @@ module Analysis
       domain = @email.sender_domain
       return build_no_domain_result unless domain
 
-      check_local_reputation(domain)
+      note_local_reputation(domain)
       check_domain_age(domain)
       check_blacklists(domain)
       check_freemail(domain)
-      check_sender_history
+      note_sender_history
       calculate_score
 
       layer = @email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
@@ -45,21 +45,13 @@ module Analysis
 
     private
 
-    def check_local_reputation(domain)
+    def note_local_reputation(domain)
       known = KnownDomain.find_by(domain: domain)
       return unless known
 
       @details[:previously_seen] = true
       @details[:times_seen] = known.times_seen
       @details[:local_fraud_ratio] = known.fraud_ratio
-
-      if known.fraud_ratio > 0.7 && known.times_seen >= 3
-        @findings << "Domínio com alta taxa de fraude em nosso banco de dados (#{(known.fraud_ratio * 100).round}%)"
-        @score += 25
-      elsif known.fraud_ratio > 0.4
-        @findings << "Domínio com taxa moderada de fraude (#{(known.fraud_ratio * 100).round}%)"
-        @score += 10
-      end
     end
 
     def check_domain_age(domain)
@@ -89,9 +81,6 @@ module Analysis
         elsif age < 365
           @score += 5
         end
-      else
-        @findings << "Idade do domínio #{domain} desconhecida — WHOIS não retornou data de registro"
-        @score += 5
       end
     end
 
@@ -120,17 +109,12 @@ module Analysis
       end
     end
 
-    def check_sender_history
+    def note_sender_history
       sender = KnownSender.find_by(email_address: @email.from_address)
       return unless sender
 
       @details[:sender_emails_analyzed] = sender.emails_analyzed
       @details[:sender_fraud_ratio] = sender.fraud_ratio
-
-      if sender.fraud_ratio > 0.8 && sender.emails_analyzed >= 2
-        @findings << "Remetente com taxa de fraude muito alta (#{(sender.fraud_ratio * 100).round}%)"
-        @score += 20
-      end
     end
 
     def extract_sender_ip
@@ -147,16 +131,15 @@ module Analysis
       signals = 0
       signals += 1 if @details[:domain_age_days]
       signals += 1 if @details[:blacklist_results]&.any?
-      signals += 1 if @details[:previously_seen]
 
-      base = 0.4 + (signals * 0.2)
+      base = 0.3 + (signals * 0.25)
       [base, 1.0].min
     end
 
     def build_explanation
       if @findings.empty?
         age_text = @details[:domain_age_days] ? "#{@details[:domain_age_days]} dias" : "idade desconhecida"
-        "Domínio do remetente #{@email.sender_domain} parece normal (#{age_text})."
+        "Domínio do remetente #{@email.sender_domain} não apresentou sinais diretos de risco (#{age_text}). Histórico local é tratado apenas como contexto, não como evidência."
       else
         "Encontrado(s) #{@findings.size} problema(s): #{@findings.join('; ')}."
       end

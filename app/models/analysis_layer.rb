@@ -9,12 +9,12 @@ class AnalysisLayer < ApplicationRecord
   ].freeze
 
   WEIGHTS = {
-    "header_auth" => 0.15,
-    "sender_reputation" => 0.15,
-    "content_analysis" => 0.20,
-    "external_api" => 0.15,
-    "entity_verification" => 0.15,
-    "llm_analysis" => 0.20
+    "header_auth" => 0.20,
+    "sender_reputation" => 0.20,
+    "content_analysis" => 0.25,
+    "external_api" => 0.20,
+    "entity_verification" => 0.05,
+    "llm_analysis" => 0.10
   }.freeze
 
   belongs_to :email

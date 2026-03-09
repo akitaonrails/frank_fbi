@@ -31,7 +31,9 @@ class Analysis::HeaderAuthAnalyzerTest < ActiveSupport::TestCase
     layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
 
     assert_equal "completed", layer.status
-    assert layer.score >= 30, "ATM spam should score high on header auth, got #{layer.score}"
+    assert_equal 0, layer.score
+    assert_in_delta 0.1, layer.confidence, 0.001
+    assert_includes layer.explanation, "indeterminada"
   end
 
   test "scores a legitimate email low" do
@@ -45,12 +47,38 @@ class Analysis::HeaderAuthAnalyzerTest < ActiveSupport::TestCase
   test "sets weight correctly" do
     email = create(:email)
     layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
-    assert_equal 0.15, layer.weight
+    assert_equal 0.20, layer.weight
   end
 
   test "calculates confidence based on available auth data" do
     email = create(:email, raw_headers: "Authentication-Results: spf=pass; dkim=pass; dmarc=pass")
     layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
     assert layer.confidence >= 0.8
+  end
+
+  test "treats forwarded identity as indeterminate instead of attributing auth headers to claimed sender" do
+    raw_source = <<~EML
+      From: trusted@example.com
+      Reply-To: trusted@example.com
+      Authentication-Results: mx.google.com; spf=pass; dkim=pass; dmarc=pass
+      Subject: Fwd: suspicious
+
+      ---------- Forwarded message ---------
+      From: Scammer Guy <scammer@evil.com>
+
+      hello
+    EML
+    email = create(:email,
+      raw_source: raw_source,
+      raw_headers: raw_source.split("\n\n").first,
+      from_address: "scammer@evil.com",
+      submitter_email: "trusted@example.com"
+    )
+
+    layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
+
+    assert_equal 0, layer.score
+    assert_in_delta 0.1, layer.confidence, 0.001
+    assert layer.details["indirect_sender_context"] || layer.details[:indirect_sender_context]
   end
 end

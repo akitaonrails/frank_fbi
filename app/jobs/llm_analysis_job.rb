@@ -6,6 +6,7 @@ class LlmAnalysisJob < ApplicationJob
     Analysis::LlmAnalyzer.new(email).analyze
   rescue => e
     mark_layer_failed(email_id, "llm_analysis", e)
+    Analysis::PipelineOrchestrator.advance(email) if email
     raise
   end
 

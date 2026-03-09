@@ -42,17 +42,17 @@ module Analysis
 
     def start_dependent_layers
       # Layer 2 (sender_reputation) can start after Layer 1
-      if layer_completed?("header_auth")
+      if layer_finished?("header_auth")
         enqueue_if_ready("sender_reputation") { SenderReputationAnalysisJob.perform_later(@email.id) }
       end
 
       # Layer 4 (external_api) needs Layer 3 for URLs
-      if layer_completed?("content_analysis")
+      if layer_finished?("content_analysis")
         enqueue_if_ready("external_api") { ExternalApiAnalysisJob.perform_later(@email.id) }
       end
 
       # Layer 6 (entity_verification) needs Layers 1 + 3
-      if layer_completed?("header_auth") && layer_completed?("content_analysis")
+      if layer_finished?("header_auth") && layer_finished?("content_analysis")
         enqueue_if_ready("entity_verification") { EntityVerificationJob.perform_later(@email.id) }
       end
 
@@ -74,14 +74,18 @@ module Analysis
       @email.analysis_layers.exists?(layer_name: name, status: "completed")
     end
 
+    def layer_finished?(name)
+      @email.analysis_layers.exists?(layer_name: name, status: %w[completed failed])
+    end
+
     def pre_llm_layers_completed?
       %w[header_auth sender_reputation content_analysis external_api entity_verification].all? do |name|
-        layer_completed?(name)
+        layer_finished?(name)
       end
     end
 
     def all_layers_completed?
-      AnalysisLayer::LAYER_NAMES.all? { |name| layer_completed?(name) }
+      AnalysisLayer::LAYER_NAMES.all? { |name| layer_finished?(name) }
     end
 
     def enqueue_if_ready(layer_name)

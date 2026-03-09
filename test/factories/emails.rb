@@ -29,6 +29,16 @@ FactoryBot.define do
       reply_to_address { "lawyergeraddave00@hotmail.com" }
       sender_domain { "asume.gov" }
       body_text { "Dear beneficiary, You have been approved for ATM CARD COMPENSATION PAYMENT worth $2.5 million USD. Contact us immediately." }
+      raw_source do
+        <<~EMAIL
+          From: FBI <info@asume.gov>
+          Reply-To: lawyergeraddave00@hotmail.com
+          Subject: YOUR ATM CARD COMPENSATION PAYMENT !!!!
+          Authentication-Results: mx.google.com; spf=pass smtp.mailfrom="bounces+SRS=02623=AQ@asume.pr.gov"; dkim=none (message not signed); dmarc=none action=none header.from=asume.gov
+
+          Dear beneficiary, You have been approved for ATM CARD COMPENSATION PAYMENT worth $2.5 million USD. Contact us immediately.
+        EMAIL
+      end
       raw_headers do
         <<~HEADERS
           Authentication-Results: mx.google.com; spf=pass smtp.mailfrom="bounces+SRS=02623=AQ@asume.pr.gov"; dkim=none (message not signed); dmarc=none action=none header.from=asume.gov
@@ -44,6 +54,15 @@ FactoryBot.define do
       from_address { "contact@codeminer42.com" }
       sender_domain { "codeminer42.com" }
       body_text { "Hello, I would like to discuss a potential project collaboration." }
+      raw_source do
+        <<~EMAIL
+          From: Gabriel Delfiol <contact@codeminer42.com>
+          Subject: Fale Conosco - Gabriel Delfiol
+          Authentication-Results: mx.google.com; spf=pass; dkim=pass header.i=@mailgun.codeminer42.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com
+
+          Hello, I would like to discuss a potential project collaboration.
+        EMAIL
+      end
       raw_headers do
         <<~HEADERS
           Authentication-Results: mx.google.com; spf=pass; dkim=pass header.i=@mailgun.codeminer42.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=codeminer42.com

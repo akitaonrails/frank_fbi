@@ -9,6 +9,7 @@ class EntityVerificationJob < ApplicationJob
     Analysis::PipelineOrchestrator.advance(email)
   rescue => e
     mark_layer_failed(email_id, e)
+    Analysis::PipelineOrchestrator.advance(email) if email
     raise
   end
 

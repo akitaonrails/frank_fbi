@@ -7,6 +7,7 @@ class ReportRendererTest < ActiveSupport::TestCase
       create(:analysis_layer, :completed, email: @email, layer_name: name,
              score: 80, weight: AnalysisLayer.default_weight(name))
     end
+    @email.update!(verdict_explanation: "Pontuação Final: 85/100 — Fraudulent\n\nLinha completa de análise")
   end
 
   test "generates HTML report" do
@@ -17,6 +18,8 @@ class ReportRendererTest < ActiveSupport::TestCase
     assert_includes html, "FRAUDULENTO"
     assert_includes html, "SCAM EMAIL"
     assert_includes html, "Autenticação do E-mail"
+    assert_includes html, "Análise Completa"
+    assert_includes html, "Linha completa de análise"
   end
 
   test "generates text report" do
@@ -26,6 +29,8 @@ class ReportRendererTest < ActiveSupport::TestCase
     assert_includes text, "85/100"
     assert_includes text, "FRAUDULENTO"
     assert_includes text, "SCAM EMAIL"
+    assert_includes text, "--- Análise Completa ---"
+    assert_includes text, "Linha completa de análise"
   end
 
   test "handles email with LLM verdicts" do

@@ -27,7 +27,7 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
     assert_equal "entity_verification", layer.layer_name
     assert_equal 85, layer.score
     assert_in_delta 0.9, layer.confidence, 0.01
-    assert_equal 0.15, layer.weight
+    assert_equal 0.05, layer.weight
     assert layer.details["key_findings"].any?
   end
 

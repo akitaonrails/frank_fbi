@@ -22,13 +22,14 @@ module Analysis
         layers = @email.analysis_layers.where(status: "completed")
         return nil if layers.empty?
 
-        final_score = calculate_weighted_score(layers)
+        escalation = RiskEscalationPolicy.new(layers).evaluate
+        final_score = calculate_weighted_score(layers, escalation[:floor])
         verdict = score_to_verdict(final_score)
 
         @email.update!(
           final_score: final_score,
           verdict: verdict,
-          verdict_explanation: build_verdict_explanation(layers, final_score, verdict),
+          verdict_explanation: build_verdict_explanation(layers, final_score, verdict, escalation[:reasons]),
           analyzed_at: Time.current
         )
       end
@@ -42,22 +43,19 @@ module Analysis
 
     private
 
-    def calculate_weighted_score(layers)
+    def calculate_weighted_score(layers, escalation_floor)
       weighted_sum = 0.0
       weight_sum = 0.0
 
       layers.each do |layer|
-        # Layers that scored near 0 ("found nothing") provide weak evidence of
-        # legitimacy — absence of evidence is not evidence of absence. Dampen
-        # their influence so they don't drown out layers that found real problems.
-        dampening = [[layer.score / 50.0, 1.0].min, 0.1].max
-        effective_weight = layer.weight * layer.confidence * dampening
+        effective_weight = layer.weight * layer.confidence
         weighted_sum += layer.score * effective_weight
         weight_sum += effective_weight
       end
 
       return 50 if weight_sum.zero?
-      (weighted_sum / weight_sum).round
+      blended_score = (weighted_sum / weight_sum).round
+      [blended_score, escalation_floor].max
     end
 
     def score_to_verdict(score)
@@ -67,9 +65,15 @@ module Analysis
       "suspicious_likely_fraud"
     end
 
-    def build_verdict_explanation(layers, score, verdict)
+    def build_verdict_explanation(layers, score, verdict, escalation_reasons = [])
       lines = ["Pontuação Final: #{score}/100 — #{verdict.humanize}"]
       lines << ""
+
+      if escalation_reasons.any?
+        lines << "Gatilhos de escalonamento:"
+        escalation_reasons.each { |reason| lines << "- #{reason}" }
+        lines << ""
+      end
 
       layers.order(:layer_name).each do |layer|
         lines << "#{layer.layer_name.titleize}: #{layer.score}/100 (weight: #{layer.weight}, confidence: #{layer.confidence})"
@@ -81,15 +85,9 @@ module Analysis
     end
 
     def update_reputation_records(verdict)
-      if @email.sender_domain
-        domain = KnownDomain.find_by(domain: @email.sender_domain)
-        domain&.record_analysis(verdict)
-      end
-
-      if @email.from_address
-        sender = KnownSender.find_by(email_address: @email.from_address)
-        sender&.record_analysis(verdict)
-      end
+      # Local reputation needs confirmed labels, not feedback from the model itself.
+      # We still keep KnownDomain/KnownSender records for caching and operator workflows,
+      # but the automated verdict is not written back as truth.
     end
 
     def encrypt_if_legitimate(verdict)

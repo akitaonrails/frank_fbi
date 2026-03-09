@@ -7,6 +7,7 @@ class SenderReputationAnalysisJob < ApplicationJob
     Analysis::PipelineOrchestrator.advance(email)
   rescue => e
     mark_layer_failed(email_id, "sender_reputation", e)
+    Analysis::PipelineOrchestrator.advance(email) if email
     raise
   end
 

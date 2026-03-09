@@ -51,7 +51,7 @@ class EmailTest < ActiveSupport::TestCase
     assert_equal email.id, found.id
   end
 
-  test "fully_analyzed? returns true when all 5 layers completed" do
+  test "fully_analyzed? returns true when all 6 layers completed" do
     email = create(:email)
     AnalysisLayer::LAYER_NAMES.each do |name|
       create(:analysis_layer, :completed, email: email, layer_name: name, weight: AnalysisLayer.default_weight(name))

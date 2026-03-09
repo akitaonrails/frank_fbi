@@ -61,6 +61,7 @@ class ReportRenderer
           .badge-ok { background: #dcfce7; color: #166534; }
           .badge-fail { background: #fef2f2; color: #991b1b; }
           .badge-unknown { background: #f3f4f6; color: #6b7280; }
+          .analysis-full { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #374151; background: #f9fafb; border-radius: 6px; padding: 12px; }
           .footer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
         </style>
       </head>
@@ -83,6 +84,8 @@ class ReportRenderer
         #{user_facing_layers_html}
 
         #{technical_details_html}
+
+        #{full_analysis_html}
 
         <div class="footer">
           <p>Frank FBI &mdash; Sistema de Análise de Fraude em E-mails</p>
@@ -178,6 +181,12 @@ class ReportRenderer
     llm_layer = find_layer("llm_analysis")
     if llm_layer
       lines << "  #{layer_label('llm_analysis')}: #{llm_layer.score}/100 — #{llm_layer.explanation}"
+    end
+
+    if @email.verdict_explanation.present?
+      lines << ""
+      lines << "--- Análise Completa ---"
+      lines << @email.verdict_explanation
     end
 
     lines << ""
@@ -421,7 +430,18 @@ class ReportRenderer
       findings << layer.explanation if layer.explanation.present?
     end
 
-    findings.uniq.first(10)
+    findings.uniq
+  end
+
+  def full_analysis_html
+    return "" if @email.verdict_explanation.blank?
+
+    <<~HTML
+      <div class="section">
+        <h3>Análise Completa</h3>
+        <div class="analysis-full">#{h @email.verdict_explanation}</div>
+      </div>
+    HTML
   end
 
   def score_color(score)
