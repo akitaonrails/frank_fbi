@@ -127,7 +127,8 @@ module Analysis
     end
 
     def combined_text
-      [@email.subject, @email.body_text, @email.from_name].compact.join(" ")
+      suspect_text = ForwardedContentExtractor.new(@email.body_text).extract[:suspect_text]
+      [@email.subject, suspect_text, @email.from_name].compact.join(" ")
     end
 
     def find_content_layer

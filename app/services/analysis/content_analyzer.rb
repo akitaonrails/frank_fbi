@@ -162,7 +162,11 @@ module Analysis
     private
 
     def combined_text
-      [@email.body_text, @email.subject].compact.join(" ")
+      [suspect_text, @email.subject].compact.join(" ")
+    end
+
+    def suspect_text
+      @suspect_text ||= ForwardedContentExtractor.new(@email.body_text).extract[:suspect_text]
     end
 
     def analyze_urls
@@ -181,7 +185,7 @@ module Analysis
     end
 
     def analyze_url_mismatches
-      html = @email.body_html.to_s
+      html = strip_submitter_html(@email.body_html.to_s)
       mismatches = []
 
       # Find <a> tags where display text looks like a URL but href is different
@@ -323,7 +327,7 @@ module Analysis
     end
 
     def calculate_confidence
-      text_length = combined_text.length
+      text_length = suspect_text.to_s.length
       if text_length > 200
         1.0
       elsif text_length > 50
@@ -331,6 +335,10 @@ module Analysis
       else
         0.5
       end
+    end
+
+    def strip_submitter_html(html)
+      html.gsub(/<div class="gmail_signature"[^>]*>.*?<\/div>/mi, "")
     end
 
     def build_explanation

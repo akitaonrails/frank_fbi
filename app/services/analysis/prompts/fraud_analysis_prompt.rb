@@ -18,8 +18,9 @@ module Analysis
           - **Data**: #{@email.received_at}
 
           ## Corpo do E-mail (texto)
+          **Nota**: Este e-mail foi encaminhado por um usuário para análise. O corpo abaixo contém apenas o conteúdo do remetente suspeito, sem a assinatura de quem encaminhou.
           ```
-          #{truncate_text(@email.body_text, 2000)}
+          #{truncate_text(suspect_text, 2000)}
           ```
 
           ## URLs Extraídas (#{(@email.extracted_urls || []).size} no total)
@@ -45,6 +46,10 @@ module Analysis
       end
 
       private
+
+      def suspect_text
+        ForwardedContentExtractor.new(@email.body_text).extract[:suspect_text]
+      end
 
       def truncate_text(text, max_length)
         return "Nenhum conteúdo de texto disponível" if text.blank?

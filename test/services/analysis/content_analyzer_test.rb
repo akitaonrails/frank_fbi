@@ -61,6 +61,31 @@ class Analysis::ContentAnalyzerTest < ActiveSupport::TestCase
     assert layer.score <= 20, "Clean email should score low, got #{layer.score}"
   end
 
+  test "forwarded email excludes submitter signature from pattern matching" do
+    body = <<~TEXT
+      ---------- Forwarded message ---------
+      From: Scammer <scammer@evil.com>
+      Date: Fri, Mar 6, 2026
+
+      Hello, this is a normal message.
+
+      --
+      FBI Agent John Smith
+      Department of Justice
+      Verify your identity within 24 hours
+    TEXT
+
+    email = create(:email, body_text: body, subject: "Fwd: Hello")
+    layer = Analysis::ContentAnalyzer.new(email).analyze
+
+    # The authority impersonation and urgency patterns are in the submitter's
+    # signature, not in the suspect's content — they should NOT be detected
+    assert_equal 0, (layer.details["authority_matches"] || layer.details[:authority_matches]).to_i,
+      "Authority patterns in submitter signature should not be detected"
+    assert_equal 0, (layer.details["urgency_matches"] || layer.details[:urgency_matches]).to_i,
+      "Urgency patterns in submitter signature should not be detected"
+  end
+
   test "scores capped at 100" do
     email = create(:email,
       subject: "URGENT!!! ACT NOW!!! YOUR ACCOUNT SUSPENDED!!!",

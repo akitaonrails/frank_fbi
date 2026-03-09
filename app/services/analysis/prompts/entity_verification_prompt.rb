@@ -18,6 +18,7 @@ module Analysis
           - **Freemail**: #{@entities[:freemail] ? 'Sim' : 'Não'}
 
           ## Entidades Extraídas
+          **Nota**: As entidades abaixo foram extraídas do e-mail do remetente suspeito, não do usuário que encaminhou a mensagem para análise.
           #{format_entities}
 
           ## Instruções de Pesquisa
