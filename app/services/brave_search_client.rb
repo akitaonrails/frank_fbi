@@ -48,18 +48,24 @@ class BraveSearchClient
 
     response = http.request(request)
 
+    body = decompress(response)
+
     unless response.is_a?(Net::HTTPSuccess)
-      Rails.logger.error("BraveSearchClient: HTTP #{response.code} for '#{query}': #{response.body.to_s[0..200]}")
+      Rails.logger.error("BraveSearchClient: HTTP #{response.code} for '#{query}': #{body[0..200]}")
       return nil
     end
 
-    body = if response["Content-Encoding"] == "gzip"
+    JSON.parse(body)
+  end
+
+  def decompress(response)
+    if response["Content-Encoding"] == "gzip"
       Zlib::GzipReader.new(StringIO.new(response.body)).read
     else
       response.body
     end
-
-    JSON.parse(body)
+  rescue Zlib::GzipFile::Error
+    response.body
   end
 
   def parse_response(data, query)
