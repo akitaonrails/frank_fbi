@@ -67,19 +67,27 @@ Final score: `sum(layer_score * weight * confidence) / sum(weight * confidence)`
 2. **File Scan** (weight 0.30) — VirusTotal file scanning
 3. **LLM Triage** (weight 0.30) — 3 parallel LLM consultations for messenger scam patterns
 
+### Community Threat Intelligence Reporting
+
+After report delivery, `CommunityReportingJob` submits IOCs from high-confidence fraudulent emails (score >= 85, verdict "fraudulent") to community threat intel databases. Best-effort — errors are logged but never block the pipeline. All API keys are optional; missing keys silently skip that provider.
+
+Providers: ThreatFox (abuse.ch), AbuseIPDB, SpamCop. IOCs extracted: URLs, domains, sender IPs, file hashes. Freemail domains, cloud IPs, and confirmed-clean URLs are filtered out.
+
+Audit trail stored in `CommunityReport` (one per email, idempotent).
+
 ### Screenshot Capture
 
 After entity verification finds reference links, ScreenshotCaptureJob captures headless Chrome screenshots (via ferrum) in parallel with LLM analysis. The pipeline waits for screenshots to complete before generating the report. Screenshots are resized to 560px, JPEG quality 60, embedded as base64 in the HTML report. Errors are caught gracefully — report renders without screenshots if capture fails.
 
 ### Job Flow (Fraud)
 
-`EmailParsingJob` → Layers 1+3 (parallel) → Layers 2+4+5 (after dependencies) → ScreenshotCaptureJob (after Layer 5) → Layer 6 → `ScoreAggregationJob` → `ReportGenerationJob` → `ReportDeliveryJob`
+`EmailParsingJob` → Layers 1+3 (parallel) → Layers 2+4+5 (after dependencies) → ScreenshotCaptureJob (after Layer 5) → Layer 6 → `ScoreAggregationJob` → `ReportGenerationJob` → `ReportDeliveryJob` → `CommunityReportingJob` (best-effort)
 
 Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(email)` after completion.
 
 ### Data Model
 
-- `Email` — central record, has_many analysis_layers/llm_verdicts, has_one analysis_report. `pipeline_type` field: "fraud_analysis" (default) or "messenger_triage"
+- `Email` — central record, has_many analysis_layers/llm_verdicts, has_one analysis_report/community_report. `pipeline_type` field: "fraud_analysis" (default) or "messenger_triage"
 - `AnalysisLayer` — one per layer per email (6 for fraud, 3 for triage), unique on [email_id, layer_name]
 - `LlmVerdict` — one per LLM provider per email (3 per email), unique on [email_id, provider]
 - `KnownDomain` — domain reputation cache (WHOIS, DNSBL, fraud ratio)
@@ -87,17 +95,19 @@ Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(ema
 - `UrlScanResult` — VirusTotal/URLhaus cache with TTL, unique on [url, source]
 - `AnalysisReport` — rendered HTML/text report per email
 - `AllowedSender` — whitelisted sender emails (encrypted, managed by admin)
+- `CommunityReport` — audit trail for threat intel submissions (one per email, unique)
 
 ### Key Directories
 
 ```
 app/services/analysis/   — 6 analyzers, consensus builder, score aggregator, pipeline orchestrator
 app/services/triage/     — 3 triage analyzers, pipeline orchestrator, report renderer
+app/services/community_reporting/ — IOC extractor, threat intel clients (ThreatFox, AbuseIPDB, SpamCop), reporter orchestrator
 app/services/            — email_parser, mail_fetcher, screenshot_capturer, API clients (virustotal, urlhaus, whois, brave_search), report_renderer
-app/jobs/                — 18 job classes (fraud + triage pipelines)
+app/jobs/                — 19 job classes (fraud + triage pipelines + community reporting)
 app/mailboxes/           — FraudAnalysisMailbox, MessengerTriageMailbox, AdminCommandMailbox, RejectionMailbox
 app/mailers/             — AnalysisReportMailer, AdminMailer
-app/models/              — 8 models with validations, associations, encryption
+app/models/              — 9 models with validations, associations, encryption
 lib/tasks/frank_fbi.rake — rake tasks for analysis, triage, smoke testing, mail fetching, sender management
 suspects/                — ~30 sample .eml files used for testing
 ```
@@ -133,6 +143,9 @@ All secrets in `.env` (see `.env.example`):
 - `VIRUSTOTAL_API_KEY` — URL scanning
 - `WHOISXML_API_KEY` — WHOIS lookups
 - `BRAVE_SEARCH_API_KEY` — Entity verification OSINT
+- `THREATFOX_AUTH_KEY` — (optional) abuse.ch ThreatFox threat intel submission
+- `ABUSEIPDB_API_KEY` — (optional) AbuseIPDB IP reporting
+- `SPAMCOP_SUBMISSION_ADDRESS` — (optional) SpamCop email forwarding
 - `ADMIN_EMAIL` — admin email for system management via email commands
 
 ### Access Control

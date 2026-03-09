@@ -4,6 +4,7 @@ class Email < ApplicationRecord
   has_many :analysis_layers, dependent: :destroy
   has_many :llm_verdicts, dependent: :destroy
   has_one :analysis_report, dependent: :destroy
+  has_one :community_report, dependent: :destroy
 
   validates :message_id, presence: true, uniqueness: true
   validates :submitter_email, presence: true

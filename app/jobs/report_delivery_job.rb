@@ -15,6 +15,8 @@ class ReportDeliveryJob < ApplicationJob
 
     report.update!(status: "sent", sent_at: Time.current)
     email.update!(status: "completed")
+
+    CommunityReportingJob.perform_later(email.id)
   rescue => e
     report&.update(status: "failed")
     Rails.logger.error("ReportDeliveryJob failed for email #{email_id}: #{e.message}")

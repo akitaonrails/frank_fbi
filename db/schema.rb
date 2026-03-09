@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_125741) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_150337) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -82,6 +82,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_125741) do
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.index ["email_id"], name: "index_analysis_reports_on_email_id", unique: true
+  end
+
+  create_table "community_reports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.json "details", default: {}
+    t.integer "email_id", null: false
+    t.json "iocs_submitted", default: {}
+    t.json "providers", default: []
+    t.datetime "updated_at", null: false
+    t.index ["email_id"], name: "index_community_reports_on_email_id", unique: true
   end
 
   create_table "emails", force: :cascade do |t|
@@ -185,6 +195,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_125741) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analysis_layers", "emails"
   add_foreign_key "analysis_reports", "emails"
+  add_foreign_key "community_reports", "emails"
   add_foreign_key "known_senders", "known_domains"
   add_foreign_key "llm_verdicts", "emails"
 end
