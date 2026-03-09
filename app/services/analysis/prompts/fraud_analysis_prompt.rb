@@ -40,6 +40,12 @@ module Analysis
           - **confidence**: float 0.0-1.0 (quão confiante você está no seu veredito)
           - **reasoning**: uma conclusão curta e direta justificando seu veredito (1-3 frases, sem enrolação)
           - **key_findings**: array de strings, as 3-5 descobertas mais importantes que sustentam seu veredito
+          - **content_patterns**: objeto com contagens de padrões detectados no corpo do e-mail:
+            - **urgency**: inteiro >= 0, frases de urgência/pressão (ex: "aja agora", "prazo", "suspensão de conta")
+            - **financial_fraud**: inteiro >= 0, indicadores de fraude financeira (ex: loteria, herança, transferência bancária, criptomoeda)
+            - **pii_request**: inteiro >= 0, solicitações de dados pessoais/sensíveis (ex: CPF, senha, cartão de crédito, SSN)
+            - **authority_impersonation**: inteiro >= 0, alegações de autoridade/governo (ex: FBI, Receita Federal, Tribunal, Polícia)
+            - **phishing**: inteiro >= 0, frases/técnicas de phishing (ex: "clique aqui para verificar", "conta suspensa")
 
           Responda em português brasileiro. Responda APENAS com o objeto JSON, nenhum outro texto.
         PROMPT

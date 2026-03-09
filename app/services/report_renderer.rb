@@ -87,6 +87,8 @@ class ReportRenderer
 
         #{llm_summary_html}
 
+        #{content_patterns_html}
+
         #{key_findings_html}
 
         #{entity_verification_html}
@@ -147,6 +149,18 @@ class ReportRenderer
       lines << "--- Opinião da IA ---"
       @llm_verdicts.each do |v|
         lines << "  #{v.provider.capitalize}: #{v.score}/100 — #{v.reasoning}"
+      end
+    end
+
+    # Content patterns from LLM
+    patterns = llm_content_patterns
+    detected = patterns.select { |_, v| v.positive? }
+    if detected.any?
+      lines << ""
+      lines << "--- Padrões de Conteúdo (detectados pela IA) ---"
+      detected.each do |key, count|
+        label = CONTENT_PATTERN_LABELS[key] || key.humanize
+        lines << "  - #{label}: #{count} ocorrência(s)"
       end
     end
 
@@ -269,6 +283,13 @@ class ReportRenderer
     else
       "<span class=\"verification-badge badge-unknown\">Indeterminado</span>"
     end
+  end
+
+  def llm_content_patterns
+    llm_layer = find_layer("llm_analysis")
+    return {} unless llm_layer&.details.is_a?(Hash)
+
+    (llm_layer.details["content_patterns"] || llm_layer.details[:content_patterns] || {}).transform_values(&:to_i)
   end
 
   def calculate_aggregate_confidence
@@ -404,6 +425,35 @@ class ReportRenderer
       <div class="section">
         <h3>Opinião da IA</h3>
         #{rows}
+      </div>
+    HTML
+  end
+
+  CONTENT_PATTERN_LABELS = {
+    "urgency" => "Urgência/Pressão",
+    "financial_fraud" => "Fraude Financeira",
+    "pii_request" => "Solicitação de Dados Pessoais",
+    "authority_impersonation" => "Impersonação de Autoridade",
+    "phishing" => "Phishing"
+  }.freeze
+
+  def content_patterns_html
+    patterns = llm_content_patterns
+    return "" if patterns.empty? || patterns.values.all?(&:zero?)
+
+    items = patterns.select { |_, v| v.positive? }.map do |key, count|
+      label = CONTENT_PATTERN_LABELS[key] || key.humanize
+      "<li>#{h label}: #{count} ocorrência(s)</li>"
+    end.join
+
+    return "" if items.empty?
+
+    <<~HTML
+      <div class="section">
+        <h3>Padrões de Conteúdo (detectados pela IA)</h3>
+        <div class="layer">
+          <ul class="findings">#{items}</ul>
+        </div>
       </div>
     HTML
   end

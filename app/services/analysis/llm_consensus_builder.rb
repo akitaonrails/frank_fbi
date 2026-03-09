@@ -20,6 +20,7 @@ module Analysis
       majority_verdict = determine_majority_verdict(verdicts_list)
       consensus_confidence = calculate_consensus_confidence(verdicts_list, confidences)
       key_findings = aggregate_key_findings
+      content_patterns = aggregate_content_patterns
 
       {
         score: weighted_score,
@@ -29,7 +30,8 @@ module Analysis
           individual_scores: @verdicts.map { |v| { provider: v.provider, score: v.score, verdict: v.verdict } },
           majority_verdict: majority_verdict,
           score_spread: scores.max - scores.min,
-          key_findings: key_findings
+          key_findings: key_findings,
+          content_patterns: content_patterns
         }
       }
     end
@@ -88,6 +90,14 @@ module Analysis
       all_findings = @verdicts.flat_map { |v| v.key_findings || [] }
       # Deduplicate similar findings and take top ones
       all_findings.uniq.first(7)
+    end
+
+    def aggregate_content_patterns
+      keys = %w[urgency financial_fraud pii_request authority_impersonation phishing]
+      keys.each_with_object({}) do |key, result|
+        counts = @verdicts.map { |v| (v.content_patterns || {})[key].to_i }
+        result[key] = counts.max || 0
+      end
     end
 
     def build_explanation(verdict, score)

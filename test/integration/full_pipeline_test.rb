@@ -11,8 +11,9 @@ class FullPipelineTest < ActiveSupport::TestCase
     assert_equal "completed", header_layer.status
     assert_equal "completed", content_layer.status
 
-    # Content should flag this heavily
-    assert content_layer.score >= 50, "Content score should be >= 50 for ATM spam, got #{content_layer.score}"
+    # Without regex patterns, content layer only has structural signals (ALL CAPS, punctuation, etc.)
+    # Text pattern detection is now handled by the LLM layer
+    assert content_layer.score >= 5, "Content score should catch structural signals for ATM spam, got #{content_layer.score}"
 
     # For forwarded/contact-form spam, outer auth headers belong to the forwarder/system.
     assert_equal 0, header_layer.score

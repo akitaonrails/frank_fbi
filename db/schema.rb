@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_153649) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_123110) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -148,6 +148,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_153649) do
   create_table "llm_verdicts", force: :cascade do |t|
     t.integer "completion_tokens"
     t.float "confidence"
+    t.json "content_patterns", default: {}
     t.datetime "created_at", null: false
     t.integer "email_id", null: false
     t.json "key_findings", default: []

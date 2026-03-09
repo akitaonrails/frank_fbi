@@ -29,8 +29,9 @@ class AnalysisLayerTest < ActiveSupport::TestCase
 
   test "default_weight returns correct weights" do
     assert_equal 0.15, AnalysisLayer.default_weight("header_auth")
-    assert_equal 0.25, AnalysisLayer.default_weight("content_analysis")
+    assert_equal 0.15, AnalysisLayer.default_weight("content_analysis")
     assert_equal 0.15, AnalysisLayer.default_weight("external_api")
+    assert_equal 0.30, AnalysisLayer.default_weight("llm_analysis")
     assert_equal 0.10, AnalysisLayer.default_weight("entity_verification")
   end
 

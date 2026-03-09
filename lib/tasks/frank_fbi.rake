@@ -165,6 +165,12 @@ namespace :frank_fbi do
       l.score = 85
       l.weight = AnalysisLayer.default_weight("llm_analysis")
       l.confidence = 0.5
+      l.details = {
+        content_patterns: {
+          urgency: 2, financial_fraud: 3, pii_request: 2,
+          authority_impersonation: 2, phishing: 1
+        }
+      }
       l.explanation = "Stubbed LLM layer for smoke test"
       l.status = "completed"
     end

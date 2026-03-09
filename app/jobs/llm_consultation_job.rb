@@ -25,6 +25,7 @@ class LlmConsultationJob < ApplicationJob
       reasoning: parsed[:reasoning],
       key_findings: parsed[:key_findings],
       confidence: parsed[:confidence],
+      content_patterns: parsed[:content_patterns],
       prompt_tokens: response.input_tokens,
       completion_tokens: response.output_tokens,
       response_time_seconds: elapsed.round(2)
@@ -48,7 +49,8 @@ class LlmConsultationJob < ApplicationJob
       verdict: validate_verdict(data["verdict"]),
       confidence: data["confidence"]&.to_f&.clamp(0.0, 1.0) || 0.5,
       reasoning: data["reasoning"].to_s,
-      key_findings: Array(data["key_findings"]).map(&:to_s).first(10)
+      key_findings: Array(data["key_findings"]).map(&:to_s).first(10),
+      content_patterns: normalize_content_patterns(data["content_patterns"])
     }
   rescue JSON::ParserError => e
     Rails.logger.warn("LlmConsultationJob: Failed to parse JSON from #{content[0..200]}: #{e.message}")
@@ -57,7 +59,8 @@ class LlmConsultationJob < ApplicationJob
       verdict: "suspicious_likely_fraud",
       confidence: 0.3,
       reasoning: "Failed to parse LLM response. Raw: #{content.to_s[0..500]}",
-      key_findings: ["LLM response parsing failed"]
+      key_findings: ["LLM response parsing failed"],
+      content_patterns: {}
     }
   end
 
@@ -86,6 +89,16 @@ class LlmConsultationJob < ApplicationJob
 
     # Last resort: try parsing the whole thing
     JSON.parse(text.strip)
+  end
+
+  def normalize_content_patterns(raw)
+    return {} unless raw.is_a?(Hash)
+
+    valid_keys = %w[urgency financial_fraud pii_request authority_impersonation phishing]
+    valid_keys.each_with_object({}) do |key, result|
+      value = raw[key] || raw[key.to_sym]
+      result[key] = [value.to_i, 0].max
+    end
   end
 
   def validate_verdict(verdict)

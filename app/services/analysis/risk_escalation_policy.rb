@@ -122,14 +122,34 @@ module Analysis
 
     def collect_combination_escalations(escalations)
       header = @layers["header_auth"]
-      content = @layers["content_analysis"]
-      return unless header && content
+      llm = @layers["llm_analysis"]
+      return unless header
 
       reply_to_mismatch = truthy?(header.details || {}, :reply_to_mismatch)
-      if reply_to_mismatch && header.score.to_i >= 20 && content.score.to_i >= 45
+      return unless reply_to_mismatch && header.score.to_i >= 20
+
+      # Check LLM content_patterns for dangerous combinations
+      if llm&.details.is_a?(Hash)
+        patterns = (llm.details["content_patterns"] || llm.details[:content_patterns]).to_h
+        authority = patterns["authority_impersonation"].to_i + patterns[:authority_impersonation].to_i
+        pii = patterns["pii_request"].to_i + patterns[:pii_request].to_i
+        phishing = patterns["phishing"].to_i + patterns[:phishing].to_i
+        total_dangerous = authority + pii + phishing
+
+        if total_dangerous >= 2
+          escalations << {
+            floor: 65,
+            reason: "Reply-To divergente combinado com padrões perigosos detectados pela IA (autoridade/PII/phishing)."
+          }
+        end
+      end
+
+      # Fallback: if LLM layer not available, use content score
+      content = @layers["content_analysis"]
+      if llm.nil? && content && content.score.to_i >= 30
         escalations << {
           floor: 65,
-          reason: "Reply-To divergente combinado com conteúdo fortemente suspeito."
+          reason: "Reply-To divergente combinado com conteúdo estruturalmente suspeito."
         }
       end
     end
