@@ -49,19 +49,18 @@ class ReportRenderer
           .section { margin-bottom: 16px; }
           .section h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
           .layer { padding: 8px 12px; margin-bottom: 6px; border-radius: 6px; background: #f9fafb; }
-          .layer-header { display: flex; justify-content: space-between; font-weight: 600; }
-          .layer-score { font-weight: bold; }
+          .layer-header { width: 100%; border-collapse: collapse; }
+          .layer-header td { font-weight: 600; padding: 0; }
+          .layer-score { font-weight: bold; text-align: right; }
           .layer-explanation { font-size: 13px; color: #4b5563; margin-top: 4px; }
           .score-bar { height: 6px; border-radius: 3px; background: #e5e7eb; margin-top: 4px; }
           .score-fill { height: 100%; border-radius: 3px; }
           .findings { padding-left: 20px; margin: 8px 0; }
           .findings li { font-size: 13px; color: #374151; margin-bottom: 4px; }
-          .verification-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+          .verification-badge { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
           .badge-ok { background: #dcfce7; color: #166534; }
           .badge-fail { background: #fef2f2; color: #991b1b; }
           .badge-unknown { background: #f3f4f6; color: #6b7280; }
-          .tech-details { font-size: 12px; color: #6b7280; }
-          .tech-details summary { cursor: pointer; font-weight: 600; color: #4b5563; font-size: 13px; }
           .footer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
         </style>
       </head>
@@ -232,10 +231,10 @@ class ReportRenderer
       color = score_color(v.score || 0)
       <<~HTML
         <div class="layer">
-          <div class="layer-header">
-            <span>#{h v.provider.capitalize} (#{h v.model_id})</span>
-            <span class="layer-score" style="color: #{color};">#{v.score}/100</span>
-          </div>
+          <table class="layer-header"><tr>
+            <td>#{h v.provider.capitalize} (#{h v.model_id})</td>
+            <td class="layer-score" style="color: #{color};">#{v.score}/100</td>
+          </tr></table>
           <div class="layer-explanation">#{h v.reasoning}</div>
         </div>
       HTML
@@ -295,10 +294,10 @@ class ReportRenderer
       <div class="section">
         <h3>Verificação de Identidade</h3>
         <div class="layer">
-          <div class="layer-header">
-            <span>Verificação de Identidade</span>
-            <span class="layer-score" style="color: #{color};">#{ev_layer.score}/100</span>
-          </div>
+          <table class="layer-header"><tr>
+            <td>Verificação de Identidade</td>
+            <td class="layer-score" style="color: #{color};">#{ev_layer.score}/100</td>
+          </tr></table>
           <div class="score-bar">
             <div class="score-fill" style="width: #{ev_layer.score}%; background: #{color};"></div>
           </div>
@@ -325,10 +324,10 @@ class ReportRenderer
       color = score_color(layer.score)
       <<~HTML
         <div class="layer">
-          <div class="layer-header">
-            <span>#{h layer_label(layer.layer_name)}</span>
-            <span class="layer-score" style="color: #{color};">#{layer.score}/100</span>
-          </div>
+          <table class="layer-header"><tr>
+            <td>#{h layer_label(layer.layer_name)}</td>
+            <td class="layer-score" style="color: #{color};">#{layer.score}/100</td>
+          </tr></table>
           <div class="score-bar">
             <div class="score-fill" style="width: #{layer.score}%; background: #{color};"></div>
           </div>
@@ -354,10 +353,10 @@ class ReportRenderer
       color = score_color(layer.score)
       <<~HTML
         <div class="layer">
-          <div class="layer-header">
-            <span>#{h layer_label(layer.layer_name)}</span>
-            <span class="layer-score" style="color: #{color};">#{layer.score}/100</span>
-          </div>
+          <table class="layer-header"><tr>
+            <td>#{h layer_label(layer.layer_name)}</td>
+            <td class="layer-score" style="color: #{color};">#{layer.score}/100</td>
+          </tr></table>
           <div class="layer-explanation">#{h layer.explanation}</div>
         </div>
       HTML
@@ -365,10 +364,8 @@ class ReportRenderer
 
     <<~HTML
       <div class="section">
-        <details class="tech-details">
-          <summary>Detalhes Técnicos</summary>
-          #{rows}
-        </details>
+        <h3>Detalhes Técnicos</h3>
+        #{rows}
       </div>
     HTML
   end
