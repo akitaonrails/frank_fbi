@@ -574,4 +574,4 @@ suspects/              — ~30 sample .eml files for testing
 
 ## License
 
-Private.
+[GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE)
