@@ -1,8 +1,8 @@
-# CLAUDE.md — Frank FBI
+# CLAUDE.md — Frank FBI (Fraud Bureau of Investigation)
 
 ## Project Summary
 
-Frank FBI is a headless Rails 8.1 email fraud/spam detection system. It receives forwarded suspicious emails via Gmail IMAP, analyzes them through a 5-layer pipeline, and replies with a score and explanation report.
+Frank FBI is a headless Rails 8.1 email fraud/spam detection system. It receives forwarded suspicious emails via Gmail IMAP, analyzes them through a 6-layer pipeline, and replies with a score and explanation report. Also supports a lighter 3-layer messenger triage pipeline for WhatsApp/Telegram/Signal screenshots.
 
 ## Tech Stack
 
@@ -10,6 +10,7 @@ Frank FBI is a headless Rails 8.1 email fraud/spam detection system. It receives
 - SQLite3 for all databases (primary, queue, cache, cable)
 - Solid Queue for background jobs
 - ruby_llm gem for LLM calls via OpenRouter
+- ferrum gem for headless Chrome screenshots
 - Action Mailbox for inbound email processing
 - Docker Compose for deployment (4 services)
 
@@ -25,6 +26,9 @@ bin/rails frank_fbi:smoke_test
 # Analyze a specific .eml file
 bin/rails "frank_fbi:analyze_eml[path/to/file.eml,submitter@email.com]"
 
+# Triage a messenger screenshot .eml
+bin/rails "frank_fbi:triage_eml[path/to/file.eml,submitter@email.com]"
+
 # Start the background worker
 bin/jobs
 
@@ -36,32 +40,47 @@ bin/rails server
 
 # Manage allowed senders
 bin/rails "frank_fbi:add_sender[user@example.com]"
+bin/rails "frank_fbi:add_senders[a@example.com,b@example.com]"
 bin/rails "frank_fbi:remove_sender[user@example.com]"
 bin/rails frank_fbi:list_senders
+
+# Build and push Docker image to Gitea registry
+bin/deploy
 ```
 
 ## Architecture
 
-### Analysis Pipeline (5 Layers)
+### Fraud Analysis Pipeline (6 Layers)
 
-1. **Header Auth** (weight 0.20) — SPF/DKIM/DMARC/ARC checks, Reply-To mismatch, antispam headers. Fully deterministic.
-2. **Sender Reputation** (weight 0.20) — WHOIS domain age, DNSBL blacklists, local reputation DB. Depends on Layer 1 (sender IP).
-3. **Content Analysis** (weight 0.25) — Pattern matching for urgency, financial fraud, PII requests, authority impersonation, URL shorteners, dangerous attachments. Fully deterministic.
+1. **Header Auth** (weight 0.15) — SPF/DKIM/DMARC/ARC checks, Reply-To mismatch, antispam headers. Fully deterministic.
+2. **Sender Reputation** (weight 0.15) — WHOIS domain age, DNSBL blacklists, local reputation DB. Depends on Layer 1 (sender IP).
+3. **Content Analysis** (weight 0.15) — Pattern matching for urgency, financial fraud, PII requests, authority impersonation, URL shorteners, dangerous attachments. Fully deterministic.
 4. **External API** (weight 0.15) — VirusTotal and URLhaus URL scanning. Depends on Layer 3 (extracted URLs).
-5. **LLM Analysis** (weight 0.20) — 3 parallel LLM consultations via OpenRouter (Claude, GPT-4o, Grok) with consensus building. Depends on Layers 1-4.
+5. **Entity Verification** (weight 0.10) — OSINT-based sender identity verification via Brave Search, domain checks, web presence validation. Depends on Layers 1+3. After completion, triggers ScreenshotCaptureJob to capture website screenshots of reference links.
+6. **LLM Analysis** (weight 0.30) — 3 parallel LLM consultations via OpenRouter (Claude, GPT-4o, Grok) with consensus building. Depends on Layers 1-5.
 
 Final score: `sum(layer_score * weight * confidence) / sum(weight * confidence)`
 
-### Job Flow
+### Messenger Triage Pipeline (3 Layers)
 
-`EmailParsingJob` → Layers 1+3 (parallel) → Layers 2+4 (after dependencies) → Layer 5 → `ScoreAggregationJob` → `ReportGenerationJob` → `ReportDeliveryJob`
+1. **URL Scan** (weight 0.40) — VirusTotal + URLhaus scanning
+2. **File Scan** (weight 0.30) — VirusTotal file scanning
+3. **LLM Triage** (weight 0.30) — 3 parallel LLM consultations for messenger scam patterns
+
+### Screenshot Capture
+
+After entity verification finds reference links, ScreenshotCaptureJob captures headless Chrome screenshots (via ferrum) in parallel with LLM analysis. The pipeline waits for screenshots to complete before generating the report. Screenshots are resized to 560px, JPEG quality 60, embedded as base64 in the HTML report. Errors are caught gracefully — report renders without screenshots if capture fails.
+
+### Job Flow (Fraud)
+
+`EmailParsingJob` → Layers 1+3 (parallel) → Layers 2+4+5 (after dependencies) → ScreenshotCaptureJob (after Layer 5) → Layer 6 → `ScoreAggregationJob` → `ReportGenerationJob` → `ReportDeliveryJob`
 
 Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(email)` after completion.
 
 ### Data Model
 
-- `Email` — central record, has_many analysis_layers/llm_verdicts, has_one analysis_report
-- `AnalysisLayer` — one per layer per email (5 per email), unique on [email_id, layer_name]
+- `Email` — central record, has_many analysis_layers/llm_verdicts, has_one analysis_report. `pipeline_type` field: "fraud_analysis" (default) or "messenger_triage"
+- `AnalysisLayer` — one per layer per email (6 for fraud, 3 for triage), unique on [email_id, layer_name]
 - `LlmVerdict` — one per LLM provider per email (3 per email), unique on [email_id, provider]
 - `KnownDomain` — domain reputation cache (WHOIS, DNSBL, fraud ratio)
 - `KnownSender` — sender reputation tracking, belongs_to KnownDomain
@@ -72,15 +91,28 @@ Orchestrated by `Analysis::PipelineOrchestrator` — each job calls `advance(ema
 ### Key Directories
 
 ```
-app/services/analysis/   — analyzers, consensus builder, score aggregator, pipeline orchestrator
-app/services/            — email_parser, mail_fetcher, API clients (virustotal, urlhaus, whois), report_renderer
-app/jobs/                — 10 job classes for pipeline stages
-app/mailboxes/           — FraudAnalysisMailbox, AdminCommandMailbox, RejectionMailbox
+app/services/analysis/   — 6 analyzers, consensus builder, score aggregator, pipeline orchestrator
+app/services/triage/     — 3 triage analyzers, pipeline orchestrator, report renderer
+app/services/            — email_parser, mail_fetcher, screenshot_capturer, API clients (virustotal, urlhaus, whois, brave_search), report_renderer
+app/jobs/                — 18 job classes (fraud + triage pipelines)
+app/mailboxes/           — FraudAnalysisMailbox, MessengerTriageMailbox, AdminCommandMailbox, RejectionMailbox
 app/mailers/             — AnalysisReportMailer, AdminMailer
 app/models/              — 8 models with validations, associations, encryption
-lib/tasks/frank_fbi.rake — rake tasks for analysis, smoke testing, mail fetching, sender management
+lib/tasks/frank_fbi.rake — rake tasks for analysis, triage, smoke testing, mail fetching, sender management
 suspects/                — ~30 sample .eml files used for testing
 ```
+
+## Docker
+
+### Local Development
+
+`docker-compose.yml` — builds from source, bind mounts `./tmp/docker_storage` and `./tmp/docker_emails`. Do NOT mount `db/` as a volume (it shadows migration files from the image).
+
+### Production
+
+`docker-compose.production.yml` — pulls from Gitea registry at `192.168.0.145:3007`, bind mounts to `/home/akitaonrails/frank_fbi/{storage,emails}`, env_file at `/home/akitaonrails/frank_fbi/.env`. No port exposed (internal Docker network only). Compose file goes in `~/docker/frank_fbi.yml`.
+
+`bin/deploy` — builds and pushes image to the Gitea registry.
 
 ## Conventions
 
@@ -100,6 +132,7 @@ All secrets in `.env` (see `.env.example`):
 - `OPENROUTER_API_KEY` — LLM access via OpenRouter
 - `VIRUSTOTAL_API_KEY` — URL scanning
 - `WHOISXML_API_KEY` — WHOIS lookups
+- `BRAVE_SEARCH_API_KEY` — Entity verification OSINT
 - `ADMIN_EMAIL` — admin email for system management via email commands
 
 ### Access Control
@@ -108,7 +141,7 @@ All secrets in `.env` (see `.env.example`):
 - `AllowedSender` whitelist — only pre-approved emails get analyzed
 - Admin sends email commands (subject: add/remove/list/stats) to manage senders
 - Non-whitelisted senders receive a rejection reply
-- Routing: admin → `AdminCommandMailbox`, allowed → `FraudAnalysisMailbox`, others → `RejectionMailbox`
+- Routing: admin → `AdminCommandMailbox`, allowed → `FraudAnalysisMailbox`, triage → `MessengerTriageMailbox`, others → `RejectionMailbox`
 
 ## Security Notes
 

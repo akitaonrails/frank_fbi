@@ -1,6 +1,6 @@
-# Frank FBI — Email Fraud Analysis System
+# Frank FBI — Fraud Bureau of Investigation
 
-A headless Rails 8 application that analyzes suspicious emails through 5 layers of deterministic checks and LLM analysis, then replies with a concise report including scores and explanations.
+A headless Rails 8 application that analyzes suspicious emails through 6 layers of deterministic checks and LLM analysis, then replies with a concise report including scores and explanations.
 
 Forward a suspicious email to a dedicated Gmail account. Frank FBI parses it, runs it through the analysis pipeline, and replies on the same thread with a verdict and breakdown.
 
@@ -45,11 +45,12 @@ Gmail (IMAP poll every 30s)
 Action Mailbox routing
   ├─ Admin email     → AdminCommandMailbox (manage senders)
   ├─ Allowed sender  → FraudAnalysisMailbox (run analysis)
+  │                  → MessengerTriageMailbox (if subject contains "triage")
   └─ Everyone else   → RejectionMailbox (send rejection notice)
         ↓
 Email Parser (extract metadata, URLs, attachments)
         ↓
-5-Layer Analysis Pipeline
+6-Layer Analysis Pipeline (fraud) or 3-Layer Triage Pipeline (messenger)
         ↓
 Score Aggregation & Verdict
         ↓
@@ -71,11 +72,11 @@ All routes verify SPF/DKIM authentication to prevent spoofing.
 
 ---
 
-## The Analysis Pipeline
+## The Fraud Analysis Pipeline
 
-Every submitted email goes through 5 analysis layers. Each layer produces a **score** (0–100), a **weight** (how important it is), and a **confidence** (0.0–1.0, how certain the layer is about its findings). Layers with dependencies wait for their prerequisites before running.
+Every submitted email goes through 6 analysis layers. Each layer produces a **score** (0–100), a **weight** (how important it is), and a **confidence** (0.0–1.0, how certain the layer is about its findings). Layers with dependencies wait for their prerequisites before running.
 
-### Layer 1 — Header Authentication (weight: 0.20)
+### Layer 1 — Header Authentication (weight: 0.15)
 
 Validates email authentication headers. Fully deterministic, no external calls.
 
@@ -101,7 +102,7 @@ Also extracts the **sender IP** from Received headers, which Layer 2 uses for bl
 
 ---
 
-### Layer 2 — Sender Reputation (weight: 0.20)
+### Layer 2 — Sender Reputation (weight: 0.15)
 
 Assesses domain and sender credibility. Depends on Layer 1 (needs sender IP).
 
@@ -126,7 +127,7 @@ Every analyzed email updates the local reputation records (`KnownDomain`, `Known
 
 ---
 
-### Layer 3 — Content Analysis (weight: 0.25)
+### Layer 3 — Content Analysis (weight: 0.15)
 
 Pattern-matches the email body and attachments for fraud indicators. Fully deterministic, no external calls. Runs in parallel with Layer 1 (no dependencies).
 
@@ -176,9 +177,31 @@ Scans extracted URLs against threat intelligence databases. Depends on Layer 3 (
 
 ---
 
-### Layer 5 — LLM Analysis (weight: 0.20)
+### Layer 5 — Entity Verification (weight: 0.10)
 
-Consults 3 AI models in parallel for independent fraud assessments. Depends on all Layers 1–4 (uses their results as context).
+OSINT-based verification of the sender's claimed identity. Depends on Layers 1 + 3 (needs sender info and extracted entities).
+
+**Checks performed:**
+
+- Extracts entities (company names, person names, domains) from the email
+- Searches the web via Brave Search API for corroborating evidence
+- Verifies sender identity against found references
+- Checks domain registration details (age, registrar, blacklist status)
+- Detects mismatches between claimed and actual identity
+
+**Output includes:**
+- Sender/domain verification status
+- Entity mismatches found
+- Reference links to verified sources (company websites, LinkedIn, etc.)
+- Website screenshots of reference links (captured via headless Chrome, inline in report)
+
+**Screenshot capture** runs in parallel with LLM analysis after entity verification completes. Uses ferrum (headless Chromium) with stealth configuration. Screenshots are resized to 560px width, JPEG quality 60, and embedded as base64 thumbnails in the HTML report. The pipeline waits for screenshots before generating the report, with graceful fallback if capture fails.
+
+---
+
+### Layer 6 — LLM Analysis (weight: 0.30)
+
+Consults 3 AI models in parallel for independent fraud assessments. Depends on all Layers 1–5 (uses their results as context).
 
 **Models consulted:**
 
@@ -192,7 +215,7 @@ Each model receives a structured prompt containing:
 - Email metadata (from, reply-to, subject, domain, date)
 - Email body (truncated to 2000 chars)
 - Extracted URLs (up to 15) and attachment info
-- Results from all 4 previous layers (scores and explanations)
+- Results from all 5 previous layers (scores and explanations)
 
 Each model returns: a score (0–100), verdict, confidence (0–1), reasoning, and key findings.
 
@@ -209,9 +232,19 @@ If an LLM fails to return valid JSON, it defaults to score 50 / suspicious_likel
 
 ---
 
+## Messenger Triage Pipeline
+
+For WhatsApp/Telegram/Signal message screenshots forwarded via email, a lighter 3-layer triage pipeline is available (triggered when the email subject contains "triage"):
+
+1. **URL Scan** (weight 0.40) — scans extracted URLs via VirusTotal and URLhaus
+2. **File Scan** (weight 0.30) — scans attached files via VirusTotal
+3. **LLM Triage** (weight 0.30) — 3 parallel LLM consultations focused on messenger scam patterns
+
+---
+
 ## Final Score & Verdict
 
-After all 5 layers complete, the **Score Aggregator** computes the final result:
+After all layers complete, the **Score Aggregator** computes the final result:
 
 ```
 final_score = sum(layer_score * weight * confidence) / sum(weight * confidence)
@@ -243,15 +276,16 @@ A typical spam email claiming to be an ATM card compensation payment might score
 
 | Layer | Score | Weight | Confidence | Contribution |
 |-------|-------|--------|------------|-------------|
-| Header Auth | 55/100 | 0.20 | 0.80 | SPF fail, Reply-To mismatch |
-| Sender Reputation | 45/100 | 0.20 | 0.60 | Domain < 90 days, 1 blacklist hit |
-| Content Analysis | 72/100 | 0.25 | 1.00 | Financial fraud patterns, urgency, PII requests, ALL CAPS |
+| Header Auth | 55/100 | 0.15 | 0.80 | SPF fail, Reply-To mismatch |
+| Sender Reputation | 45/100 | 0.15 | 0.60 | Domain < 90 days, 1 blacklist hit |
+| Content Analysis | 72/100 | 0.15 | 1.00 | Financial fraud patterns, urgency, PII requests, ALL CAPS |
 | External API | 0/100 | 0.15 | 0.40 | No URLs flagged |
-| LLM Analysis | 65/100 | 0.20 | 0.85 | Consensus: suspicious_likely_fraud |
+| Entity Verification | 60/100 | 0.10 | 0.50 | Sender not verified, no corroborating web presence |
+| LLM Analysis | 65/100 | 0.30 | 0.85 | Consensus: suspicious_likely_fraud |
 
 **Final score:** ~55/100 — **Suspicious (Likely Fraud)**
 
-Layers 1 and 3 are fully deterministic and always run, even without API keys. Layers 2, 4, and 5 require external API keys but degrade gracefully with low confidence when unavailable.
+Layers 1 and 3 are fully deterministic and always run, even without API keys. Layers 2, 4, 5, and 6 require external API keys but degrade gracefully with low confidence when unavailable.
 
 ---
 
@@ -260,12 +294,14 @@ Layers 1 and 3 are fully deterministic and always run, even without API keys. La
 - Ruby 4.0.1
 - SQLite3
 - Docker & Docker Compose (for deployment)
+- Chromium (for website screenshots, included in Docker image)
 
 ### API Keys (optional but recommended)
 
-- **OpenRouter** — for LLM analysis (Layer 5). Get a key at [openrouter.ai](https://openrouter.ai)
+- **OpenRouter** — for LLM analysis (Layer 6). Get a key at [openrouter.ai](https://openrouter.ai)
 - **VirusTotal** — for URL scanning (Layer 4). Free tier: 4 requests/min. [virustotal.com](https://www.virustotal.com)
 - **WhoisXML API** — for WHOIS/domain age (Layer 2). Free tier: 500 lookups/month. [whoisxmlapi.com](https://www.whoisxmlapi.com)
+- **Brave Search** — for entity verification OSINT (Layer 5). [brave.com/search/api](https://brave.com/search/api/)
 
 Layers 1 and 3 are fully deterministic and require no API keys.
 
@@ -305,6 +341,12 @@ bin/rails frank_fbi:smoke_test
 bin/rails "frank_fbi:analyze_eml[suspects/YOUR ATM CARD COMPENSATION PAYMENT !!!!.eml]"
 ```
 
+### Triage a Messenger Screenshot
+
+```bash
+bin/rails "frank_fbi:triage_eml[path/to/message.eml,submitter@email.com]"
+```
+
 ### Analyze All Sample Emails
 
 ```bash
@@ -333,6 +375,7 @@ bin/rails server
 
 ```bash
 bin/rails "frank_fbi:add_sender[user@example.com]"
+bin/rails "frank_fbi:add_senders[user1@example.com,user2@example.com]"
 bin/rails "frank_fbi:remove_sender[user@example.com]"
 bin/rails frank_fbi:list_senders
 ```
@@ -355,7 +398,7 @@ bin/rails frank_fbi:smoke_test
 ```
 test/
   models/            — Email, AnalysisLayer, KnownDomain validations and associations
-  services/          — EmailParser, ReportRenderer
+  services/          — EmailParser, ReportRenderer, ScreenshotCapturer
   services/analysis/ — HeaderAuthAnalyzer, ContentAnalyzer, ScoreAggregator, LlmConsensusBuilder
   integration/       — Full pipeline from .eml file through scoring and report generation
   factories/         — FactoryBot factories for Email, AnalysisLayer, LlmVerdict
@@ -365,25 +408,42 @@ External API calls are blocked in tests via WebMock. The `suspects/` directory c
 
 ## Docker Deployment
 
+### Local Development
+
 ```bash
 # Configure
 cp .env.example .env
-# Fill in all values in .env (see above for key generation commands)
+# Fill in all values in .env
 
-# Build and start everything (volumes auto-create, setup runs migrations)
+# Build and start (data stored in ./tmp/)
 docker compose up --build -d
 
 # Check logs
 docker compose logs -f
 
-# Check health
-curl http://localhost:3000/up
-
 # Stop
 docker compose down
+```
 
-# Stop and delete all data
-docker compose down -v
+### Production (home server)
+
+```bash
+# On dev machine: build and push to Gitea registry
+bin/deploy
+
+# On server: create data directories
+mkdir -p ~/frank_fbi/storage ~/frank_fbi/emails
+
+# Copy .env to server
+scp .env server:~/frank_fbi/.env
+
+# Copy compose file
+scp docker-compose.production.yml server:~/docker/frank_fbi.yml
+
+# Start
+cd ~/docker
+docker compose -f frank_fbi.yml pull
+docker compose -f frank_fbi.yml up -d
 ```
 
 This starts 4 services:
@@ -391,7 +451,7 @@ This starts 4 services:
 | Service | Purpose |
 |---------|---------|
 | `setup` | One-shot: runs `db:prepare`, then exits |
-| `app` | Rails server on port 3000 (healthchecked at `/up`) |
+| `app` | Rails server (internal only, no port exposed) |
 | `worker` | Solid Queue worker (processes analysis jobs) |
 | `mail_fetcher` | Polls Gmail IMAP every 30s, relays to Action Mailbox (waits for app healthcheck) |
 
@@ -400,7 +460,7 @@ This starts 4 services:
 ### Data Model
 
 - **emails** — Central record per analyzed email (parsed metadata, URLs, attachments, raw source, final score/verdict)
-- **analysis_layers** — One record per layer per email (5 per email)
+- **analysis_layers** — One record per layer per email (6 for fraud, 3 for triage)
 - **llm_verdicts** — One record per LLM consultation (3 per email)
 - **known_domains** — Domain reputation cache (WHOIS, DNSBL results, fraud ratio)
 - **known_senders** — Sender-level reputation tracking
@@ -408,17 +468,19 @@ This starts 4 services:
 - **analysis_reports** — Rendered report HTML/text and delivery status
 - **allowed_senders** — Whitelisted submitter emails (encrypted)
 
-### Job Pipeline
+### Job Pipeline (Fraud Analysis)
 
 ```
 EmailParsingJob
   → HeaderAuthAnalysisJob (Layer 1)  ─┐
   → ContentAnalysisJob (Layer 3)     ─┤ parallel
                                       ↓
-  → SenderReputationAnalysisJob (Layer 2, needs Layer 1 for IP)
-  → ExternalApiAnalysisJob (Layer 4, needs Layer 3 for URLs)
+  → SenderReputationAnalysisJob (Layer 2, needs Layer 1)
+  → ExternalApiAnalysisJob (Layer 4, needs Layer 3)
+  → EntityVerificationJob (Layer 5, needs Layers 1+3)
+    → ScreenshotCaptureJob (after Layer 5, parallel with Layer 6)
                                       ↓
-  → LlmAnalysisJob (Layer 5, needs Layers 1-4)
+  → LlmAnalysisJob (Layer 6, needs Layers 1-5)
     ├─ LlmConsultationJob (Claude)  ┐
     ├─ LlmConsultationJob (GPT-4o)  ├ parallel
     └─ LlmConsultationJob (Grok)    ┘
@@ -430,13 +492,14 @@ EmailParsingJob
 
 ```
 app/
-  services/analysis/   — 5 analyzers, consensus builder, score aggregator, pipeline orchestrator
-  services/            — email parser, mail fetcher, API clients, report renderer
-  jobs/                — 10 job classes
-  mailboxes/           — FraudAnalysisMailbox, AdminCommandMailbox, RejectionMailbox
+  services/analysis/   — 6 analyzers, consensus builder, score aggregator, pipeline orchestrator
+  services/triage/     — 3 triage analyzers, pipeline orchestrator, report renderer
+  services/            — email parser, mail fetcher, API clients, report renderer, screenshot capturer
+  jobs/                — 18 job classes (fraud pipeline + triage pipeline)
+  mailboxes/           — FraudAnalysisMailbox, MessengerTriageMailbox, AdminCommandMailbox, RejectionMailbox
   mailers/             — AnalysisReportMailer (thread-aware reply), AdminMailer
   models/              — 8 models
-lib/tasks/             — Rake tasks (analyze, smoke test, fetch mail, sender management)
+lib/tasks/             — Rake tasks (analyze, triage, smoke test, fetch mail, sender management)
 suspects/              — ~30 sample .eml files for testing
 ```
 

@@ -87,6 +87,26 @@ namespace :frank_fbi do
     end
   end
 
+  desc "Add multiple allowed senders (comma-separated)"
+  task :add_senders, [:emails] => :environment do |_t, args|
+    emails = args[:emails].to_s.split(",").map(&:strip).reject(&:blank?)
+    abort("Usage: bin/rails \"frank_fbi:add_senders[a@example.com,b@example.com]\"") if emails.empty?
+
+    emails.each do |email|
+      sender = AllowedSender.find_or_initialize_by(email_address: email.downcase)
+      if sender.new_record?
+        sender.added_by = "rake"
+        sender.save!
+        puts "Added: #{email}"
+      elsif !sender.active?
+        sender.update!(active: true)
+        puts "Reactivated: #{email}"
+      else
+        puts "Already exists: #{email}"
+      end
+    end
+  end
+
   desc "List all allowed senders"
   task list_senders: :environment do
     senders = AllowedSender.active.order(:email_address)
