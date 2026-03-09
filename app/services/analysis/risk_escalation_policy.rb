@@ -104,10 +104,32 @@ module Analysis
       return unless layer
 
       dangerous = Array(detail_value(layer, :dangerous_attachments))
+      suspicious = Array(detail_value(layer, :suspicious_attachments))
+      double_extensions = Array(detail_value(layer, :double_extension_attachments))
+
       if dangerous.any?
         escalations << {
           floor: 80,
           reason: "E-mail contém anexo executável ou claramente perigoso."
+        }
+      end
+
+      if double_extensions.any?
+        escalations << {
+          floor: 75,
+          reason: "E-mail contém anexo com extensão dupla, padrão comum de disfarce."
+        }
+      end
+
+      if suspicious.any?
+        categories = suspicious.filter_map do |entry|
+          value = entry.is_a?(Hash) ? (entry["category"] || entry[:category]) : nil
+          value&.tr("_", " ")
+        end.uniq
+
+        escalations << {
+          floor: suspicious.size >= 2 ? 65 : 55,
+          reason: "E-mail contém anexo altamente suspeito#{categories.any? ? " (#{categories.join(', ')})" : ''}."
         }
       end
 

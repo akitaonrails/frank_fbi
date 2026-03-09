@@ -22,6 +22,8 @@ On desktop Gmail:
 
 If a user forwards inline, Frank FBI will still analyze the message content, but the report will warn that header/auth evidence is incomplete and recommend resubmitting as an attachment for a higher-fidelity scan.
 
+If the suspicious email contains attachments, the report now highlights risky file types explicitly. Archive files (`.zip`, `.rar`, `.7z`), macro-enabled Office files (`.docm`, `.xlsm`, `.pptm`), disk images (`.iso`, `.img`), shortcuts (`.lnk`, `.url`), and executables are treated as dangerous or highly suspicious and the user is warned not to open them directly.
+
 ## Important: Use a Dedicated Email Account
 
 **Do not use your personal Gmail account.** Frank FBI manages its inbox programmatically — it marks emails as read after processing and may move or delete messages. Using your personal email risks losing important correspondence.
@@ -145,7 +147,8 @@ Pattern-matches the email body and attachments for fraud indicators. Fully deter
 
 - **URL shorteners** (bit.ly, tinyurl.com, goo.gl, etc.): **+8 pts** per shortened URL
 - **URL mismatches** — display text shows one URL, href goes somewhere else: **+15 pts** each (classic phishing)
-- **Dangerous attachments** (.exe, .scr, .bat, .vbs, .js, .ps1, etc.): **+25 pts**
+- **Dangerous attachments** (.exe, .scr, .bat, .vbs, .js, .ps1, `.lnk`, `.url`, etc.): **+25 pts each** (capped)
+- **Highly suspicious attachments** (`.zip`, `.rar`, `.7z`, `.iso`, `.img`, `.docm`, `.xlsm`, `.pptm`, `.one`, `.apk`, attached `.html/.svg`): **+10 to +18 pts each** (capped)
 - **Double extensions** (e.g. `invoice.pdf.exe`): **+15 pts**
 - **ALL CAPS subject** (>10 chars): **+8 pts**
 - **Excessive exclamation marks** (3+ or `!!`): **+5 pts**
@@ -154,6 +157,8 @@ Pattern-matches the email body and attachments for fraud indicators. Fully deter
 **Confidence** is based on body length: 1.0 if >200 chars, 0.8 if 50–200, 0.5 if <50.
 
 Also extracts all URLs from the email, which Layer 4 uses for scanning.
+
+Risky attachments are also surfaced prominently in the final report with a plain-language warning telling the user not to open them directly on their workstation.
 
 ---
 

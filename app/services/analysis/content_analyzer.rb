@@ -13,7 +13,22 @@ module Analysis
 
     DANGEROUS_EXTENSIONS = %w[
       .exe .scr .bat .cmd .com .pif .vbs .js .wsf
-      .msi .dll .jar .ps1 .reg .inf .hta .cpl
+      .msi .dll .jar .ps1 .reg .inf .hta .cpl .lnk .url
+    ].freeze
+
+    SUSPICIOUS_ATTACHMENT_RULES = [
+      { category: "archive", extensions: %w[.zip .rar .7z .tar .gz .bz2 .xz .cab], points: 12,
+        reason: "Arquivo compactado pode ocultar executáveis, scripts ou documentos perigosos" },
+      { category: "disk_image", extensions: %w[.iso .img], points: 18,
+        reason: "Imagem de disco pode carregar instaladores e atalhos maliciosos" },
+      { category: "macro_document", extensions: %w[.docm .xlsm .pptm .xlam], points: 18,
+        reason: "Documento com macro pode executar código ao ser aberto" },
+      { category: "onenote", extensions: %w[.one], points: 18,
+        reason: "Arquivo do OneNote é um vetor comum para malware e phishing" },
+      { category: "mobile_package", extensions: %w[.apk], points: 18,
+        reason: "Pacote de aplicativo instala software fora de lojas oficiais" },
+      { category: "web_document", extensions: %w[.html .htm .svg], points: 10,
+        reason: "Arquivo web anexado pode abrir páginas falsas de login localmente" }
     ].freeze
 
     WHATSAPP_PATTERNS = [
@@ -169,6 +184,7 @@ module Analysis
     def analyze_attachments
       attachments = @email.attachments_info || []
       @details[:attachment_count] = attachments.size
+      @details[:attachment_risks] = []
 
       dangerous = attachments.select do |att|
         filename = att["filename"].to_s.downcase
@@ -178,8 +194,46 @@ module Analysis
       if dangerous.any?
         names = dangerous.map { |a| a["filename"] }
         @findings << "Tipo(s) de anexo perigoso(s): #{names.join(', ')}"
-        @score += 25
+        @score += [dangerous.size * 25, 45].min
         @details[:dangerous_attachments] = names
+        names.each do |name|
+          @details[:attachment_risks] << {
+            filename: name,
+            severity: "dangerous",
+            reason: "Tipo de arquivo executável ou atalho com alto risco de execução"
+          }
+        end
+      end
+
+      suspicious = attachments.filter_map do |att|
+        filename = att["filename"].to_s
+        downcased = filename.downcase
+        rule = SUSPICIOUS_ATTACHMENT_RULES.find do |entry|
+          entry[:extensions].any? { |ext| downcased.end_with?(ext) }
+        end
+        next unless rule
+
+        {
+          "filename" => filename,
+          "category" => rule[:category],
+          "reason" => rule[:reason],
+          "points" => rule[:points]
+        }
+      end
+
+      if suspicious.any?
+        names = suspicious.map { |a| a["filename"] }
+        @findings << "Anexo(s) altamente suspeito(s): #{names.join(', ')}"
+        @score += [suspicious.sum { |a| a["points"].to_i }, 35].min
+        @details[:suspicious_attachments] = suspicious
+        suspicious.each do |entry|
+          @details[:attachment_risks] << {
+            filename: entry["filename"],
+            severity: "suspicious",
+            category: entry["category"],
+            reason: entry["reason"]
+          }
+        end
       end
 
       # Check for double extensions (e.g., invoice.pdf.exe)
@@ -187,8 +241,17 @@ module Analysis
         att["filename"].to_s.match?(/\.\w+\.\w+$/)
       end
       if double_ext.any?
-        @findings << "Anexo(s) com extensão dupla (possível disfarce)"
-        @score += 15
+        names = double_ext.map { |att| att["filename"] }
+        @findings << "Anexo(s) com extensão dupla (possível disfarce): #{names.join(', ')}"
+        @score += [double_ext.size * 15, 30].min
+        @details[:double_extension_attachments] = names
+        names.each do |name|
+          @details[:attachment_risks] << {
+            filename: name,
+            severity: "dangerous",
+            reason: "Extensão dupla é uma técnica comum para disfarçar o tipo real do arquivo"
+          }
+        end
       end
     end
 

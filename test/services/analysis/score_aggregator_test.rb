@@ -298,4 +298,32 @@ class Analysis::ScoreAggregatorTest < ActiveSupport::TestCase
     assert_includes email.reload.verdict_explanation, "Gatilhos de escalonamento:"
     assert_includes email.verdict_explanation, "URLhaus confirmou URL maliciosa."
   end
+
+  test "highly suspicious attachment raises floor without forcing fraud by itself" do
+    email = create(:email)
+    AnalysisLayer::LAYER_NAMES.each do |name|
+      details = if name == "content_analysis"
+        {
+          suspicious_attachments: [
+            {
+              filename: "invoice.zip",
+              category: "archive",
+              reason: "Arquivo compactado pode ocultar executáveis, scripts ou documentos perigosos"
+            }
+          ]
+        }
+      else
+        {}
+      end
+
+      create(:analysis_layer, :completed, email: email, layer_name: name,
+             score: name == "content_analysis" ? 18 : 5,
+             weight: AnalysisLayer.default_weight(name), confidence: 1.0, details: details)
+    end
+
+    result = Analysis::ScoreAggregator.new(email).aggregate
+
+    assert_equal 55, result[:score]
+    assert_equal "suspicious_likely_fraud", result[:verdict]
+  end
 end

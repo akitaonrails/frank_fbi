@@ -77,6 +77,21 @@ class Analysis::ContentAnalyzerTest < ActiveSupport::TestCase
     assert_includes dangerous, "malware.exe"
   end
 
+  test "detects highly suspicious attachments and explains the risk" do
+    email = create(:email,
+      attachments_info: [{ "filename" => "invoice.zip", "content_type" => "application/zip", "size" => 5_000 }]
+    )
+    layer = Analysis::ContentAnalyzer.new(email).analyze
+
+    suspicious = layer.details["suspicious_attachments"] || layer.details[:suspicious_attachments]
+    risks = layer.details["attachment_risks"] || layer.details[:attachment_risks]
+
+    assert suspicious.present?
+    assert_equal "invoice.zip", suspicious.first["filename"] || suspicious.first[:filename]
+    assert risks.any? { |entry| (entry["filename"] || entry[:filename]) == "invoice.zip" }
+    assert layer.score >= 10
+  end
+
   test "detects URL text/href mismatches" do
     email = create(:email,
       body_html: '<a href="https://evil.com/steal">https://mybank.com/login</a>',

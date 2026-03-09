@@ -88,4 +88,27 @@ class ReportRendererTest < ActiveSupport::TestCase
 
     assert_includes text, "encaminhado como anexo .eml"
   end
+
+  test "report warns users not to open highly suspicious attachments directly" do
+    content_layer = @email.analysis_layers.find_by(layer_name: "content_analysis")
+    content_layer.update!(
+      details: content_layer.details.merge(
+        "attachment_risks" => [
+          {
+            "filename" => "invoice.zip",
+            "severity" => "suspicious",
+            "reason" => "Arquivo compactado pode ocultar executáveis, scripts ou documentos perigosos"
+          }
+        ]
+      )
+    )
+
+    html = ReportRenderer.new(@email).to_html
+    text = ReportRenderer.new(@email).to_text
+
+    assert_includes html, "Atenção aos anexos"
+    assert_includes html, "invoice.zip"
+    assert_includes text, "CUIDADO COM ANEXOS"
+    assert_includes text, "Não abra esses arquivos diretamente"
+  end
 end

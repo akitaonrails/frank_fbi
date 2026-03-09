@@ -66,6 +66,8 @@ class ReportRenderer
           .critical-alert strong { color: #dc2626; }
           .confidence-warning { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
           .confidence-warning strong { color: #d97706; }
+          .attachment-warning { background: #fff7ed; border: 2px solid #f97316; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+          .attachment-warning strong { color: #c2410c; }
           .footer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
         </style>
       </head>
@@ -77,6 +79,8 @@ class ReportRenderer
         #{confidence_warning_html}
 
         #{forwarding_notice_html}
+
+        #{attachment_warning_html}
 
         <div class="section">
           <h3>E-mail Analisado</h3>
@@ -141,6 +145,14 @@ class ReportRenderer
     if forwarding_notice_text.present?
       lines << ""
       lines << forwarding_notice_text
+    end
+
+    attachment_lines = attachment_warning_lines
+    if attachment_lines.any?
+      lines << ""
+      lines << "!!! CUIDADO COM ANEXOS !!!"
+      lines << "  Não abra esses arquivos diretamente no seu computador sem validação adicional."
+      attachment_lines.each { |line| lines << "  #{line}" }
     end
 
     # AI verdicts first
@@ -367,6 +379,24 @@ class ReportRenderer
     alerts
   end
 
+  def attachment_warning_lines
+    warnings = []
+    content_layer = find_layer("content_analysis")
+    return warnings unless content_layer&.details
+
+    Array(content_layer.details["attachment_risks"] || content_layer.details[:attachment_risks]).each do |entry|
+      next unless entry.is_a?(Hash)
+
+      filename = entry["filename"] || entry[:filename] || "arquivo"
+      reason = entry["reason"] || entry[:reason]
+      severity = entry["severity"] || entry[:severity]
+      prefix = severity == "dangerous" ? "Alto risco" : "Suspeito"
+      warnings << "#{prefix}: #{filename}#{reason.present? ? " — #{reason}" : ''}"
+    end
+
+    warnings.uniq
+  end
+
   def critical_alerts_html
     alerts = collect_critical_alerts
     return "" if alerts.empty?
@@ -378,6 +408,23 @@ class ReportRenderer
     <<~HTML
       <div class="section">
         #{items}
+      </div>
+    HTML
+  end
+
+  def attachment_warning_html
+    warnings = attachment_warning_lines
+    return "" if warnings.empty?
+
+    items = warnings.map { |warning| "<li>#{h warning}</li>" }.join
+
+    <<~HTML
+      <div class="section">
+        <div class="attachment-warning">
+          <strong>Atenção aos anexos.</strong>
+          Não abra esses arquivos diretamente no seu computador sem validação adicional.
+          <ul class="findings">#{items}</ul>
+        </div>
       </div>
     HTML
   end
