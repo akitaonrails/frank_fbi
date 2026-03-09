@@ -28,8 +28,16 @@ class ScreenshotCaptureJob < ApplicationJob
     end
 
     Analysis::PipelineOrchestrator.advance(email)
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.warn("ScreenshotCaptureJob: record not found — #{e.message}")
+  rescue => e
+    # On any failure (RecordNotFound, crash, etc.), try to unblock the pipeline
+    Rails.logger.warn("ScreenshotCaptureJob error for email #{email_id}: #{e.message}")
+    mark_screenshots_failed(email_id)
+    begin
+      email = Email.find_by(id: email_id)
+      Analysis::PipelineOrchestrator.advance(email) if email
+    rescue => advance_error
+      Rails.logger.error("ScreenshotCaptureJob: advance also failed for email #{email_id}: #{advance_error.message}")
+    end
   end
 
   private
@@ -37,5 +45,22 @@ class ScreenshotCaptureJob < ApplicationJob
   def extract_urls(ev_layer)
     reference_links = ev_layer.details&.dig("reference_links") || []
     reference_links.filter_map { |link| link["url"] || link[:url] }
+  end
+
+  def mark_screenshots_failed(email_id)
+    email = Email.find_by(id: email_id)
+    return unless email
+
+    ev_layer = email.analysis_layers.find_by(layer_name: "entity_verification")
+    return unless ev_layer
+    return unless ev_layer.details&.dig("screenshots_status") == "pending"
+
+    ev_layer.with_lock do
+      details = ev_layer.reload.details || {}
+      details["screenshots_status"] = "failed"
+      ev_layer.update!(details: details)
+    end
+  rescue => e
+    Rails.logger.error("ScreenshotCaptureJob: mark_screenshots_failed error: #{e.message}")
   end
 end

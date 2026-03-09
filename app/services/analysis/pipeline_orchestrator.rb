@@ -94,6 +94,8 @@ module Analysis
       @email.pipeline_layer_names.all? { |name| layer_finished?(name) }
     end
 
+    SCREENSHOT_TIMEOUT = 5.minutes
+
     def enqueue_screenshot_capture
       ev_layer = @email.analysis_layers.find_by(layer_name: "entity_verification")
       return unless ev_layer
@@ -103,20 +105,33 @@ module Analysis
       return if reference_links.empty?
       return if details["screenshots_status"].present? # already enqueued or done
 
-      ev_layer.update!(details: details.merge("screenshots_status" => "pending"))
+      ev_layer.update!(details: details.merge(
+        "screenshots_status" => "pending",
+        "screenshots_enqueued_at" => Time.current.iso8601
+      ))
       ScreenshotCaptureJob.perform_later(@email.id)
     end
 
     def screenshots_pending?
       ev_layer = @email.analysis_layers.find_by(layer_name: "entity_verification")
       return false unless ev_layer
-      ev_layer.details&.dig("screenshots_status") == "pending"
+      return false unless ev_layer.details&.dig("screenshots_status") == "pending"
+
+      # Timeout: if screenshots have been pending too long, treat as failed and unblock
+      enqueued_at = ev_layer.details&.dig("screenshots_enqueued_at")
+      if enqueued_at.present? && Time.parse(enqueued_at) < SCREENSHOT_TIMEOUT.ago
+        Rails.logger.warn("PipelineOrchestrator: screenshots timed out for email #{@email.id}, unblocking pipeline")
+        ev_layer.update!(details: ev_layer.details.merge("screenshots_status" => "timed_out"))
+        return false
+      end
+
+      true
     end
 
     def enqueue_if_ready(layer_name)
-      # Don't re-enqueue if already running or completed
+      # Don't re-enqueue if already running, completed, or failed
       existing = @email.analysis_layers.find_by(layer_name: layer_name)
-      return if existing && %w[running completed].include?(existing.status)
+      return if existing && %w[running completed failed].include?(existing.status)
 
       # Create or update the layer record
       layer = @email.analysis_layers.find_or_initialize_by(layer_name: layer_name)
