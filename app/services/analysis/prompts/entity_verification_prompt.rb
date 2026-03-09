@@ -52,9 +52,22 @@ module Analysis
             "domain_verified": <boolean>,
             "entity_mismatches": ["<lista de divergências encontradas>"],
             "key_findings": ["<top 3-5 descobertas>"],
-            "search_summary": "<breve descrição das buscas realizadas e resultados>"
+            "search_summary": "<breve descrição das buscas realizadas e resultados>",
+            "reference_links": [
+              {
+                "label": "<nome curto do perfil ou página>",
+                "url": "<URL direta https e canônica>",
+                "platform": "<linkedin|x|twitter|facebook|instagram|github|youtube|tiktok|threads|site_oficial|other>"
+              }
+            ]
           }
           ```
+
+          Regras para `reference_links`:
+          - Inclua até 5 links relevantes
+          - Priorize LinkedIn, perfis sociais relevantes e site oficial
+          - Use apenas URLs `https` diretas e canônicas
+          - Não inclua links encurtados, redirecionadores, parâmetros de rastreamento ou resultados de busca
 
           **Guia de pontuação:**
           - 0-15: Pessoa verificada no LinkedIn/redes sociais, domínio corresponde à org, alegações consistentes

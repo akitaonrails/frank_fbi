@@ -5,6 +5,17 @@ module Analysis
     LAYER_NAME = "entity_verification"
     WEIGHT = AnalysisLayer::WEIGHTS[LAYER_NAME]
     MODEL = "anthropic/claude-sonnet-4.6"
+    SAFE_REFERENCE_HOSTS = %w[
+      linkedin.com www.linkedin.com
+      x.com www.x.com
+      twitter.com www.twitter.com
+      facebook.com www.facebook.com
+      instagram.com www.instagram.com
+      github.com www.github.com
+      youtube.com www.youtube.com
+      tiktok.com www.tiktok.com
+      threads.net www.threads.net
+    ].freeze
 
     def initialize(email)
       @email = email
@@ -39,6 +50,7 @@ module Analysis
           entity_mismatches: merged[:entity_mismatches],
           key_findings: merged[:key_findings],
           search_summary: merged[:search_summary],
+          reference_links: merged[:reference_links],
           domain_whois: domain_info[:whois],
           domain_age_days: domain_info[:age_days],
           domain_registrar: domain_info[:registrar],
@@ -158,6 +170,7 @@ module Analysis
         entity_mismatches: [],
         key_findings: [],
         search_summary: "Verificação por IA falhou: #{e.message}",
+        reference_links: [],
         llm_succeeded: false
       }
     end
@@ -195,6 +208,7 @@ module Analysis
         end
 
         merged[:search_summary] = [merged[:search_summary], domain_data_summary(domain_info)].compact.join(" ")
+        merged[:reference_links] = sanitize_reference_links(merged[:reference_links], domain_info[:domain])
         merged
       else
         # LLM failed or very low confidence — build result from domain verification alone
@@ -246,7 +260,8 @@ module Analysis
         domain_verified: domain_info[:verified],
         entity_mismatches: [],
         key_findings: findings.first(10),
-        search_summary: domain_data_summary(domain_info)
+        search_summary: domain_data_summary(domain_info),
+        reference_links: []
       }
     end
 
@@ -281,7 +296,8 @@ module Analysis
         domain_verified: data["domain_verified"],
         entity_mismatches: Array(data["entity_mismatches"]).map(&:to_s).first(10),
         key_findings: Array(data["key_findings"]).map(&:to_s).first(10),
-        search_summary: data["search_summary"].to_s
+        search_summary: data["search_summary"].to_s,
+        reference_links: sanitize_reference_links(data["reference_links"], @email.sender_domain)
       }
     rescue JSON::ParserError => e
       Rails.logger.warn("EntityVerificationAnalyzer: JSON parse failed: #{e.message}")
@@ -293,7 +309,8 @@ module Analysis
         domain_verified: nil,
         entity_mismatches: [],
         key_findings: ["Falha na interpretação da resposta"],
-        search_summary: "Parse error: #{content.to_s[0..200]}"
+        search_summary: "Parse error: #{content.to_s[0..200]}",
+        reference_links: []
       }
     end
 
@@ -334,12 +351,68 @@ module Analysis
           domain_blacklisted: domain_info[:blacklisted],
           domain_verified: domain_info[:verified],
           key_findings: result[:key_findings],
-          search_summary: result[:search_summary]
+          search_summary: result[:search_summary],
+          reference_links: []
         },
         explanation: result[:verdict_summary],
         status: "completed"
       )
       layer
+    end
+
+    def sanitize_reference_links(raw_links, sender_domain)
+      Array(raw_links).filter_map do |link|
+        normalize_reference_link(link, sender_domain)
+      end.uniq { |link| link[:url] }.first(5)
+    end
+
+    def normalize_reference_link(link, sender_domain)
+      return nil unless link.is_a?(Hash)
+
+      url = link["url"] || link[:url]
+      label = (link["label"] || link[:label]).to_s.strip
+      platform = (link["platform"] || link[:platform]).to_s.strip.downcase
+      return nil if url.blank?
+
+      uri = URI.parse(url)
+      return nil unless uri.is_a?(URI::HTTPS)
+
+      host = uri.host.to_s.downcase
+      return nil if host.blank? || host.start_with?("xn--")
+      return nil unless safe_reference_host?(host, sender_domain)
+
+      uri.query = nil
+      uri.fragment = nil
+
+      {
+        label: label.presence || host,
+        url: uri.to_s,
+        platform: platform.presence || classify_platform(host, sender_domain)
+      }
+    rescue URI::InvalidURIError
+      nil
+    end
+
+    def safe_reference_host?(host, sender_domain)
+      return true if SAFE_REFERENCE_HOSTS.include?(host)
+      return false if sender_domain.blank?
+
+      host == sender_domain || host.end_with?(".#{sender_domain}")
+    end
+
+    def classify_platform(host, sender_domain)
+      return "site_oficial" if sender_domain.present? && (host == sender_domain || host.end_with?(".#{sender_domain}"))
+      return "linkedin" if host.include?("linkedin.com")
+      return "x" if host == "x.com" || host == "www.x.com"
+      return "twitter" if host.include?("twitter.com")
+      return "facebook" if host.include?("facebook.com")
+      return "instagram" if host.include?("instagram.com")
+      return "github" if host.include?("github.com")
+      return "youtube" if host.include?("youtube.com")
+      return "tiktok" if host.include?("tiktok.com")
+      return "threads" if host.include?("threads.net")
+
+      "other"
     end
   end
 end

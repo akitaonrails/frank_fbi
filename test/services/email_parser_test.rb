@@ -107,6 +107,19 @@ class EmailParserTest < ActiveSupport::TestCase
     assert_equal "badsite.net", result[:sender_domain]
   end
 
+  test "parses forwarded email sent as attached original message" do
+    raw = read_eml("original_msg.eml")
+    result = EmailParser.new(raw).parse
+
+    assert_equal "suporte-pje-123@pje.jus.br", result[:from_address]
+    assert_equal "Suporte-Pje", result[:from_name]
+    assert_equal "Andamento Processual Ref: 15098", result[:subject]
+    assert_equal "y0jludsl@pje.jus.br", result[:reply_to_address]
+    assert_equal "pje.jus.br", result[:sender_domain]
+    assert result[:raw_headers].include?("Authentication-Results")
+    assert result[:analysis_raw_source].include?("Reply-To: y0jludsl@pje.jus.br")
+  end
+
   # --- Contact form detection ---
 
   test "extracts sender from contact form with Email: label" do

@@ -41,4 +41,51 @@ class ReportRendererTest < ActiveSupport::TestCase
     assert_includes html, "Anthropic"
     assert_includes html, "Clear fraud indicators"
   end
+
+  test "entity verification renders safe reference links" do
+    entity_layer = @email.analysis_layers.find_by(layer_name: "entity_verification")
+    entity_layer.update!(
+      details: entity_layer.details.merge(
+        "reference_links" => [
+          { "label" => "LinkedIn", "url" => "https://www.linkedin.com/in/example/", "platform" => "linkedin" },
+          { "label" => "Official", "url" => "https://example.com/team", "platform" => "site_oficial" }
+        ]
+      )
+    )
+
+    html = ReportRenderer.new(@email).to_html
+    text = ReportRenderer.new(@email).to_text
+
+    assert_includes html, "https://www.linkedin.com/in/example/"
+    assert_includes html, "rel=\"noopener noreferrer nofollow\""
+    assert_includes text, "Links verificados:"
+    assert_includes text, "https://example.com/team"
+  end
+
+  test "inline forwarded email includes resubmission guidance" do
+    raw_source = <<~EML
+      From: trusted@example.com
+      Subject: Fwd: Suspicious message
+
+      ---------- Forwarded message ---------
+      From: Scammer <scammer@evil.com>
+
+      Click here now.
+    EML
+    email = create(:email, :completed, raw_source: raw_source)
+
+    text = ReportRenderer.new(email).to_text
+
+    assert_includes text, "Forward as attachment"
+  end
+
+  test "attached original message notes higher fidelity analysis" do
+    raw = read_eml("original_msg.eml")
+    email = create_email_from_eml("original_msg.eml")
+    email.update!(raw_source: raw, verdict_explanation: "Pontuação Final: 85/100")
+
+    text = ReportRenderer.new(email).to_text
+
+    assert_includes text, "encaminhado como anexo .eml"
+  end
 end

@@ -141,22 +141,21 @@ module Analysis
     end
 
     def scan_attachments
-      return unless @email.raw_source.present?
-
-      mail = Mail.new(@email.raw_source)
-      non_image_attachments = mail.attachments.reject { |att| image_attachment?(att) }
-      return if non_image_attachments.empty?
-
       client = VirusTotalClient.new
       malicious_count = 0
 
-      non_image_attachments.first(MAX_ATTACHMENTS_TO_SCAN).each do |attachment|
-        sha256 = Digest::SHA256.hexdigest(attachment.body.decoded)
+      attachments = attachment_candidates
+      return if attachments.empty?
+
+      attachments.first(MAX_ATTACHMENTS_TO_SCAN).each do |attachment|
+        sha256 = attachment["sha256"] || attachment[:sha256]
+        next if sha256.blank?
+
         result = client.scan_file_hash(sha256)
 
         att_result = {
-          filename: attachment.filename,
-          content_type: attachment.content_type,
+          filename: attachment["filename"] || attachment[:filename],
+          content_type: attachment["content_type"] || attachment[:content_type],
           sha256: sha256,
           malicious: result&.dig(:malicious) || false,
           detection_count: result&.dig(:detection_count)
@@ -230,6 +229,32 @@ module Analysis
 
       content_type = attachment.content_type.to_s.split(";").first.to_s.strip.downcase
       IMAGE_CONTENT_TYPES.include?(content_type)
+    end
+
+    def image_attachment_info?(attachment)
+      filename = attachment["filename"] || attachment[:filename]
+      content_type = attachment["content_type"] || attachment[:content_type]
+      ext = File.extname(filename.to_s).delete_prefix(".").downcase
+      return true if IMAGE_EXTENSIONS.include?(ext)
+
+      IMAGE_CONTENT_TYPES.include?(content_type.to_s.split(";").first.to_s.strip.downcase)
+    end
+
+    def attachment_candidates
+      parsed = Array(@email.attachments_info).reject { |attachment| image_attachment_info?(attachment) }
+      return parsed if parsed.any?
+      return [] unless @email.raw_source.present?
+
+      Mail.new(@email.raw_source).attachments.reject { |attachment| image_attachment?(attachment) }.map do |attachment|
+        decoded = attachment.body.decoded
+        {
+          "filename" => attachment.filename,
+          "content_type" => attachment.content_type,
+          "sha256" => Digest::SHA256.hexdigest(decoded)
+        }
+      end
+    rescue
+      []
     end
   end
 end

@@ -76,6 +76,8 @@ class ReportRenderer
 
         #{confidence_warning_html}
 
+        #{forwarding_notice_html}
+
         <div class="section">
           <h3>E-mail Analisado</h3>
           <p><strong>De:</strong> #{h @email.from_name} &lt;#{h @email.from_address}&gt;</p>
@@ -134,6 +136,11 @@ class ReportRenderer
     lines << "Assunto: #{@email.subject}"
     lines << "Data: #{@email.received_at&.strftime('%d/%m/%Y %H:%M %Z')}"
 
+    if forwarding_notice_text.present?
+      lines << ""
+      lines << forwarding_notice_text
+    end
+
     # AI verdicts first
     if @llm_verdicts.any?
       lines << ""
@@ -176,9 +183,16 @@ class ReportRenderer
         mismatches.each { |m| lines << "    - #{m}" }
       end
       ev_findings = details["key_findings"] || []
+      reference_links = details["reference_links"] || []
       if ev_findings.any?
         lines << "  Descobertas:"
         ev_findings.each { |f| lines << "    - #{f}" }
+      end
+      if reference_links.any?
+        lines << "  Links verificados:"
+        reference_links.each do |link|
+          lines << "    - #{link['label'] || link[:label]} (#{link['platform'] || link[:platform]}): #{link['url'] || link[:url]}"
+        end
       end
       summary = details["search_summary"]
       lines << "  Pesquisa: #{summary}" if summary.present?
@@ -228,6 +242,10 @@ class ReportRenderer
 
   def find_layer(name)
     @layers.find { |l| l.layer_name == name }
+  end
+
+  def forwarding_mode
+    @forwarding_mode ||= ForwardingSourceDetector.new(@email.raw_source).detect[:mode]
   end
 
   def layer_label(name)
@@ -413,6 +431,7 @@ class ReportRenderer
     mismatches = details["entity_mismatches"] || []
     ev_findings = details["key_findings"] || []
     search_summary = details["search_summary"]
+    reference_links = details["reference_links"] || []
     domain_age = details["domain_age_days"]
     domain_registrar = details["domain_registrar"]
     domain_blacklisted = details["domain_blacklisted"]
@@ -447,6 +466,17 @@ class ReportRenderer
       findings_html = "<ul class=\"findings\">#{items}</ul>"
     end
 
+    links_html = ""
+    if reference_links.any?
+      items = reference_links.map do |link|
+        label = link["label"] || link[:label]
+        platform = link["platform"] || link[:platform]
+        url = link["url"] || link[:url]
+        %(<li><a href="#{h url}" target="_blank" rel="noopener noreferrer nofollow">#{h label}</a>#{platform.present? ? " <span style=\"color:#6b7280;\">(#{h platform})</span>" : ""}</li>)
+      end.join
+      links_html = "<p style=\"font-size:13px;color:#4b5563;margin:4px 0 0;\"><strong>Links verificados:</strong></p><ul class=\"findings\">#{items}</ul>"
+    end
+
     summary_html = ""
     if search_summary.present?
       summary_html = "<p style=\"font-size:12px;color:#6b7280;margin-top:8px;\"><em>#{h search_summary}</em></p>"
@@ -472,6 +502,7 @@ class ReportRenderer
           <div class="layer-explanation">#{h ev_layer.explanation}</div>
           #{mismatch_html}
           #{findings_html}
+          #{links_html}
           #{summary_html}
         </div>
       </div>
@@ -567,6 +598,42 @@ class ReportRenderer
         <div class="analysis-full">#{h @email.verdict_explanation}</div>
       </div>
     HTML
+  end
+
+  def forwarding_notice_html
+    case forwarding_mode
+    when "inline_forward"
+      <<~HTML
+        <div class="section">
+          <div class="confidence-warning">
+            <strong>Envio inline detectado.</strong>
+            Conseguimos analisar o conteúdo, mas os cabeçalhos originais do remetente podem ter sido perdidos.
+            Para obter SPF, DKIM, DMARC, cadeia <code>Received</code> e anexos originais com mais fidelidade, reenvie usando <strong>Forward as attachment</strong> no Gmail.
+          </div>
+        </div>
+      HTML
+    when "attached_message"
+      <<~HTML
+        <div class="section">
+          <div class="layer" style="border-left: 4px solid #22c55e;">
+            <div class="layer-explanation">
+              Este e-mail foi encaminhado como anexo <code>.eml</code>. A análise pôde usar a mensagem original com mais fidelidade.
+            </div>
+          </div>
+        </div>
+      HTML
+    else
+      ""
+    end
+  end
+
+  def forwarding_notice_text
+    case forwarding_mode
+    when "inline_forward"
+      "OBSERVAÇÃO: este e-mail foi encaminhado inline. Conseguimos analisar o conteúdo, mas os cabeçalhos originais podem ter sido perdidos. Para uma análise mais completa, reenvie usando Forward as attachment no Gmail."
+    when "attached_message"
+      "OBSERVAÇÃO: este e-mail foi encaminhado como anexo .eml. A análise pôde usar a mensagem original com mais fidelidade."
+    end
   end
 
   def score_color(score)

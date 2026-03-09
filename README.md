@@ -4,6 +4,24 @@ A headless Rails 8 application that analyzes suspicious emails through 5 layers 
 
 Forward a suspicious email to a dedicated Gmail account. Frank FBI parses it, runs it through the analysis pipeline, and replies on the same thread with a verdict and breakdown.
 
+## Best Way To Forward
+
+If you use Gmail, prefer **Forward as attachment** instead of the normal inline forward.
+
+- **Forward as attachment** preserves the original message as an `.eml` file, including the original headers, auth results, MIME structure, and original attachments.
+- **Inline forward** preserves mostly the visible content and a human-readable summary. It often loses the original SMTP evidence needed for reliable SPF, DKIM, DMARC, and `Received` chain analysis.
+
+### Gmail instructions
+
+On desktop Gmail:
+
+1. In the inbox, select the suspicious email
+2. Click **More**
+3. Choose **Forward as attachment**
+4. Send that attached `.eml` to the Frank FBI mailbox
+
+If a user forwards inline, Frank FBI will still analyze the message content, but the report will warn that header/auth evidence is incomplete and recommend resubmitting as an attachment for a higher-fidelity scan.
+
 ## Important: Use a Dedicated Email Account
 
 **Do not use your personal Gmail account.** Frank FBI manages its inbox programmatically — it marks emails as read after processing and may move or delete messages. Using your personal email risks losing important correspondence.

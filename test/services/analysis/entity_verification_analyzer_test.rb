@@ -18,7 +18,12 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
       domain_verified: false,
       entity_mismatches: ["FBI domain mismatch", "No agent found"],
       key_findings: ["No FBI agent named this exists", "Domain is not FBI.gov"],
-      search_summary: "Searched for FBI agent and domain"
+      search_summary: "Searched for FBI agent and domain",
+      reference_links: [
+        { label: "LinkedIn Profile", url: "https://www.linkedin.com/in/test-agent/?trk=public", platform: "linkedin" },
+        { label: "Official Site", url: "https://asume.gov/about#team", platform: "site_oficial" },
+        { label: "Unsafe Redirect", url: "http://evil.example/redirect", platform: "other" }
+      ]
     }
 
     layer = run_with_stubbed_response(response_data.to_json)
@@ -29,6 +34,8 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
     assert_in_delta 0.9, layer.confidence, 0.01
     assert_equal 0.10, layer.weight
     assert layer.details["key_findings"].any?
+    assert_equal 1, layer.details["reference_links"].size
+    assert_equal "https://www.linkedin.com/in/test-agent/", layer.details["reference_links"].first["url"]
   end
 
   test "handles LLM failure with domain-only fallback" do
