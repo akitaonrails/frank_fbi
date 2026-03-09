@@ -59,6 +59,11 @@ class ApplicationMailbox < ActionMailbox::Base
       return false
     end
 
+    # Rate limit AFTER authentication — spoofed senders don't burn the real sender's quota
+    if AllowedSender.rate_limited?(sender)
+      return false
+    end
+
     true
   end
 

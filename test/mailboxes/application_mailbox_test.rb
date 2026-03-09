@@ -140,4 +140,53 @@ class ApplicationMailboxTest < ActionMailbox::TestCase
     )
     assert ApplicationMailbox.send(:admin_email?, inbound)
   end
+
+  # --- Rate limiting ---
+
+  test "rate-limited allowed sender is rejected" do
+    create(:allowed_sender, email_address: "trusted@example.com")
+    with_memory_cache do
+      (AllowedSender::MAX_SUBMISSIONS_PER_HOUR + 1).times do
+        AllowedSender.rate_limited?("trusted@example.com")
+      end
+
+      inbound = create_inbound_email_from_mail(
+        from: "trusted@example.com", to: "fbi@example.com", subject: "Check this", body: "content"
+      )
+      assert_not ApplicationMailbox.send(:allowed_sender?, inbound)
+    end
+  end
+
+  test "spoofed sender does not increment rate counter" do
+    create(:allowed_sender, email_address: "trusted@example.com")
+    with_memory_cache do
+      raw = <<~EML
+        From: trusted@example.com
+        To: fbi@example.com
+        Subject: Check this
+        Authentication-Results: mx.google.com; spf=fail; dkim=fail
+        Message-ID: <spoofed-rate@example.com>
+
+        body
+      EML
+      inbound = create_inbound_email_from_source(raw)
+      ApplicationMailbox.send(:allowed_sender?, inbound)
+
+      # Counter should not have been incremented — first real submission should still pass
+      inbound2 = create_inbound_email_from_mail(
+        from: "trusted@example.com", to: "fbi@example.com", subject: "Legit", body: "content"
+      )
+      assert ApplicationMailbox.send(:allowed_sender?, inbound2)
+    end
+  end
+
+  test "allowed sender under rate limit is accepted" do
+    create(:allowed_sender, email_address: "trusted@example.com")
+    with_memory_cache do
+      inbound = create_inbound_email_from_mail(
+        from: "trusted@example.com", to: "fbi@example.com", subject: "Check this", body: "content"
+      )
+      assert ApplicationMailbox.send(:allowed_sender?, inbound)
+    end
+  end
 end

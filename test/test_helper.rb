@@ -29,6 +29,15 @@ module ActiveSupport
       File.read(Rails.root.join("suspects", filename))
     end
 
+    # Swap cache to memory_store for rate limit tests, restore after block
+    def with_memory_cache
+      original_cache = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      yield
+    ensure
+      Rails.cache = original_cache
+    end
+
     # Helper to create a parsed email record from an .eml file
     def create_email_from_eml(filename, submitter: "test@example.com")
       raw = read_eml(filename)

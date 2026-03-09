@@ -272,6 +272,7 @@ Each layer's effective influence = weight * confidence. A layer with high weight
 - **Privacy protection** — if the verdict is "legitimate", the email body is encrypted in the database (no need to retain plaintext of confirmed safe emails)
 - **Report generation** — an HTML and plaintext report is rendered with the score, verdict, per-layer breakdown, key findings, and AI model verdicts
 - **Report delivery** — the report is emailed back to the submitter on the same email thread
+- **Community threat intel** (optional, beta) — submits IOCs from high-confidence fraudulent emails to community threat databases. See [Community Reporting](#community-threat-intelligence-reporting-beta) below.
 
 ---
 
@@ -291,6 +292,57 @@ A typical spam email claiming to be an ATM card compensation payment might score
 **Final score:** ~55/100 — **Suspicious (Likely Fraud)**
 
 Layers 1 and 3 are fully deterministic and always run, even without API keys. Layers 2, 4, 5, and 6 require external API keys but degrade gracefully with low confidence when unavailable.
+
+---
+
+## Community Threat Intelligence Reporting (Beta)
+
+After delivering a report, Frank FBI can optionally submit Indicators of Compromise (IOCs) from high-confidence fraudulent emails (score >= 85, verdict "fraudulent") to community threat intelligence databases:
+
+| Provider | What gets reported |
+|---|---|
+| **ThreatFox** (abuse.ch) | Malicious URLs, domains |
+| **AbuseIPDB** | Sender IPs |
+| **SpamCop** | Full email forwarding |
+
+**Do NOT enable community reporting until you have tested the system extensively and are confident in the accuracy of its verdicts.** This is a beta feature. False positives submitted to threat intel databases can harm innocent domain owners, get legitimate IPs blacklisted, and erode trust in shared threat feeds. Run Frank FBI for a while with community reporting disabled, review the reports it generates, and only enable it once you trust the pipeline's judgment on your real-world email traffic.
+
+To enable, set the corresponding API keys in `.env`:
+
+```bash
+# All optional — missing keys silently skip that provider
+THREATFOX_AUTH_KEY=your-key    # abuse.ch ThreatFox
+ABUSEIPDB_API_KEY=your-key     # AbuseIPDB
+SPAMCOP_SUBMISSION_ADDRESS=    # SpamCop forwarding address
+```
+
+With no keys set, community reporting is completely inert — no API calls, no errors.
+
+### Anti-Poisoning Safeguards
+
+The IOC extractor includes hardening against adversarial manipulation:
+
+- **Well-known domain filtering** — ~40 major domains (Microsoft, Apple, Google, Amazon, PayPal, government domains, etc.) are never reported as malicious IOCs, even if an attacker embeds them in a spam email to poison threat databases.
+- **Scan-verified clean domains** — domains where all scanned URLs came back clean from VirusTotal/URLhaus are excluded.
+- **Infrastructure IP filtering** — email provider MTA IPs (Google, Microsoft Exchange Online, SendGrid, Amazon SES) and cloud provider ranges are never reported to AbuseIPDB, preventing false reports from forged Received headers.
+- **Freemail domain filtering** — shared email infrastructure domains (gmail.com, yahoo.com, etc.) are excluded.
+
+Audit trail is stored in `CommunityReport` (one per email, idempotent).
+
+---
+
+## Rate Limiting
+
+Per-sender rate limiting prevents a compromised allowed sender from flooding the system. Controlled by `MAX_SUBMISSIONS_PER_HOUR` (default: 20, set to 0 to disable).
+
+- Rate check happens **after** SPF/DKIM authentication — a spoofed sender does not burn the real sender's quota
+- Rate-limited senders receive a specific "rate limit exceeded" notice instead of the generic rejection
+- Uses `Rails.cache` with 1-hour expiry — counter resets automatically
+
+```bash
+# In .env
+MAX_SUBMISSIONS_PER_HOUR=20  # default, 0 = disabled
+```
 
 ---
 
@@ -472,6 +524,7 @@ This starts 4 services:
 - **url_scan_results** — VirusTotal/URLhaus result cache with TTL
 - **analysis_reports** — Rendered report HTML/text and delivery status
 - **allowed_senders** — Whitelisted submitter emails (encrypted)
+- **community_reports** — Audit trail for threat intel submissions (one per email)
 
 ### Job Pipeline (Fraud Analysis)
 
@@ -490,7 +543,7 @@ EmailParsingJob
     ├─ LlmConsultationJob (GPT-4o)  ├ parallel
     └─ LlmConsultationJob (Grok)    ┘
                                       ↓
-  → ScoreAggregationJob → ReportGenerationJob → ReportDeliveryJob
+  → ScoreAggregationJob → ReportGenerationJob → ReportDeliveryJob → CommunityReportingJob (best-effort)
 ```
 
 ### Key Directories
@@ -515,6 +568,8 @@ suspects/              — ~30 sample .eml files for testing
 - All API keys in environment variables only
 - HTML body sanitized before storage
 - SPF/DKIM verification at ingress — prevents spoofed submissions
+- Per-sender rate limiting — prevents flooding from compromised accounts
+- IOC extraction hardened against domain poisoning and IP forgery attacks
 - WebMock blocks all external HTTP in tests
 
 ## License

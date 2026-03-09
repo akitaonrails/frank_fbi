@@ -54,6 +54,41 @@ class AllowedSenderTest < ActiveSupport::TestCase
     assert_not sender.valid?
   end
 
+  # --- Rate limiting ---
+
+  test ".rate_limited? returns false on first submission" do
+    with_memory_cache do
+      assert_not AllowedSender.rate_limited?("user@example.com")
+    end
+  end
+
+  test ".rate_limited? returns true after exceeding limit" do
+    with_memory_cache do
+      AllowedSender::MAX_SUBMISSIONS_PER_HOUR.times do
+        AllowedSender.rate_limited?("flood@example.com")
+      end
+      assert AllowedSender.rate_limited?("flood@example.com")
+    end
+  end
+
+  test ".over_rate_limit? reads without incrementing" do
+    with_memory_cache do
+      assert_not AllowedSender.over_rate_limit?("user@example.com")
+
+      # Push over the limit
+      (AllowedSender::MAX_SUBMISSIONS_PER_HOUR + 1).times do
+        AllowedSender.rate_limited?("user@example.com")
+      end
+
+      assert AllowedSender.over_rate_limit?("user@example.com")
+    end
+  end
+
+  test ".rate_limited? returns false with null_store cache" do
+    # Default test cache is null_store — increment returns nil
+    assert_not AllowedSender.rate_limited?("user@example.com")
+  end
+
   test "encrypts email_address" do
     sender = create(:allowed_sender, email_address: "secret@example.com")
     raw_value = AllowedSender.connection.select_value(

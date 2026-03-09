@@ -125,4 +125,130 @@ class CommunityReporting::IocExtractorTest < ActiveSupport::TestCase
 
     assert_equal 20, iocs[:urls].size
   end
+
+  # --- Domain poisoning defense ---
+
+  test "filters out well-known domains (anti-poisoning)" do
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["microsoft.com", "evil.com", "apple.com", "google.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["evil.com"], iocs[:domains]
+  end
+
+  test "filters well-known domains case-insensitively" do
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["Microsoft.COM", "evil.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["evil.com"], iocs[:domains]
+  end
+
+  test "filters domain when all its scanned URLs are clean" do
+    UrlScanResult.create!(
+      url: "https://legit-business.com/about",
+      source: "virustotal",
+      malicious: false,
+      detection_count: 0,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+    UrlScanResult.create!(
+      url: "https://legit-business.com/contact",
+      source: "urlhaus",
+      malicious: false,
+      detection_count: 0,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["legit-business.com", "evil.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["evil.com"], iocs[:domains]
+  end
+
+  test "keeps domain when some scanned URLs are malicious" do
+    UrlScanResult.create!(
+      url: "https://suspicious.com/clean",
+      source: "virustotal",
+      malicious: false,
+      detection_count: 0,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+    UrlScanResult.create!(
+      url: "https://suspicious.com/malware",
+      source: "virustotal",
+      malicious: true,
+      detection_count: 3,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["suspicious.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_includes iocs[:domains], "suspicious.com"
+  end
+
+  test "keeps domain when no scan results exist" do
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["never-scanned.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_includes iocs[:domains], "never-scanned.com"
+  end
+
+  # --- IP forgery defense ---
+
+  test "filters Google MTA IPs" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "64.233.160.1" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_empty iocs[:ips]
+  end
+
+  test "filters Microsoft Exchange Online IPs" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "40.107.22.1" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_empty iocs[:ips]
+  end
+
+  test "allows real attacker IPs through" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "185.220.101.5" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["185.220.101.5"], iocs[:ips]
+  end
 end

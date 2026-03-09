@@ -146,6 +146,7 @@ All secrets in `.env` (see `.env.example`):
 - `THREATFOX_AUTH_KEY` — (optional) abuse.ch ThreatFox threat intel submission
 - `ABUSEIPDB_API_KEY` — (optional) AbuseIPDB IP reporting
 - `SPAMCOP_SUBMISSION_ADDRESS` — (optional) SpamCop email forwarding
+- `MAX_SUBMISSIONS_PER_HOUR` — per-sender rate limit (default 20, 0 = disabled)
 - `ADMIN_EMAIL` — admin email for system management via email commands
 
 ### Access Control
@@ -163,3 +164,5 @@ All secrets in `.env` (see `.env.example`):
 - HTML body sanitized before storage
 - No credentials in code — all via ENV
 - WebMock blocks all external HTTP in tests
+- **IOC extraction hardening** — well-known domains (~40) and infrastructure IP prefixes (Google MTA, Microsoft Exchange Online, SendGrid, SES) are excluded from community reports to prevent threat intel poisoning. Domains with all-clean scan results are also excluded.
+- **Per-sender rate limiting** — `MAX_SUBMISSIONS_PER_HOUR` (default 20) limits submissions per allowed sender using Rails.cache. Rate check occurs AFTER SPF/DKIM authentication so spoofed senders don't burn real quota. Rate-limited senders get a specific notice instead of the generic rejection.

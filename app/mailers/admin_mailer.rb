@@ -6,6 +6,22 @@ class AdminMailer < ApplicationMailer
     end
   end
 
+  def rate_limit_notice(to_email, original_subject)
+    @original_subject = original_subject
+
+    mail(
+      to: to_email,
+      subject: "Re: #{original_subject} — Limite de Envios Excedido"
+    ) do |format|
+      format.text do
+        render plain: "Você excedeu o limite de envios por hora. Aguarde um momento e tente novamente mais tarde."
+      end
+      format.html do
+        render html: "<p>Você excedeu o limite de envios por hora. Aguarde um momento e tente novamente mais tarde.</p>".html_safe
+      end
+    end
+  end
+
   def rejection_notice(to_email, original_subject)
     @original_subject = original_subject
 
