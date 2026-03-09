@@ -127,14 +127,26 @@ class MailFetcher
   end
 
   def fetch_and_relay(imap)
+    # Check INBOX (already selected)
+    fetch_unseen(imap, "INBOX")
+
+    # Also check Spam — Gmail may move forwarded spam there
+    fetch_unseen(imap, "[Gmail]/Spam")
+
+    # Return to INBOX for IDLE
+    imap.select("INBOX")
+  end
+
+  def fetch_unseen(imap, folder)
+    imap.select(folder)
     message_ids = imap.search(["UNSEEN"])
 
     if message_ids.empty?
-      Rails.logger.debug("MailFetcher: No new messages")
+      Rails.logger.debug("MailFetcher: No new messages in #{folder}")
       return
     end
 
-    Rails.logger.info("MailFetcher: Found #{message_ids.size} new message(s)")
+    Rails.logger.info("MailFetcher: Found #{message_ids.size} new message(s) in #{folder}")
 
     message_ids.each do |msg_id|
       break unless @running

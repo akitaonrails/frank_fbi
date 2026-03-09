@@ -21,7 +21,11 @@ module Analysis
       /\b(expires?\s+(today|soon|in\s+\d+)|limited\s+time|last\s+chance)\b/i,
       /\b(suspend|deactivat|terminat|block|restrict)\w*\s+(your|the)\s+(account|access)/i,
       /\b(verify|confirm|validate)\s+your\s+(identity|account|information|details)/i,
-      /\b(within\s+\d+\s+hours?|within\s+24|48\s+hours?)\b/i
+      /\b(within\s+\d+\s+hours?|within\s+24|48\s+hours?)\b/i,
+      /\b(immediate|urgent)\s+action\s+(required|needed)\b/i,
+      /\bmandatory\s+(update|verification|action|upgrade|security)\b/i,
+      /\bdeadline\s*:\s*\w+\s+\d+/i,
+      /\bmay\s+result\s+in\s+(restricted|limited|loss|suspend)/i
     ].freeze
 
     FINANCIAL_PATTERNS = [
@@ -55,7 +59,10 @@ module Analysis
       /\byour\s+account\s+(has\s+been|will\s+be|is)\s+(compromised|suspended|locked)/i,
       /\bunusual\s+(activity|sign.?in|login)\s+(detected|found|noticed)/i,
       /\bsecure\s+your\s+account\b/i,
-      /\bfailure\s+to\s+(comply|respond|verify)\b/i
+      /\bfailure\s+to\s+(comply|respond|verify)\b/i,
+      /\brestricted\s+access\s+to\s+your\b/i,
+      /\bcompromise\s+your\s+(access|funds?|account|assets?|data|security)\b/i,
+      /\bexposed\s+to\s+(risks?|threats?|vulnerabilit)/i
     ].freeze
 
     # --- PT-BR patterns ---

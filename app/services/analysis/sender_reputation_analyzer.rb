@@ -64,7 +64,16 @@ module Analysis
 
     def check_domain_age(domain)
       whois = WhoisLookupService.new(domain).lookup
-      return unless whois
+
+      unless whois
+        # Don't penalize if WHOIS API key is simply not configured
+        if ENV.fetch("WHOISXML_API_KEY", "").present?
+          @findings << "Consulta WHOIS falhou para #{domain} — não foi possível verificar a idade do domínio"
+          @score += 5
+        end
+        @details[:domain_age_days] = nil
+        return
+      end
 
       age = whois[:domain_age_days] || whois["domain_age_days"]
       @details[:domain_age_days] = age
@@ -80,6 +89,9 @@ module Analysis
         elsif age < 365
           @score += 5
         end
+      else
+        @findings << "Idade do domínio #{domain} desconhecida — WHOIS não retornou data de registro"
+        @score += 5
       end
     end
 
