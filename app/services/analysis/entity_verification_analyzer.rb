@@ -118,6 +118,7 @@ module Analysis
         checker = DnsBlacklistChecker.new(domain, ip: ip)
         results = checker.check
         listed = results.select { |_, v| v[:listed] }
+        errored = results.select { |_, v| v[:error] }
 
         if listed.any?
           names = listed.values.map { |v| v[:blacklist_name] }
@@ -127,6 +128,11 @@ module Analysis
           info[:verified] = false
         else
           info[:findings] << "Domínio #{domain} não consta em listas negras de DNS"
+        end
+
+        if errored.any? && listed.empty?
+          names = errored.values.map { |v| v[:blacklist_name] }
+          info[:findings] << "Consulta bloqueada/rate-limited em #{names.join(', ')} (não é evidência de listagem)"
         end
       rescue => e
         Rails.logger.warn("EntityVerificationAnalyzer DNS blacklist failed: #{e.message}")

@@ -33,13 +33,22 @@ module Analysis
 
           #{format_layer_results}
 
+          ## REGRAS OBRIGATÓRIAS
+          - Cada item em key_findings DEVE ser sustentado por dados das camadas acima. NUNCA invente dados.
+          - Se sender_reputation mostra 0 hits em listas negras, NUNCA afirme que o domínio está em blacklists.
+          - Se external_api mostra 0 URLs maliciosas, NUNCA afirme que URLs foram detectadas como maliciosas.
+          - Se external_api mostra 0 anexos maliciosos, NUNCA afirme que anexos foram detectados como maliciosos.
+          - Se estiver incerto, diga "não confirmado" — NUNCA fabrique números, contagens ou nomes de blacklists.
+          - Cada item em key_findings deve começar com [Nome da Camada] indicando a fonte dos dados.
+          - O campo reasoning deve citar APENAS fatos presentes nos resultados acima.
+
           ## Sua Tarefa
           Com base em TODAS as informações acima, forneça sua análise de fraude como um objeto JSON com exatamente estes campos:
           - **score**: inteiro 0-100 (0 = certamente legítimo, 100 = certamente fraudulento)
           - **verdict**: um de "legitimate", "suspicious_likely_ok", "suspicious_likely_fraud", "fraudulent"
           - **confidence**: float 0.0-1.0 (quão confiante você está no seu veredito)
           - **reasoning**: uma conclusão curta e direta justificando seu veredito (1-3 frases, sem enrolação)
-          - **key_findings**: array de strings, as 3-5 descobertas mais importantes que sustentam seu veredito
+          - **key_findings**: array de strings, as 3-5 descobertas mais importantes que sustentam seu veredito. CADA item deve começar com "[Nome da Camada]" indicando a fonte dos dados. NÃO inclua descobertas sem evidência nas camadas.
           - **content_patterns**: objeto com contagens de padrões detectados no corpo do e-mail:
             - **urgency**: inteiro >= 0, frases de urgência/pressão (ex: "aja agora", "prazo", "suspensão de conta")
             - **financial_fraud**: inteiro >= 0, indicadores de fraude financeira (ex: loteria, herança, transferência bancária, criptomoeda)
@@ -83,11 +92,70 @@ module Analysis
 
       def format_layer_results
         @layer_results.map do |layer|
+          details_section = format_layer_details(layer)
           <<~LAYER
             ### #{layer.layer_name.titleize} (Pontuação: #{layer.score}/100, Confiança: #{layer.confidence})
             #{layer.explanation}
+            #{details_section}
           LAYER
         end.join("\n")
+      end
+
+      def format_layer_details(layer)
+        return "" unless layer.details.is_a?(Hash)
+
+        case layer.layer_name
+        when "sender_reputation"
+          format_sender_reputation_details(layer.details)
+        when "external_api"
+          format_external_api_details(layer.details)
+        when "header_auth"
+          format_header_auth_details(layer.details)
+        else
+          ""
+        end
+      end
+
+      def format_sender_reputation_details(details)
+        lines = ["**Dados estruturados:**"]
+        lines << "- Hits em listas negras (blacklist_hits): #{details['blacklist_hits'] || details[:blacklist_hits] || 0}"
+
+        age = details["domain_age_days"] || details[:domain_age_days]
+        lines << "- Idade do domínio: #{age ? "#{age} dias" : 'desconhecida'}"
+
+        freemail = details["freemail"] || details[:freemail]
+        lines << "- Freemail: #{freemail ? 'sim' : 'não'}" unless freemail.nil?
+
+        lines.join("\n")
+      end
+
+      def format_external_api_details(details)
+        lines = ["**Dados estruturados:**"]
+        lines << "- URLs maliciosas VirusTotal (virustotal_malicious_count): #{details['virustotal_malicious_count'] || details[:virustotal_malicious_count] || 0}"
+        lines << "- URLs maliciosas URLhaus (urlhaus_malicious_count): #{details['urlhaus_malicious_count'] || details[:urlhaus_malicious_count] || 0}"
+        lines << "- Anexos maliciosos (attachments_malicious_count): #{details['attachments_malicious_count'] || details[:attachments_malicious_count] || 0}"
+
+        urls_scanned = details["urls_scanned"] || details[:urls_scanned] || 0
+        lines << "- URLs verificadas: #{urls_scanned}"
+
+        lines.join("\n")
+      end
+
+      def format_header_auth_details(details)
+        lines = ["**Dados estruturados:**"]
+
+        spf = details["spf_result"] || details[:spf_result]
+        dkim = details["dkim_result"] || details[:dkim_result]
+        dmarc = details["dmarc_result"] || details[:dmarc_result]
+
+        lines << "- SPF: #{spf || 'não verificado'}"
+        lines << "- DKIM: #{dkim || 'não verificado'}"
+        lines << "- DMARC: #{dmarc || 'não verificado'}"
+
+        reply_to_mismatch = details["reply_to_mismatch"] || details[:reply_to_mismatch]
+        lines << "- Reply-To divergente: #{reply_to_mismatch ? 'sim' : 'não'}" unless reply_to_mismatch.nil?
+
+        lines.join("\n")
       end
     end
   end

@@ -10,6 +10,7 @@ class DnsBlacklistChecker
 
   IP_BLACKLISTS = %w[zen.spamhaus.org b.barracudacentral.org].freeze
   DOMAIN_BLACKLISTS = %w[dbl.spamhaus.org multi.uribl.com].freeze
+
   SPAMHAUS_ZEN_CODES = {
     "127.0.0.2" => "sbl",
     "127.0.0.3" => "css",
@@ -19,6 +20,7 @@ class DnsBlacklistChecker
     "127.0.0.11" => "pbl",
     "127.0.0.30" => "bcl"
   }.freeze
+
   SPAMHAUS_DBL_CODES = {
     "127.0.1.2" => "low_reputation",
     "127.0.1.4" => "phishing",
@@ -30,6 +32,18 @@ class DnsBlacklistChecker
     "127.0.1.105" => "abused_malware",
     "127.0.1.106" => "abused_botnet_cc"
   }.freeze
+
+  # Spamhaus returns these codes when your query is rate-limited or blocked
+  SPAMHAUS_ERROR_RANGE_START = "127.255.255.252"
+  SPAMHAUS_ERROR_RANGE_END = "127.255.255.255"
+
+  # URIBL valid listing bitmask codes
+  URIBL_LISTING_CODES = %w[127.0.0.2 127.0.0.4 127.0.0.8].freeze
+  # URIBL returns 127.0.0.1 when query is refused (not paying customer, rate-limited)
+  URIBL_REFUSED_CODE = "127.0.0.1"
+
+  # Barracuda valid listing code
+  BARRACUDA_LISTING_CODE = "127.0.0.2"
 
   def initialize(domain, ip: nil)
     @domain = domain
@@ -79,21 +93,98 @@ class DnsBlacklistChecker
     resolver.timeouts = 3
     begin
       addresses = resolver.getaddresses(query)
-      listed = addresses.any?
       response_codes = addresses.map(&:to_s)
+      listing = determine_listing(blacklist, response_codes)
+
       {
-        listed: listed,
+        listed: listing[:listed],
         blacklist_name: BLACKLISTS[blacklist],
         response: response_codes,
         categories: spamhaus_categories(blacklist, response_codes),
-        authoritative_malicious: authoritative_malicious?(blacklist, response_codes),
-        policy_listing: policy_listing?(blacklist, response_codes)
-      }
+        authoritative_malicious: listing[:listed] ? authoritative_malicious?(blacklist, response_codes) : false,
+        policy_listing: listing[:listed] ? policy_listing?(blacklist, response_codes) : false,
+        error: listing[:error]
+      }.compact
     rescue Resolv::ResolvError
       { listed: false, blacklist_name: BLACKLISTS[blacklist] }
     ensure
       resolver.close
     end
+  end
+
+  def determine_listing(blacklist, response_codes)
+    return { listed: false } if response_codes.empty?
+
+    case blacklist
+    when "zen.spamhaus.org"
+      determine_spamhaus_listing(response_codes, SPAMHAUS_ZEN_CODES)
+    when "dbl.spamhaus.org"
+      determine_spamhaus_listing(response_codes, SPAMHAUS_DBL_CODES)
+    when "multi.uribl.com"
+      determine_uribl_listing(response_codes)
+    when "b.barracudacentral.org"
+      determine_barracuda_listing(response_codes)
+    else
+      # Unknown blacklist — don't assume listing from unknown codes
+      { listed: false, error: "unknown_blacklist" }
+    end
+  end
+
+  def determine_spamhaus_listing(response_codes, known_codes)
+    valid_codes = []
+    error_codes = []
+
+    response_codes.each do |code|
+      if spamhaus_error_code?(code)
+        error_codes << code
+      elsif known_codes.key?(code)
+        valid_codes << code
+      else
+        # Unknown code in Spamhaus range — treat as error, not a listing
+        error_codes << code
+      end
+    end
+
+    if valid_codes.any?
+      { listed: true }
+    elsif error_codes.any?
+      { listed: false, error: "rate_limited_or_blocked" }
+    else
+      { listed: false }
+    end
+  end
+
+  def determine_uribl_listing(response_codes)
+    if response_codes.include?(URIBL_REFUSED_CODE) && (response_codes - [URIBL_REFUSED_CODE]).empty?
+      return { listed: false, error: "query_refused" }
+    end
+
+    valid_codes = response_codes & URIBL_LISTING_CODES
+    if valid_codes.any?
+      { listed: true }
+    elsif response_codes.any?
+      { listed: false, error: "unknown_response_codes" }
+    else
+      { listed: false }
+    end
+  end
+
+  def determine_barracuda_listing(response_codes)
+    if response_codes.include?(BARRACUDA_LISTING_CODE)
+      { listed: true }
+    elsif response_codes.any?
+      { listed: false, error: "unknown_response_codes" }
+    else
+      { listed: false }
+    end
+  end
+
+  def spamhaus_error_code?(code)
+    octets = code.split(".").map(&:to_i)
+    return false unless octets.size == 4
+
+    # 127.255.255.252 through 127.255.255.255
+    octets[0] == 127 && octets[1] == 255 && octets[2] == 255 && octets[3] >= 252
   end
 
   def spamhaus_categories(blacklist, response_codes)

@@ -90,6 +90,7 @@ module Analysis
       results = checker.check
 
       listed = results.select { |_, v| v[:listed] }
+      errored = results.select { |_, v| v[:error] }
       @details[:blacklist_results] = results
       @details[:blacklist_hits] = listed.size
 
@@ -97,6 +98,11 @@ module Analysis
         names = listed.values.map { |v| v[:blacklist_name] }
         @findings << "Listado em #{listed.size} lista(s) negra(s): #{names.join(', ')}"
         @score += [listed.size * 15, 40].min
+      end
+
+      if errored.any? && listed.empty?
+        names = errored.values.map { |v| v[:blacklist_name] }
+        @findings << "Consulta bloqueada/rate-limited em #{names.join(', ')} (não é evidência de listagem)"
       end
     end
 

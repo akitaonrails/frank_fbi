@@ -7,8 +7,9 @@ module Analysis
       "legitimate" => 1
     }.freeze
 
-    def initialize(verdicts)
+    def initialize(verdicts, email: nil)
       @verdicts = verdicts
+      @email = email
     end
 
     def build
@@ -88,8 +89,15 @@ module Analysis
 
     def aggregate_key_findings
       all_findings = @verdicts.flat_map { |v| v.key_findings || [] }
-      # Deduplicate similar findings and take top ones
-      all_findings.uniq.first(7)
+      findings = all_findings.uniq.first(7)
+
+      # Defense-in-depth: validate aggregated findings against actual layer data
+      if @email
+        validator = LlmFindingValidator.new(@email)
+        findings = validator.validate_findings(findings)
+      end
+
+      findings
     end
 
     def aggregate_content_patterns

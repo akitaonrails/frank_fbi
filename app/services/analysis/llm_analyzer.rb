@@ -37,7 +37,7 @@ module Analysis
         return if layer.status == "completed"
 
         if verdicts.size >= 2
-          consensus = LlmConsensusBuilder.new(verdicts.reload).build
+          consensus = LlmConsensusBuilder.new(verdicts.reload, email: email).build
 
           layer.update!(
             score: consensus[:score],

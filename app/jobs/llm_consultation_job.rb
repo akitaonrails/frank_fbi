@@ -17,6 +17,10 @@ class LlmConsultationJob < ApplicationJob
 
     parsed = parse_llm_response(response.content)
 
+    # Validate key_findings against actual layer data to prevent hallucinations
+    validator = Analysis::LlmFindingValidator.new(email)
+    parsed[:key_findings] = validator.validate_findings(parsed[:key_findings])
+
     verdict = email.llm_verdicts.find_or_initialize_by(provider: provider)
     verdict.update!(
       model_id: model_id,
