@@ -41,9 +41,7 @@ class LlmConsultationJob < ApplicationJob
   private
 
   def parse_llm_response(content)
-    # Extract JSON from response (might be wrapped in markdown code blocks)
-    json_str = content.gsub(/```json\s*/i, "").gsub(/```\s*/, "").strip
-    data = JSON.parse(json_str)
+    data = extract_json(content)
 
     {
       score: data["score"]&.to_i&.clamp(0, 100) || 50,
@@ -61,6 +59,25 @@ class LlmConsultationJob < ApplicationJob
       reasoning: "Failed to parse LLM response. Raw: #{content.to_s[0..500]}",
       key_findings: ["LLM response parsing failed"]
     }
+  end
+
+  def extract_json(text)
+    text = text.to_s
+
+    # Try to find JSON inside ```json ... ``` blocks first
+    if text =~ /```json\s*(.*?)```/mi
+      return JSON.parse($1.strip)
+    end
+
+    # Find the first { and match to the last }
+    start_idx = text.index("{")
+    end_idx = text.rindex("}")
+    if start_idx && end_idx && end_idx > start_idx
+      return JSON.parse(text[start_idx..end_idx])
+    end
+
+    # Last resort: try parsing the whole thing
+    JSON.parse(text.strip)
   end
 
   def validate_verdict(verdict)

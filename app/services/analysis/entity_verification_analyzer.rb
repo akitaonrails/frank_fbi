@@ -68,8 +68,7 @@ module Analysis
     end
 
     def parse_response(content)
-      json_str = content.to_s.gsub(/```json\s*/i, "").gsub(/```\s*/, "").strip
-      data = JSON.parse(json_str)
+      data = extract_json(content.to_s)
 
       {
         score: data["score"]&.to_i&.clamp(0, 100) || 50,
@@ -93,6 +92,23 @@ module Analysis
         key_findings: ["Falha na interpretação da resposta"],
         search_summary: "Parse error: #{content.to_s[0..200]}"
       }
+    end
+
+    def extract_json(text)
+      # Try to find JSON inside ```json ... ``` blocks first
+      if text =~ /```json\s*(.*?)```/mi
+        return JSON.parse($1.strip)
+      end
+
+      # Find the first { and match to the last }
+      start_idx = text.index("{")
+      end_idx = text.rindex("}")
+      if start_idx && end_idx && end_idx > start_idx
+        return JSON.parse(text[start_idx..end_idx])
+      end
+
+      # Last resort: try parsing the whole thing
+      JSON.parse(text.strip)
     end
 
     def handle_failure(error)
