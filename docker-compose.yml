@@ -6,8 +6,7 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - frank_fbi_db:/rails/db
-      - frank_fbi_storage:/rails/storage
+      - ./tmp/docker_storage:/rails/storage
 
   app:
     build: .
@@ -17,9 +16,8 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - frank_fbi_db:/rails/db
-      - frank_fbi_storage:/rails/storage
-      - frank_fbi_emails:/rails/emails
+      - ./tmp/docker_storage:/rails/storage
+      - ./tmp/docker_emails:/rails/emails
     depends_on:
       setup:
         condition: service_completed_successfully
@@ -38,8 +36,7 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - frank_fbi_db:/rails/db
-      - frank_fbi_storage:/rails/storage
+      - ./tmp/docker_storage:/rails/storage
     depends_on:
       setup:
         condition: service_completed_successfully
@@ -53,14 +50,8 @@ services:
       - RAILS_ENV=production
       - APP_HOST=http://app:3000
     volumes:
-      - frank_fbi_db:/rails/db
-      - frank_fbi_storage:/rails/storage
+      - ./tmp/docker_storage:/rails/storage
     depends_on:
       app:
         condition: service_healthy
     restart: unless-stopped
-
-volumes:
-  frank_fbi_db:
-  frank_fbi_storage:
-  frank_fbi_emails:

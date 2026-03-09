@@ -6,7 +6,6 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/db:/rails/db
       - /home/akitaonrails/frank_fbi/storage:/rails/storage
 
   app:
@@ -17,7 +16,6 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/db:/rails/db
       - /home/akitaonrails/frank_fbi/storage:/rails/storage
       - /home/akitaonrails/frank_fbi/emails:/rails/emails
     depends_on:
@@ -38,7 +36,6 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/db:/rails/db
       - /home/akitaonrails/frank_fbi/storage:/rails/storage
     depends_on:
       setup:
@@ -53,7 +50,6 @@ services:
       - RAILS_ENV=production
       - APP_HOST=http://app:3000
     volumes:
-      - /home/akitaonrails/frank_fbi/db:/rails/db
       - /home/akitaonrails/frank_fbi/storage:/rails/storage
     depends_on:
       app:
