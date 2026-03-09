@@ -45,7 +45,6 @@ class ScreenshotCapturer
 
     begin
       browser = create_browser
-      browser.command("Page.addScriptToEvaluateOnNewDocument", source: STEALTH_JS)
 
       @urls.each do |url|
         break if Time.current >= deadline
@@ -99,6 +98,7 @@ class ScreenshotCapturer
 
   def capture_url(browser, url, timeout)
     page = browser.create_page
+    inject_stealth(page)
     page.go_to(url)
 
     # Wait for network idle or timeout
@@ -118,6 +118,13 @@ class ScreenshotCapturer
     nil
   ensure
     page&.close
+  end
+
+  def inject_stealth(page)
+    page.command("Page.addScriptToEvaluateOnNewDocument", source: STEALTH_JS)
+  rescue Ferrum::Error
+    # CDP command unavailable on this Chrome version — inject post-navigation instead
+    nil
   end
 
   def resize_to_jpeg(png_data)
