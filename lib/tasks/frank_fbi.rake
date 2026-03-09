@@ -137,7 +137,7 @@ namespace :frank_fbi do
       puts "  Sender reputation skipped (external): #{e.message}"
       email.analysis_layers.find_or_create_by!(layer_name: "sender_reputation") do |l|
         l.score = 50
-        l.weight = 0.15
+        l.weight = AnalysisLayer.default_weight("sender_reputation")
         l.confidence = 0.3
         l.explanation = "Skipped in smoke test"
         l.status = "completed"
@@ -147,7 +147,7 @@ namespace :frank_fbi do
     # Skip external API, entity verification, and LLM for smoke test — create stub layers
     email.analysis_layers.find_or_create_by!(layer_name: "external_api") do |l|
       l.score = 0
-      l.weight = 0.15
+      l.weight = AnalysisLayer.default_weight("external_api")
       l.confidence = 0.3
       l.explanation = "Skipped in smoke test"
       l.status = "completed"
@@ -155,7 +155,7 @@ namespace :frank_fbi do
 
     email.analysis_layers.find_or_create_by!(layer_name: "entity_verification") do |l|
       l.score = 60
-      l.weight = 0.15
+      l.weight = AnalysisLayer.default_weight("entity_verification")
       l.confidence = 0.4
       l.explanation = "Stubbed entity verification for smoke test"
       l.status = "completed"
@@ -163,7 +163,7 @@ namespace :frank_fbi do
 
     email.analysis_layers.find_or_create_by!(layer_name: "llm_analysis") do |l|
       l.score = 85
-      l.weight = 0.20
+      l.weight = AnalysisLayer.default_weight("llm_analysis")
       l.confidence = 0.5
       l.explanation = "Stubbed LLM layer for smoke test"
       l.status = "completed"

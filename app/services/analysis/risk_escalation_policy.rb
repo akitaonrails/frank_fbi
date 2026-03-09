@@ -11,6 +11,7 @@ module Analysis
       collect_external_api_escalations(escalations)
       collect_content_escalations(escalations)
       collect_combination_escalations(escalations)
+      collect_llm_escalations(escalations)
 
       {
         floor: escalations.map { |entry| entry[:floor] }.max.to_i,
@@ -129,6 +130,24 @@ module Analysis
         escalations << {
           floor: 65,
           reason: "Reply-To divergente combinado com conteúdo fortemente suspeito."
+        }
+      end
+    end
+
+    def collect_llm_escalations(escalations)
+      layer = @layers["llm_analysis"]
+      return unless layer
+      return unless layer.confidence.to_f >= 0.5
+
+      if layer.score.to_i >= 70
+        escalations << {
+          floor: 60,
+          reason: "Análise por IA identificou forte indicação de fraude (score #{layer.score}, confiança #{(layer.confidence * 100).round}%)."
+        }
+      elsif layer.score.to_i >= 55
+        escalations << {
+          floor: 45,
+          reason: "Análise por IA identificou indicadores suspeitos (score #{layer.score}, confiança #{(layer.confidence * 100).round}%)."
         }
       end
     end

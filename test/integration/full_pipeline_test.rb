@@ -25,7 +25,9 @@ class FullPipelineTest < ActiveSupport::TestCase
     header_layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
     content_layer = Analysis::ContentAnalyzer.new(email).analyze
 
-    combined = (header_layer.score * 0.15 + content_layer.score * 0.20) / 0.35
+    hw = AnalysisLayer.default_weight("header_auth")
+    cw = AnalysisLayer.default_weight("content_analysis")
+    combined = (header_layer.score * hw + content_layer.score * cw) / (hw + cw)
     assert combined < 50, "Legitimate email combined score should be < 50, got #{combined}"
   end
 
@@ -38,7 +40,7 @@ class FullPipelineTest < ActiveSupport::TestCase
     # Stub remaining layers
     email.analysis_layers.find_or_create_by!(layer_name: "sender_reputation") do |l|
       l.score = 40
-      l.weight = 0.15
+      l.weight = AnalysisLayer.default_weight("sender_reputation")
       l.confidence = 0.6
       l.explanation = "Domain has no prior history"
       l.status = "completed"
@@ -46,7 +48,7 @@ class FullPipelineTest < ActiveSupport::TestCase
 
     email.analysis_layers.find_or_create_by!(layer_name: "external_api") do |l|
       l.score = 0
-      l.weight = 0.15
+      l.weight = AnalysisLayer.default_weight("external_api")
       l.confidence = 0.3
       l.explanation = "No URLs to scan"
       l.status = "completed"
@@ -54,7 +56,7 @@ class FullPipelineTest < ActiveSupport::TestCase
 
     email.analysis_layers.find_or_create_by!(layer_name: "entity_verification") do |l|
       l.score = 80
-      l.weight = 0.15
+      l.weight = AnalysisLayer.default_weight("entity_verification")
       l.confidence = 0.7
       l.explanation = "Sender claims FBI affiliation but no verifiable presence"
       l.status = "completed"
@@ -62,7 +64,7 @@ class FullPipelineTest < ActiveSupport::TestCase
 
     email.analysis_layers.find_or_create_by!(layer_name: "llm_analysis") do |l|
       l.score = 90
-      l.weight = 0.20
+      l.weight = AnalysisLayer.default_weight("llm_analysis")
       l.confidence = 0.85
       l.explanation = "LLMs unanimously identify this as fraud"
       l.status = "completed"

@@ -24,25 +24,11 @@ class Email < ApplicationRecord
   scope :failed, -> { where(status: "failed") }
   scope :fraudulent, -> { where(verdict: "fraudulent") }
 
-  after_update :encrypt_body_if_legitimate, if: :verdict_changed_to_legitimate?
-
-  def verdict_changed_to_legitimate?
-    saved_change_to_verdict? && verdict == "legitimate"
-  end
-
   def fully_analyzed?
     analysis_layers.where(status: "completed").count == AnalysisLayer::LAYER_NAMES.size
   end
 
   def layer_completed?(layer_name)
     analysis_layers.exists?(layer_name: layer_name, status: "completed")
-  end
-
-  private
-
-  def encrypt_body_if_legitimate
-    # Re-save body fields so they get encrypted
-    # Active Record Encryption will handle this via the encrypts declaration
-    # that we conditionally apply
   end
 end

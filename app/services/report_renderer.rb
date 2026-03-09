@@ -62,11 +62,19 @@ class ReportRenderer
           .badge-fail { background: #fef2f2; color: #991b1b; }
           .badge-unknown { background: #f3f4f6; color: #6b7280; }
           .analysis-full { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #374151; background: #f9fafb; border-radius: 6px; padding: 12px; }
+          .critical-alert { background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
+          .critical-alert strong { color: #dc2626; }
+          .confidence-warning { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+          .confidence-warning strong { color: #d97706; }
           .footer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
         </style>
       </head>
       <body>
         #{banner_html}
+
+        #{critical_alerts_html}
+
+        #{confidence_warning_html}
 
         <div class="section">
           <h3>E-mail Analisado</h3>
@@ -104,6 +112,22 @@ class ReportRenderer
     lines << ""
     lines << "VEREDITO: #{VERDICT_LABELS[@email.verdict] || @email.verdict&.upcase}"
     lines << "PONTUAÇÃO: #{@email.final_score}/100"
+
+    # Critical alerts right after score
+    alerts = collect_critical_alerts
+    if alerts.any?
+      lines << ""
+      lines << "!!! ALERTA CRÍTICO !!!"
+      alerts.each { |a| lines << "  #{a}" }
+    end
+
+    # Confidence warning
+    aggregate_confidence = calculate_aggregate_confidence
+    if aggregate_confidence && aggregate_confidence < 0.5
+      lines << ""
+      lines << "⚠ AVISO: Confiança agregada baixa (#{(aggregate_confidence * 100).round}%). Resultado pode ser impreciso."
+    end
+
     lines << ""
     lines << "--- E-mail Analisado ---"
     lines << "De: #{@email.from_name} <#{@email.from_address}>"
@@ -227,6 +251,107 @@ class ReportRenderer
     else
       "<span class=\"verification-badge badge-unknown\">Indeterminado</span>"
     end
+  end
+
+  def calculate_aggregate_confidence
+    completed = @layers.select { |l| l.status == "completed" }
+    return nil if completed.empty?
+    completed.sum(&:confidence) / completed.size.to_f
+  end
+
+  def collect_critical_alerts
+    alerts = []
+
+    ext_layer = find_layer("external_api")
+    if ext_layer&.details
+      details = ext_layer.details
+
+      # VirusTotal malicious attachments
+      Array(details["attachments"] || details[:attachments]).each do |att|
+        detections = (att["detection_count"] || att[:detection_count]).to_i
+        next if detections.zero?
+        filename = att["filename"] || att[:filename] || "arquivo"
+        alerts << "Anexo malicioso detectado: #{filename} (#{detections} detecções no VirusTotal)"
+      end
+
+      # URLhaus malicious URLs
+      if (details["urlhaus_malicious_count"] || details[:urlhaus_malicious_count]).to_i.positive?
+        Array(details["urlhaus"] || details[:urlhaus]).each do |url_entry|
+          url = url_entry.is_a?(Hash) ? (url_entry["url"] || url_entry[:url]) : url_entry
+          alerts << "URL maliciosa confirmada pelo URLhaus: #{url}" if url
+        end
+        alerts << "URLhaus confirmou URL(s) maliciosa(s) neste e-mail" if alerts.none? { |a| a.include?("URLhaus") }
+      end
+
+      # VirusTotal flagged URLs
+      Array(details["virustotal"] || details[:virustotal]).each do |vt|
+        detections = (vt["detections"] || vt[:detections]).to_i
+        next if detections.zero?
+        url = vt["url"] || vt[:url] || "URL desconhecida"
+        alerts << "URL sinalizada pelo VirusTotal: #{url} (#{detections} detecções)"
+      end
+    end
+
+    content_layer = find_layer("content_analysis")
+    if content_layer&.details
+      details = content_layer.details
+
+      # Dangerous attachments
+      Array(details["dangerous_attachments"] || details[:dangerous_attachments]).each do |att|
+        filename = att.is_a?(Hash) ? (att["filename"] || att[:filename]) : att
+        alerts << "Anexo perigoso detectado: #{filename}" if filename
+      end
+
+      # URL text/href mismatches
+      Array(details["url_mismatches"] || details[:url_mismatches]).each do |mm|
+        if mm.is_a?(Hash)
+          display = mm["display_text"] || mm[:display_text] || mm["text"] || mm[:text]
+          href = mm["actual_url"] || mm[:actual_url] || mm["href"] || mm[:href]
+          alerts << "Link enganoso: texto exibe '#{display}' mas aponta para '#{href}'" if display && href
+        else
+          alerts << "Divergência entre texto e destino de link detectada"
+        end
+      end
+    end
+
+    rep_layer = find_layer("sender_reputation")
+    if rep_layer&.details
+      blacklist_results = rep_layer.details["blacklist_results"] || rep_layer.details[:blacklist_results] || {}
+      blacklist_results.each do |bl_name, entry|
+        value = entry.is_a?(Hash) ? entry : {}
+        if value["authoritative_malicious"] || value[:authoritative_malicious]
+          alerts << "Remetente em blacklist autoritativa: #{bl_name}"
+        end
+      end
+    end
+
+    alerts
+  end
+
+  def critical_alerts_html
+    alerts = collect_critical_alerts
+    return "" if alerts.empty?
+
+    items = alerts.map do |alert|
+      "<div class=\"critical-alert\"><strong>\u{1F6A8} ALERTA CRÍTICO:</strong> #{h alert}</div>"
+    end.join("\n")
+
+    <<~HTML
+      <div class="section">
+        #{items}
+      </div>
+    HTML
+  end
+
+  def confidence_warning_html
+    aggregate_confidence = calculate_aggregate_confidence
+    return "" unless aggregate_confidence && aggregate_confidence < 0.5
+
+    <<~HTML
+      <div class="confidence-warning">
+        <strong>⚠ Aviso:</strong> Confiança agregada baixa (#{(aggregate_confidence * 100).round}%). O resultado desta análise pode ser impreciso.
+      </div>
+    HTML
   end
 
   def banner_html
@@ -446,8 +571,8 @@ class ReportRenderer
 
   def score_color(score)
     case score
-    when 0..25 then "#22c55e"
-    when 26..50 then "#f59e0b"
+    when 0..20 then "#22c55e"
+    when 21..50 then "#f59e0b"
     when 51..75 then "#f97316"
     else "#ef4444"
     end

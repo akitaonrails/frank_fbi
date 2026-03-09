@@ -1,8 +1,8 @@
 module Analysis
   class ScoreAggregator
     VERDICT_THRESHOLDS = {
-      (0..25) => "legitimate",
-      (26..50) => "suspicious_likely_ok",
+      (0..20) => "legitimate",
+      (21..50) => "suspicious_likely_ok",
       (51..75) => "suspicious_likely_fraud",
       (76..100) => "fraudulent"
     }.freeze
@@ -36,7 +36,6 @@ module Analysis
 
       # These run outside the lock — they update other records
       update_reputation_records(verdict)
-      encrypt_if_legitimate(verdict)
 
       { score: final_score, verdict: verdict }
     end
@@ -48,14 +47,38 @@ module Analysis
       weight_sum = 0.0
 
       layers.each do |layer|
-        effective_weight = layer.weight * layer.confidence
+        dampening = dampening_factor(layer.score)
+        effective_weight = layer.weight * layer.confidence * dampening
         weighted_sum += layer.score * effective_weight
         weight_sum += effective_weight
       end
 
       return 50 if weight_sum.zero?
       blended_score = (weighted_sum / weight_sum).round
-      [blended_score, escalation_floor].max
+      data_quality_floor = calculate_data_quality_floor(layers)
+      [blended_score, escalation_floor, data_quality_floor].max
+    end
+
+    def dampening_factor(score)
+      case score
+      when 0..10 then 0.1
+      when 11..30 then 0.4
+      when 31..50 then 0.7
+      else 1.0
+      end
+    end
+
+    def calculate_data_quality_floor(layers)
+      total_confidence = layers.sum(&:confidence)
+      aggregate_confidence = total_confidence / layers.size.to_f
+
+      if aggregate_confidence < 0.3
+        45
+      elsif aggregate_confidence < 0.5
+        35
+      else
+        0
+      end
     end
 
     def score_to_verdict(score)
@@ -68,6 +91,13 @@ module Analysis
     def build_verdict_explanation(layers, score, verdict, escalation_reasons = [])
       lines = ["Pontuação Final: #{score}/100 — #{verdict.humanize}"]
       lines << ""
+
+      # Confidence warning
+      aggregate_confidence = layers.sum(&:confidence) / layers.size.to_f
+      if aggregate_confidence < 0.5
+        lines << "⚠ Aviso: confiança agregada baixa (#{(aggregate_confidence * 100).round}%). Resultado pode ser impreciso."
+        lines << ""
+      end
 
       if escalation_reasons.any?
         lines << "Gatilhos de escalonamento:"
@@ -88,18 +118,6 @@ module Analysis
       # Local reputation needs confirmed labels, not feedback from the model itself.
       # We still keep KnownDomain/KnownSender records for caching and operator workflows,
       # but the automated verdict is not written back as truth.
-    end
-
-    def encrypt_if_legitimate(verdict)
-      return unless verdict == "legitimate"
-
-      # For legitimate emails, encrypt the body content to protect privacy
-      # We re-save with encryption applied
-      @email.class.encrypts :body_text
-      @email.class.encrypts :body_html
-      @email.save!
-    rescue => e
-      Rails.logger.warn("ScoreAggregator: Failed to encrypt legitimate email body: #{e.message}")
     end
   end
 end
