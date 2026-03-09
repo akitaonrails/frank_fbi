@@ -45,7 +45,7 @@ class Analysis::HeaderAuthAnalyzerTest < ActiveSupport::TestCase
   test "sets weight correctly" do
     email = create(:email)
     layer = Analysis::HeaderAuthAnalyzer.new(email).analyze
-    assert_equal 0.20, layer.weight
+    assert_equal 0.15, layer.weight
   end
 
   test "calculates confidence based on available auth data" do

@@ -137,19 +137,27 @@ namespace :frank_fbi do
       puts "  Sender reputation skipped (external): #{e.message}"
       email.analysis_layers.find_or_create_by!(layer_name: "sender_reputation") do |l|
         l.score = 50
-        l.weight = 0.20
+        l.weight = 0.15
         l.confidence = 0.3
         l.explanation = "Skipped in smoke test"
         l.status = "completed"
       end
     end
 
-    # Skip external API and LLM for smoke test — create stub layers
+    # Skip external API, entity verification, and LLM for smoke test — create stub layers
     email.analysis_layers.find_or_create_by!(layer_name: "external_api") do |l|
       l.score = 0
       l.weight = 0.15
       l.confidence = 0.3
       l.explanation = "Skipped in smoke test"
+      l.status = "completed"
+    end
+
+    email.analysis_layers.find_or_create_by!(layer_name: "entity_verification") do |l|
+      l.score = 60
+      l.weight = 0.15
+      l.confidence = 0.4
+      l.explanation = "Stubbed entity verification for smoke test"
       l.status = "completed"
     end
 

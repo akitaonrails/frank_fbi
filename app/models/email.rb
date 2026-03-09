@@ -31,7 +31,7 @@ class Email < ApplicationRecord
   end
 
   def fully_analyzed?
-    analysis_layers.where(status: "completed").count == 5
+    analysis_layers.where(status: "completed").count == AnalysisLayer::LAYER_NAMES.size
   end
 
   def layer_completed?(layer_name)

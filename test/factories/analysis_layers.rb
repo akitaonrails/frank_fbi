@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :analysis_layer do
     email
     layer_name { "header_auth" }
-    weight { 0.20 }
+    weight { 0.15 }
     confidence { 1.0 }
     status { "pending" }
 
@@ -14,21 +14,26 @@ FactoryBot.define do
 
     trait :header_auth do
       layer_name { "header_auth" }
-      weight { 0.20 }
+      weight { 0.15 }
     end
 
     trait :content_analysis do
       layer_name { "content_analysis" }
-      weight { 0.25 }
+      weight { 0.20 }
     end
 
     trait :sender_reputation do
       layer_name { "sender_reputation" }
-      weight { 0.20 }
+      weight { 0.15 }
     end
 
     trait :external_api do
       layer_name { "external_api" }
+      weight { 0.15 }
+    end
+
+    trait :entity_verification do
+      layer_name { "entity_verification" }
       weight { 0.15 }
     end
 

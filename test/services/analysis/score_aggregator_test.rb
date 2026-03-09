@@ -3,10 +3,11 @@ require "test_helper"
 class Analysis::ScoreAggregatorTest < ActiveSupport::TestCase
   test "calculates weighted average score" do
     email = create(:email)
-    create(:analysis_layer, :completed, email: email, layer_name: "header_auth", score: 80, weight: 0.20, confidence: 1.0)
-    create(:analysis_layer, :completed, email: email, layer_name: "sender_reputation", score: 60, weight: 0.20, confidence: 0.8)
-    create(:analysis_layer, :completed, email: email, layer_name: "content_analysis", score: 90, weight: 0.25, confidence: 1.0)
+    create(:analysis_layer, :completed, email: email, layer_name: "header_auth", score: 80, weight: 0.15, confidence: 1.0)
+    create(:analysis_layer, :completed, email: email, layer_name: "sender_reputation", score: 60, weight: 0.15, confidence: 0.8)
+    create(:analysis_layer, :completed, email: email, layer_name: "content_analysis", score: 90, weight: 0.20, confidence: 1.0)
     create(:analysis_layer, :completed, email: email, layer_name: "external_api", score: 50, weight: 0.15, confidence: 0.5)
+    create(:analysis_layer, :completed, email: email, layer_name: "entity_verification", score: 70, weight: 0.15, confidence: 0.7)
     create(:analysis_layer, :completed, email: email, layer_name: "llm_analysis", score: 85, weight: 0.20, confidence: 0.9)
 
     result = Analysis::ScoreAggregator.new(email).aggregate
@@ -46,10 +47,11 @@ class Analysis::ScoreAggregatorTest < ActiveSupport::TestCase
     email = create(:email)
 
     # High score but low confidence should reduce impact
-    create(:analysis_layer, :completed, email: email, layer_name: "header_auth", score: 90, weight: 0.20, confidence: 0.2)
-    create(:analysis_layer, :completed, email: email, layer_name: "sender_reputation", score: 10, weight: 0.20, confidence: 1.0)
-    create(:analysis_layer, :completed, email: email, layer_name: "content_analysis", score: 10, weight: 0.25, confidence: 1.0)
+    create(:analysis_layer, :completed, email: email, layer_name: "header_auth", score: 90, weight: 0.15, confidence: 0.2)
+    create(:analysis_layer, :completed, email: email, layer_name: "sender_reputation", score: 10, weight: 0.15, confidence: 1.0)
+    create(:analysis_layer, :completed, email: email, layer_name: "content_analysis", score: 10, weight: 0.20, confidence: 1.0)
     create(:analysis_layer, :completed, email: email, layer_name: "external_api", score: 10, weight: 0.15, confidence: 1.0)
+    create(:analysis_layer, :completed, email: email, layer_name: "entity_verification", score: 10, weight: 0.15, confidence: 1.0)
     create(:analysis_layer, :completed, email: email, layer_name: "llm_analysis", score: 10, weight: 0.20, confidence: 1.0)
 
     result = Analysis::ScoreAggregator.new(email).aggregate

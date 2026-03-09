@@ -4,14 +4,16 @@ class AnalysisLayer < ApplicationRecord
     sender_reputation
     content_analysis
     external_api
+    entity_verification
     llm_analysis
   ].freeze
 
   WEIGHTS = {
-    "header_auth" => 0.20,
-    "sender_reputation" => 0.20,
-    "content_analysis" => 0.25,
+    "header_auth" => 0.15,
+    "sender_reputation" => 0.15,
+    "content_analysis" => 0.20,
     "external_api" => 0.15,
+    "entity_verification" => 0.15,
     "llm_analysis" => 0.20
   }.freeze
 

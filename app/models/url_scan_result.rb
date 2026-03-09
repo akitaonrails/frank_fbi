@@ -1,5 +1,5 @@
 class UrlScanResult < ApplicationRecord
-  SOURCES = %w[virustotal urlhaus virustotal_file].freeze
+  SOURCES = %w[virustotal urlhaus virustotal_file brave_search].freeze
 
   validates :url, presence: true
   validates :source, presence: true, inclusion: { in: SOURCES },
