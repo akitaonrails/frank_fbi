@@ -182,7 +182,7 @@ module Analysis
     end
 
     def domain_context(domain_info)
-      lines = ["\n\n## Dados de Verificação Direta do Domínio (WHOIS + DNS)\n"]
+      lines = ["\n\n## Dados de Verificação Direta do Domínio (WHOIS + DNS)\n<domain_data>"]
 
       if domain_info[:age_days]
         lines << "- Idade do domínio: #{domain_info[:age_days]} dias"
@@ -198,6 +198,7 @@ module Analysis
 
       domain_info[:findings].each { |f| lines << "- #{f}" }
 
+      lines << "</domain_data>"
       lines << "\nUse estes dados para complementar sua análise, especialmente se as buscas web falharem."
       lines.join("\n")
     end
