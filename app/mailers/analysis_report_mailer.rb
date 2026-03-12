@@ -18,6 +18,11 @@ class AnalysisReportMailer < ApplicationMailer
 
   private
 
+  # Invert score for display: high = safe (matches report body)
+  def display_score(internal_score)
+    internal_score.present? ? (100 - internal_score) : nil
+  end
+
   def report_subject
     verdict_label = case @email.verdict
     when "legitimate" then "[OK]"
@@ -27,10 +32,12 @@ class AnalysisReportMailer < ApplicationMailer
     else "[ANALISADO]"
     end
 
+    score = display_score(@email.final_score)
+
     if @email.messenger_triage?
-      "Triagem: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"
+      "Triagem: #{@email.subject} — Frank FBI #{verdict_label} #{score}/100"
     else
-      "Re: #{@email.subject} — Frank FBI #{verdict_label} #{@email.final_score}/100"
+      "Re: #{@email.subject} — Frank FBI #{verdict_label} #{score}/100"
     end
   end
 end

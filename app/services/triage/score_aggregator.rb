@@ -61,7 +61,7 @@ module Triage
     end
 
     def build_verdict_explanation(layers, score, verdict, escalation_reasons = [])
-      lines = ["Pontuação Final: #{score}/100 — #{verdict.humanize}"]
+      lines = ["Pontuação Final: #{100 - score}/100 — #{verdict.humanize}"]
       lines << ""
 
       if escalation_reasons.any?
@@ -71,7 +71,7 @@ module Triage
       end
 
       layers.order(:layer_name).each do |layer|
-        lines << "#{layer.layer_name.titleize}: #{layer.score}/100 (weight: #{layer.weight}, confidence: #{layer.confidence})"
+        lines << "#{layer.layer_name.titleize}: #{100 - layer.score}/100 (weight: #{layer.weight}, confidence: #{layer.confidence})"
         lines << "  #{layer.explanation}"
         lines << ""
       end
