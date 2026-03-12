@@ -11,7 +11,14 @@ docker build -t "${IMAGE}:${TAG}" .
 echo "==> Pushing to ${REGISTRY}..."
 docker push "${IMAGE}:${TAG}"
 
-echo "==> Done. On the server, run:"
-echo "    cd /home/akitaonrails/docker"
-echo "    docker compose -f frank_fbi.yml pull"
-echo "    docker compose -f frank_fbi.yml up -d"
+SERVER="192.168.0.145"
+SSH_PORT="2022"
+SSH_USER="akitaonrails"
+COMPOSE_DIR="/home/${SSH_USER}/docker"
+COMPOSE_FILE="frank_fbi.yml"
+
+echo "==> Deploying on ${SERVER}..."
+ssh -p "${SSH_PORT}" "${SSH_USER}@${SERVER}" \
+  "cd ${COMPOSE_DIR} && docker compose -f ${COMPOSE_FILE} pull && docker compose -f ${COMPOSE_FILE} down && docker compose -f ${COMPOSE_FILE} up -d"
+
+echo "==> Done."

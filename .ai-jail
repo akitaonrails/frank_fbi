@@ -3,8 +3,8 @@
 # Edit freely. Regenerate with: ai-jail --clean --init
 
 command = [
-    "codex",
-    "resume",
+    "claude",
+    "--continue",
 ]
 rw_maps = []
 ro_maps = []
