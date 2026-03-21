@@ -18,13 +18,15 @@ module Analysis
       layer = @email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
       layer.update!(weight: WEIGHT, status: "running")
 
-      # Build prompt with all previous layer results
+      # Build system/user prompts with all previous layer results
       prior_layers = @email.analysis_layers.where(status: "completed").where.not(layer_name: LAYER_NAME)
-      prompt = Prompts::FraudAnalysisPrompt.new(@email, prior_layers).build
+      prompt_builder = Prompts::FraudAnalysisPrompt.new(@email, prior_layers)
+      system_prompt = prompt_builder.build_system
+      user_content = prompt_builder.build_user
 
-      # Enqueue parallel LLM consultations
+      # Enqueue parallel LLM consultations with separate system/user messages
       MODELS.each do |provider, model_id|
-        LlmConsultationJob.perform_later(@email.id, provider, model_id, prompt)
+        LlmConsultationJob.perform_later(@email.id, provider, model_id, system_prompt, user_content)
       end
     end
 

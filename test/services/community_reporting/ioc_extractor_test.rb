@@ -251,4 +251,119 @@ class CommunityReporting::IocExtractorTest < ActiveSupport::TestCase
 
     assert_equal ["185.220.101.5"], iocs[:ips]
   end
+
+  # --- SQL LIKE wildcard escaping (Issue 4) ---
+
+  test "domain with SQL wildcard percent does not match unrelated URLs" do
+    # Create a scan result for a completely different domain
+    UrlScanResult.create!(
+      url: "https://totally-different.com/page",
+      source: "virustotal",
+      malicious: false,
+      detection_count: 0,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+
+    # Domain with % wildcard — without escaping, "evil%clean" would LIKE-match
+    # "https://totally-different.com/page" via the unescaped % acting as wildcard
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["evil%clean.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    # The domain should NOT be filtered out — the clean scan is for a different domain
+    assert_includes iocs[:domains], "evil%clean.com"
+  end
+
+  test "domain with SQL wildcard underscore does not match unrelated URLs" do
+    UrlScanResult.create!(
+      url: "https://evilXclean.com/page",
+      source: "virustotal",
+      malicious: false,
+      detection_count: 0,
+      scan_details: {},
+      expires_at: 1.hour.from_now
+    )
+
+    create(:analysis_layer, :content_analysis, :completed,
+      email: @email,
+      details: { "urls" => [], "url_domains" => ["evil_clean.com"] }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    # Without escaping, _ matches any single char so "evil_clean" would match "evilXclean"
+    assert_includes iocs[:domains], "evil_clean.com"
+  end
+
+  # --- CIDR precision tests (Issue 1: overly broad prefix matching) ---
+
+  test "filters AWS CloudFront IP within CIDR range" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "13.32.100.5" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_empty iocs[:ips]
+  end
+
+  test "allows IP in 13.x range outside AWS CIDR blocks" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "13.1.2.3" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["13.1.2.3"], iocs[:ips]
+  end
+
+  test "allows IP in 52.x range outside AWS CIDR blocks" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "52.200.1.1" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["52.200.1.1"], iocs[:ips]
+  end
+
+  test "filters Cloudflare IP within 104.16.0.0/13" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "104.18.55.2" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_empty iocs[:ips]
+  end
+
+  test "allows IP in 104.x range outside Cloudflare CIDR" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "104.28.1.1" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["104.28.1.1"], iocs[:ips]
+  end
+
+  test "handles malformed IP address gracefully" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "sender_ip" => "not-an-ip" }
+    )
+
+    iocs = CommunityReporting::IocExtractor.new(@email).extract
+
+    assert_equal ["not-an-ip"], iocs[:ips]
+  end
 end

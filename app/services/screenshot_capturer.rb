@@ -1,9 +1,26 @@
+require "ipaddr"
+require "resolv"
+
 class ScreenshotCapturer
   MAX_URLS = 5
   PER_URL_TIMEOUT = 15 # seconds
   TOTAL_TIMEOUT = 90 # seconds
   RESIZE_WIDTH = 560
   JPEG_QUALITY = 60
+
+  # RFC 1918, loopback, link-local, and other reserved ranges
+  # that should never be accessed by the screenshot browser.
+  BLOCKED_IP_RANGES = [
+    IPAddr.new("10.0.0.0/8"),       # RFC 1918
+    IPAddr.new("172.16.0.0/12"),    # RFC 1918
+    IPAddr.new("192.168.0.0/16"),   # RFC 1918
+    IPAddr.new("127.0.0.0/8"),      # Loopback
+    IPAddr.new("169.254.0.0/16"),   # Link-local
+    IPAddr.new("0.0.0.0/8"),        # "This" network
+    IPAddr.new("::1/128"),          # IPv6 loopback
+    IPAddr.new("fc00::/7"),         # IPv6 unique local
+    IPAddr.new("fe80::/10"),        # IPv6 link-local
+  ].freeze
 
   USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
 
@@ -97,6 +114,11 @@ class ScreenshotCapturer
   end
 
   def capture_url(browser, url, timeout)
+    unless safe_url?(url)
+      Rails.logger.warn("Screenshot SSRF blocked: #{url}")
+      return nil
+    end
+
     page = browser.create_page
     inject_stealth(page)
     page.go_to(url)
@@ -125,6 +147,23 @@ class ScreenshotCapturer
   rescue Ferrum::Error
     # CDP command unavailable on this Chrome version — inject post-navigation instead
     nil
+  end
+
+  def safe_url?(url)
+    uri = URI.parse(url)
+    return false unless %w[http https].include?(uri.scheme)
+    return false if uri.host.blank?
+
+    # Resolve hostname to IP and check against blocked ranges
+    ip_str = resolve_host(uri.host)
+    ip = IPAddr.new(ip_str)
+    !BLOCKED_IP_RANGES.any? { |range| range.include?(ip) }
+  rescue URI::InvalidURIError, Resolv::ResolvError, IPAddr::InvalidAddressError
+    false
+  end
+
+  def resolve_host(host)
+    Resolv.getaddress(host)
   end
 
   def resize_to_jpeg(png_data)

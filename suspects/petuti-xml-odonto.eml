@@ -1,0 +1,36 @@
+MIME-Version: 1.0
+From: Clínica OdontoClinic <agendamento@odontoclinic.com.br>
+To: rodolfo.tavares@gmail.com
+Subject: Confirmacao de consulta - 18/03/2026
+Date: Sat, 14 Mar 2026 09:30:00 -0300
+Message-ID: <CABx2+m4kVs8Rs9Tz@mail-sor-f41.google.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com [209.85.220.41])
+        by mx.google.com with ESMTPS id a1-2026031409.3
+        for <rodolfo.tavares@gmail.com>
+Authentication-Results: mx.google.com;
+       spf=pass smtp.mailfrom=agendamento@odontoclinic.com.br;
+       dkim=pass header.i=@odontoclinic.com.br;
+       dmarc=pass header.from=odontoclinic.com.br
+DKIM-Signature: v=1; a=rsa-sha256; d=odontoclinic.com.br; s=google;
+        b=kX9vT2LpM1nO2pQ3rS4tU5vW6xY7zA8bC9dE0fG1hI2jK3lM4nO5pQ6rS7tU8vW9x
+Received-SPF: pass (google.com: domain of agendamento@odontoclinic.com.br)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+
+Prezado(a) Rodolfo,
+
+Confirmamos sua consulta para o dia 18/03/2026 às 10h30 com o Dr. Paulo Mendes (CRO-SP 14.211).
+
+Especialidade: Ortodontia
+Duração estimada: 45 minutos
+
+Para confirmar sua presença, acesse:
+https://odontoclinic.com.br/confirmar
+
+Endereço: Rua Augusta, 500 - Cj. 301 - Consolação, São Paulo/SP
+Telefone: (11) 3456-7890
+
+Atenciosamente,
+Equipe de Agendamento
+OdontoClinic - Clínica Odontológica
+CRO-SP CL-12.345

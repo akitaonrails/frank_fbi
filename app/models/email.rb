@@ -1,5 +1,7 @@
 class Email < ApplicationRecord
   encrypts :submitter_email, deterministic: true
+  encrypts :body_html
+  encrypts :body_text
 
   has_many :analysis_layers, dependent: :destroy
   has_many :llm_verdicts, dependent: :destroy

@@ -96,4 +96,91 @@ class ScreenshotCapturerTest < ActiveSupport::TestCase
     def command(*); end
     def quit; end
   end
+
+  # --- SSRF protection tests (Issue 3: private IP blocking) ---
+
+  # Helper: create a capturer subclass that stubs DNS resolution
+  def capturer_with_resolved_ip(ip)
+    klass = Class.new(ScreenshotCapturer) do
+      define_method(:resolve_host) { |_host| ip }
+    end
+    klass.new([])
+  end
+
+  test "blocks localhost URL" do
+    capturer = capturer_with_resolved_ip("127.0.0.1")
+    refute capturer.send(:safe_url?, "http://localhost:8080/admin")
+  end
+
+  test "blocks RFC 1918 10.x.x.x URL" do
+    capturer = capturer_with_resolved_ip("10.0.0.1")
+    refute capturer.send(:safe_url?, "https://internal.corp.local")
+  end
+
+  test "blocks RFC 1918 172.16.x.x URL" do
+    capturer = capturer_with_resolved_ip("172.16.0.50")
+    refute capturer.send(:safe_url?, "https://docker-service.local")
+  end
+
+  test "blocks RFC 1918 192.168.x.x URL" do
+    capturer = capturer_with_resolved_ip("192.168.1.1")
+    refute capturer.send(:safe_url?, "https://router.local")
+  end
+
+  test "blocks IPv6 loopback URL" do
+    capturer = capturer_with_resolved_ip("::1")
+    refute capturer.send(:safe_url?, "http://[::1]:3000")
+  end
+
+  test "allows public IP URL" do
+    capturer = capturer_with_resolved_ip("93.184.216.34")
+    assert capturer.send(:safe_url?, "https://example.com")
+  end
+
+  test "blocks non-http scheme" do
+    capturer = capturer_with_resolved_ip("93.184.216.34")
+    refute capturer.send(:safe_url?, "file:///etc/passwd")
+    refute capturer.send(:safe_url?, "ftp://internal/data")
+    refute capturer.send(:safe_url?, "javascript:alert(1)")
+  end
+
+  test "blocks URL with unresolvable host" do
+    klass = Class.new(ScreenshotCapturer) do
+      define_method(:resolve_host) { |_host| raise Resolv::ResolvError, "no address" }
+    end
+    capturer = klass.new([])
+    refute capturer.send(:safe_url?, "https://nonexistent.invalid")
+  end
+
+  test "blocks 0.0.0.0 URL" do
+    capturer = capturer_with_resolved_ip("0.0.0.0")
+    refute capturer.send(:safe_url?, "http://0.0.0.0:8080")
+  end
+
+  test "SSRF blocked URLs are skipped during capture" do
+    capturer = StubCapturerSSRF.new(["http://localhost:8080", "https://safe.com"])
+    result = capturer.capture
+
+    assert_equal 1, result.size
+    refute result.key?("http://localhost:8080")
+    assert result.key?("https://safe.com")
+  end
+
+  # Test double that stubs safe_url? to simulate SSRF blocking during capture
+  class StubCapturerSSRF < ScreenshotCapturer
+    private
+
+    def create_browser
+      FakeBrowser.new
+    end
+
+    def safe_url?(url)
+      !url.include?("localhost")
+    end
+
+    def capture_url(browser, url, timeout)
+      return nil unless safe_url?(url)
+      "fake_base64"
+    end
+  end
 end
