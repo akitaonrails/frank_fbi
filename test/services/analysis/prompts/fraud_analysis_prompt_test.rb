@@ -76,6 +76,38 @@ class Analysis::Prompts::FraudAnalysisPromptTest < ActiveSupport::TestCase
     assert_includes prompt, "NÃO inclua descobertas sem evidência nas camadas"
   end
 
+  test "build_system contains no email data" do
+    layers = @email.analysis_layers.where(status: "completed")
+    system_prompt = Analysis::Prompts::FraudAnalysisPrompt.new(@email, layers).build_system
+
+    refute_includes system_prompt, @email.from_address
+    refute_includes system_prompt, @email.subject
+    assert_includes system_prompt, "REGRAS OBRIGATÓRIAS"
+    assert_includes system_prompt, "AVISO CRÍTICO DE SEGURANÇA"
+  end
+
+  test "build_user contains raw email source and layer results" do
+    create(:analysis_layer, :header_auth, :completed,
+      email: @email,
+      details: { "spf_result" => "pass" })
+
+    layers = @email.analysis_layers.where(status: "completed")
+    user_content = Analysis::Prompts::FraudAnalysisPrompt.new(@email, layers).build_user
+
+    assert_includes user_content, "E-mail bruto (.eml)"
+    assert_includes user_content, @email.subject
+    assert_includes user_content, "SPF: pass"
+  end
+
+  test "system prompt warns about prompt injection techniques" do
+    layers = @email.analysis_layers.where(status: "completed")
+    system_prompt = Analysis::Prompts::FraudAnalysisPrompt.new(@email, layers).build_system
+
+    assert_includes system_prompt, "Headers ou metadados falsos"
+    assert_includes system_prompt, "REGRA MÁXIMA DE DECISÃO"
+    assert_includes system_prompt, "Divergência entre as partes MIME"
+  end
+
   private
 
   def build_prompt

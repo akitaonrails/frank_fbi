@@ -43,14 +43,40 @@ module Triage
       weight_sum = 0.0
 
       layers.each do |layer|
-        effective_weight = layer.weight * layer.confidence
+        dampening = dampening_factor(layer.score)
+        effective_weight = layer.weight * layer.confidence * dampening
         weighted_sum += layer.score * effective_weight
         weight_sum += effective_weight
       end
 
       return 50 if weight_sum.zero?
       blended_score = (weighted_sum / weight_sum).round
-      [blended_score, escalation_floor].max
+      data_quality_floor = calculate_data_quality_floor(layers)
+      [blended_score, escalation_floor, data_quality_floor].max
+    end
+
+    # Reduces the weight of layers that returned low/zero scores (no data).
+    # Prevents empty layers from diluting high-confidence LLM verdicts.
+    def dampening_factor(score)
+      case score
+      when 0..10 then 0.1
+      when 11..30 then 0.4
+      when 31..50 then 0.7
+      else 1.0
+      end
+    end
+
+    def calculate_data_quality_floor(layers)
+      total_confidence = layers.sum(&:confidence)
+      aggregate_confidence = total_confidence / layers.size.to_f
+
+      if aggregate_confidence < 0.3
+        45
+      elsif aggregate_confidence < 0.5
+        35
+      else
+        0
+      end
     end
 
     def score_to_verdict(score)
