@@ -3,27 +3,44 @@ set -euo pipefail
 
 REGISTRY="192.168.0.90:3007"
 IMAGE="${REGISTRY}/akitaonrails/frank_fbi"
-TAG="${1:-latest}"
-
-echo "==> Building image..."
-docker build -t "${IMAGE}:${TAG}" .
-
-echo "==> Pushing to ${REGISTRY}..."
-docker push "${IMAGE}:${TAG}"
+DEPLOY_TAG="${1:-latest}"
 
 SERVER="192.168.0.90"
 SSH_PORT="22"
 SSH_USER="akitaonrails"
-REMOTE_DIR="/var/opt/docker/frank_fbi"
-LOCAL_COMPOSE_FILE="docker-compose.production.yml"
+REMOTE_DIR="/var/opt/docker/frank/fbi"
 REMOTE_COMPOSE_FILE="docker-compose.yml"
+SSH_KNOWN_HOSTS_DIR="/tmp/codex-ssh"
+SSH_ARGS=(
+  -o StrictHostKeyChecking=accept-new
+  -o UserKnownHostsFile="${SSH_KNOWN_HOSTS_DIR}/known_hosts"
+  -F /dev/null
+  -p "${SSH_PORT}"
+)
 
-echo "==> Uploading compose template to ${SERVER}:${REMOTE_DIR}/${REMOTE_COMPOSE_FILE}..."
-scp -P "${SSH_PORT}" "${LOCAL_COMPOSE_FILE}" \
-  "${SSH_USER}@${SERVER}:${REMOTE_DIR}/${REMOTE_COMPOSE_FILE}"
+mkdir -p "${SSH_KNOWN_HOSTS_DIR}"
+
+echo "==> Building image..."
+if [[ "${DEPLOY_TAG}" == "latest" ]]; then
+  docker build -t "${IMAGE}:latest" .
+else
+  docker build -t "${IMAGE}:latest" -t "${IMAGE}:${DEPLOY_TAG}" .
+fi
+
+echo "==> Pushing ${IMAGE}:latest..."
+docker push "${IMAGE}:latest"
+
+if [[ "${DEPLOY_TAG}" != "latest" ]]; then
+  echo "==> Pushing ${IMAGE}:${DEPLOY_TAG}..."
+  docker push "${IMAGE}:${DEPLOY_TAG}"
+fi
 
 echo "==> Deploying on ${SERVER}..."
-ssh -p "${SSH_PORT}" "${SSH_USER}@${SERVER}" \
-  "cd ${REMOTE_DIR} && docker compose -f ${REMOTE_COMPOSE_FILE} pull && docker compose -f ${REMOTE_COMPOSE_FILE} up -d && docker compose -f ${REMOTE_COMPOSE_FILE} ps"
+ssh "${SSH_ARGS[@]}" "${SSH_USER}@${SERVER}" \
+  "cd '${REMOTE_DIR}' \
+    && docker compose -f '${REMOTE_COMPOSE_FILE}' pull \
+    && docker compose -f '${REMOTE_COMPOSE_FILE}' down --remove-orphans \
+    && docker compose -f '${REMOTE_COMPOSE_FILE}' up -d \
+    && docker compose -f '${REMOTE_COMPOSE_FILE}' ps"
 
 echo "==> Done."
