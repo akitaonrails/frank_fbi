@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REGISTRY="192.168.0.145:3007"
+REGISTRY="192.168.0.90:3007"
 IMAGE="${REGISTRY}/akitaonrails/frank_fbi"
 TAG="${1:-latest}"
 
@@ -11,14 +11,19 @@ docker build -t "${IMAGE}:${TAG}" .
 echo "==> Pushing to ${REGISTRY}..."
 docker push "${IMAGE}:${TAG}"
 
-SERVER="192.168.0.145"
-SSH_PORT="2022"
+SERVER="192.168.0.90"
+SSH_PORT="22"
 SSH_USER="akitaonrails"
-COMPOSE_DIR="/home/${SSH_USER}/docker"
-COMPOSE_FILE="frank_fbi.yml"
+REMOTE_DIR="/var/opt/docker/frank_fbi"
+LOCAL_COMPOSE_FILE="docker-compose.production.yml"
+REMOTE_COMPOSE_FILE="docker-compose.yml"
+
+echo "==> Uploading compose template to ${SERVER}:${REMOTE_DIR}/${REMOTE_COMPOSE_FILE}..."
+scp -P "${SSH_PORT}" "${LOCAL_COMPOSE_FILE}" \
+  "${SSH_USER}@${SERVER}:${REMOTE_DIR}/${REMOTE_COMPOSE_FILE}"
 
 echo "==> Deploying on ${SERVER}..."
 ssh -p "${SSH_PORT}" "${SSH_USER}@${SERVER}" \
-  "cd ${COMPOSE_DIR} && docker compose -f ${COMPOSE_FILE} pull && docker compose -f ${COMPOSE_FILE} down && docker compose -f ${COMPOSE_FILE} up -d"
+  "cd ${REMOTE_DIR} && docker compose -f ${REMOTE_COMPOSE_FILE} pull && docker compose -f ${REMOTE_COMPOSE_FILE} up -d && docker compose -f ${REMOTE_COMPOSE_FILE} ps"
 
 echo "==> Done."

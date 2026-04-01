@@ -1,21 +1,30 @@
+name: frank_fbi
+
 services:
   setup:
-    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    image: 192.168.0.90:3007/akitaonrails/frank_fbi:latest
+    container_name: frank-fbi-setup
     command: ["./bin/rails", "db:prepare"]
-    env_file: /home/akitaonrails/frank_fbi/.env
+    env_file: /var/opt/docker/frank_fbi/.env
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+      - /var/opt/docker/frank_fbi/storage:/rails/storage
+    security_opt:
+      - label:disable
+    restart: "no"
 
   app:
-    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
-    env_file: /home/akitaonrails/frank_fbi/.env
+    image: 192.168.0.90:3007/akitaonrails/frank_fbi:latest
+    container_name: frank-fbi-app
+    env_file: /var/opt/docker/frank_fbi/.env
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/storage:/rails/storage
-      - /home/akitaonrails/frank_fbi/emails:/rails/emails
+      - /var/opt/docker/frank_fbi/storage:/rails/storage
+      - /var/opt/docker/frank_fbi/emails:/rails/emails
+    security_opt:
+      - label:disable
     depends_on:
       setup:
         condition: service_completed_successfully
@@ -25,31 +34,37 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
-    restart: unless-stopped
+    restart: always
 
   worker:
-    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    image: 192.168.0.90:3007/akitaonrails/frank_fbi:latest
+    container_name: frank-fbi-worker
     command: ["./bin/jobs"]
-    env_file: /home/akitaonrails/frank_fbi/.env
+    env_file: /var/opt/docker/frank_fbi/.env
     environment:
       - RAILS_ENV=production
     volumes:
-      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+      - /var/opt/docker/frank_fbi/storage:/rails/storage
+    security_opt:
+      - label:disable
     depends_on:
       setup:
         condition: service_completed_successfully
-    restart: unless-stopped
+    restart: always
 
   mail_fetcher:
-    image: 192.168.0.145:3007/akitaonrails/frank_fbi:latest
+    image: 192.168.0.90:3007/akitaonrails/frank_fbi:latest
+    container_name: frank-fbi-mail-fetcher
     command: ["./bin/rails", "frank_fbi:fetch_mail"]
-    env_file: /home/akitaonrails/frank_fbi/.env
+    env_file: /var/opt/docker/frank_fbi/.env
     environment:
       - RAILS_ENV=production
-      - APP_HOST=http://app:3000
+      - APP_HOST=http://frank-fbi-app:3000
     volumes:
-      - /home/akitaonrails/frank_fbi/storage:/rails/storage
+      - /var/opt/docker/frank_fbi/storage:/rails/storage
+    security_opt:
+      - label:disable
     depends_on:
       app:
         condition: service_healthy
-    restart: unless-stopped
+    restart: always
