@@ -1,3 +1,5 @@
+require "ipaddr"
+
 module CommunityReporting
   class IocExtractor
     # Freemail domains — shared infrastructure, not useful as IOCs
@@ -22,17 +24,48 @@ module CommunityReporting
       cloudflare.com akamai.com fastly.com
     ].freeze
 
-    # Infrastructure IP prefixes — email MTAs and cloud providers.
+    # Infrastructure IP CIDR ranges — email MTAs and cloud providers.
     # Reporting these as malicious creates false positives in AbuseIPDB.
-    INFRASTRUCTURE_IP_PREFIXES = %w[
-      13. 52. 54. 35. 34. 18.
-      104.16. 104.17. 104.18. 104.19. 104.20. 104.21. 104.22. 104.23. 104.24.
-      172.64. 172.65. 172.66. 172.67.
-      64.233. 74.125. 209.85. 142.250. 172.217. 216.58. 216.239.
-      40.92. 40.107. 104.47.
-      167.89.
-      199.255.
-    ].freeze
+    # Uses precise CIDR notation instead of string prefixes to avoid
+    # overly broad matching (e.g. "13." matched 16.7M IPs).
+    INFRASTRUCTURE_IP_CIDRS = [
+      # AWS — major service ranges (CloudFront, EC2, ELB, SES)
+      "13.32.0.0/14",    # CloudFront
+      "13.224.0.0/14",   # CloudFront
+      "13.248.0.0/16",   # Global Accelerator
+      "52.0.0.0/11",     # EC2 us-east
+      "52.44.0.0/15",    # EC2
+      "52.92.0.0/14",    # S3
+      "54.64.0.0/11",    # EC2
+      "54.160.0.0/11",   # EC2
+      "54.192.0.0/12",   # CloudFront
+      "54.230.0.0/15",   # CloudFront
+      "35.72.0.0/13",    # EC2 ap-northeast
+      "35.152.0.0/14",   # EC2
+      "34.192.0.0/10",   # EC2 us-east
+      "18.64.0.0/14",    # CloudFront
+      "18.204.0.0/14",   # EC2
+      # Cloudflare
+      "104.16.0.0/13",   # 104.16-104.23
+      "104.24.0.0/14",   # 104.24-104.27
+      "172.64.0.0/13",   # 172.64-172.71
+      # Google MTA / Workspace
+      "64.233.160.0/19",
+      "74.125.0.0/16",
+      "209.85.128.0/17",
+      "142.250.0.0/15",
+      "172.217.0.0/16",
+      "216.58.192.0/19",
+      "216.239.32.0/19",
+      # Microsoft Exchange Online
+      "40.92.0.0/15",
+      "40.107.0.0/16",
+      "104.47.0.0/17",
+      # SendGrid
+      "167.89.0.0/17",
+      # SparkPost
+      "199.255.192.0/22",
+    ].map { |cidr| IPAddr.new(cidr) }.freeze
 
     def initialize(email)
       @email = email
@@ -93,14 +126,18 @@ module CommunityReporting
 
     # A domain is considered clean if ALL its scanned URLs came back clean
     def domain_confirmed_all_clean?(domain)
-      scans = UrlScanResult.where("url LIKE ?", "%://#{domain}%")
+      escaped = ActiveRecord::Base.sanitize_sql_like(domain)
+      scans = UrlScanResult.where("url LIKE ?", "%://#{escaped}%")
       return false if scans.empty?
 
       scans.where(malicious: true).or(scans.where("detection_count > 0")).empty?
     end
 
     def infrastructure_ip?(ip)
-      INFRASTRUCTURE_IP_PREFIXES.any? { |prefix| ip.start_with?(prefix) }
+      parsed = IPAddr.new(ip)
+      INFRASTRUCTURE_IP_CIDRS.any? { |cidr| cidr.include?(parsed) }
+    rescue IPAddr::InvalidAddressError
+      false
     end
   end
 end

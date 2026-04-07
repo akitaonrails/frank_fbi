@@ -51,6 +51,30 @@ class EmailTest < ActiveSupport::TestCase
     assert_equal email.id, found.id
   end
 
+  test "encrypts body_text at rest but decrypts transparently" do
+    email = create(:email, body_text: "Sensitive PII content: CPF 123.456.789-00")
+    email.reload
+
+    # Accessible via model
+    assert_equal "Sensitive PII content: CPF 123.456.789-00", email.body_text
+
+    # Encrypted in raw database — ciphertext_for returns the encrypted value
+    raw = email.ciphertext_for(:body_text)
+    assert_not_equal "Sensitive PII content: CPF 123.456.789-00", raw
+    assert raw.present?, "body_text should be encrypted at rest"
+  end
+
+  test "encrypts body_html at rest but decrypts transparently" do
+    email = create(:email, body_html: "<p>Dados sensíveis: conta bancária 12345</p>")
+    email.reload
+
+    assert_equal "<p>Dados sensíveis: conta bancária 12345</p>", email.body_html
+
+    raw = email.ciphertext_for(:body_html)
+    assert_not_equal "<p>Dados sensíveis: conta bancária 12345</p>", raw
+    assert raw.present?, "body_html should be encrypted at rest"
+  end
+
   test "fully_analyzed? returns true when all pipeline layers completed" do
     email = create(:email)
     email.pipeline_layer_names.each do |name|

@@ -81,12 +81,12 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Allow Docker internal hostnames and healthcheck requests.
+  # Allow only known Docker internal hostnames.
+  # Do NOT use wildcard ranges (0.0.0.0/0) — they disable Host header validation.
   config.hosts = [
     "localhost",
-    "app",               # Docker Compose service name
-    IPAddr.new("0.0.0.0/0"),  # All IPv4 (Docker internal networking)
-    IPAddr.new("::/0")        # All IPv6
+    "app",                       # Docker Compose service name
+    IPAddr.new("172.16.0.0/12"), # Docker default bridge + user-defined networks
   ]
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end

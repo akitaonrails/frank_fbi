@@ -5,13 +5,20 @@ class LlmConsultationJob < ApplicationJob
 
   retry_on StandardError, wait: :polynomially_longer, attempts: 2
 
-  def perform(email_id, provider, model_id, prompt)
+  def perform(email_id, provider, model_id, prompt_or_system, user_content = nil)
     email = Email.find(email_id)
 
     start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
     chat = RubyLLM.chat(model: model_id)
-    response = chat.ask(prompt)
+    if user_content
+      # New: separate system/user messages
+      chat.with_instructions(prompt_or_system)
+      response = chat.ask(user_content)
+    else
+      # Legacy: single combined prompt
+      response = chat.ask(prompt_or_system)
+    end
 
     elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
 

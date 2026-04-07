@@ -253,4 +253,120 @@ namespace :frank_fbi do
       exit 1
     end
   end
+
+  desc "End-to-end manual test: parse → all layers → LLMs → aggregation → email report (synchronous)"
+  task :e2e_test, [:submitter_email, :file_path] => :environment do |_t, args|
+    require "json"
+
+    submitter = args[:submitter_email]
+    file_path = args[:file_path]
+
+    abort("Usage: bin/rails \"frank_fbi:e2e_test[recipient@example.com,path/to/file.eml]\"") unless submitter.present? && file_path.present?
+
+    eml_path = Pathname.new(file_path)
+    eml_path = Rails.root.join(eml_path) unless eml_path.absolute?
+    abort("File not found or unreadable: #{eml_path}") unless eml_path.file? && eml_path.readable?
+
+    puts "EML: #{eml_path}"
+
+    raw = File.read(eml_path)
+    parser = EmailParser.new(raw)
+    parsed = parser.parse
+
+    puts "From: #{parsed[:from_address]} | Domain: #{parsed[:sender_domain]}"
+    puts "URLs: #{parsed[:extracted_urls]}"
+    puts "Attachments: #{parsed[:attachments_info]}"
+
+    slug = eml_path.basename(".eml").to_s.parameterize.presence || "e2e"
+    email = Email.create!(
+      message_id: "#{slug}-#{SecureRandom.uuid}",
+      submitter_email: submitter,
+      subject: parsed[:subject],
+      from_address: parsed[:from_address],
+      from_name: parsed[:from_name],
+      reply_to_address: parsed[:reply_to_address],
+      sender_domain: parsed[:sender_domain],
+      body_text: parsed[:body_text],
+      body_html: parsed[:body_html],
+      raw_headers: parsed[:raw_headers],
+      raw_source: raw,
+      extracted_urls: parsed[:extracted_urls],
+      extracted_emails: parsed[:extracted_emails],
+      attachments_info: parsed[:attachments_info],
+      received_at: parsed[:received_at],
+      status: "analyzing"
+    )
+
+    puts "Email ##{email.id}"
+
+    # Run deterministic and external layers synchronously
+    puts "\n--- Running analysis layers ---"
+    Analysis::HeaderAuthAnalyzer.new(email).analyze rescue puts("  header_auth: SKIPPED (#{$!.message})")
+    Analysis::ContentAnalyzer.new(email).analyze rescue puts("  content_analysis: SKIPPED (#{$!.message})")
+    Analysis::SenderReputationAnalyzer.new(email).analyze rescue puts("  sender_reputation: SKIPPED (#{$!.message})")
+    Analysis::ExternalApiAnalyzer.new(email).analyze rescue puts("  external_api: SKIPPED (#{$!.message})")
+    Analysis::EntityVerificationAnalyzer.new(email).analyze rescue puts("  entity_verification: SKIPPED (#{$!.message})")
+
+    email.analysis_layers.reload.order(:layer_name).each do |l|
+      puts "  #{l.layer_name}: #{l.score}/100 (confidence: #{l.confidence})"
+    end
+
+    # Run LLM consultations synchronously
+    puts "\n--- Running LLM consultations ---"
+    prior = email.analysis_layers.where(status: "completed")
+    prompt_builder = Analysis::Prompts::FraudAnalysisPrompt.new(email, prior)
+    system_prompt = prompt_builder.build_system
+    user_content = prompt_builder.build_user
+
+    Analysis::LlmAnalyzer::MODELS.each do |provider, model_id|
+      begin
+        chat = RubyLLM.chat(model: model_id)
+        chat.with_instructions(system_prompt)
+        resp = chat.ask(user_content)
+        text = resp.content.to_s
+        si = text.index("{")
+        ei = text.rindex("}")
+        data = (si && ei) ? (JSON.parse(text[si..ei]) rescue {}) : {}
+        validator = Analysis::LlmFindingValidator.new(email)
+        findings = validator.validate_findings(Array(data["key_findings"]).map(&:to_s).first(10))
+        valid_verdicts = %w[legitimate suspicious_likely_ok suspicious_likely_fraud fraudulent]
+        verdict = valid_verdicts.include?(data["verdict"]) ? data["verdict"] : "suspicious_likely_fraud"
+        v = email.llm_verdicts.find_or_initialize_by(provider: provider)
+        v.update!(
+          model_id: model_id,
+          score: data["score"]&.to_i&.clamp(0, 100),
+          verdict: verdict,
+          confidence: data["confidence"]&.to_f&.clamp(0.0, 1.0),
+          reasoning: data["reasoning"].to_s,
+          key_findings: findings,
+          content_patterns: {},
+          prompt_tokens: resp.input_tokens,
+          completion_tokens: resp.output_tokens,
+          response_time_seconds: 0
+        )
+        puts "  #{provider}: score=#{v.score} verdict=#{v.verdict} confidence=#{v.confidence}"
+      rescue => e
+        puts "  #{provider}: ERROR #{e.message[0..80]}"
+      end
+    end
+
+    # Finalize LLM consensus and aggregate scores
+    Analysis::LlmAnalyzer.finalize(email)
+    result = Analysis::ScoreAggregator.new(email).aggregate
+    score = result&.dig(:score) || 50
+    verdict = result&.dig(:verdict) || "unknown"
+
+    puts "\n--- Final result ---"
+    puts "  SCORE: #{score}/100  VERDICT: #{verdict}#{score < 30 ? '  >>> BYPASS!' : ''}"
+
+    # Generate and send report
+    renderer = ReportRenderer.new(email)
+    report = email.build_analysis_report
+    report.update!(report_html: renderer.to_html, report_text: renderer.to_text, status: "generated")
+    AnalysisReportMailer.report(email).deliver_now
+    report.update!(status: "sent", sent_at: Time.current)
+    email.update!(status: "completed")
+
+    puts "  Report sent to #{submitter}"
+  end
 end

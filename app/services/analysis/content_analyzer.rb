@@ -64,6 +64,7 @@ module Analysis
       detect_broken_unsubscribe
       analyze_attachments
       check_grammar_flags(text)
+      detect_mime_mismatch
       calculate_score
 
       layer = @email.analysis_layers.find_or_initialize_by(layer_name: LAYER_NAME)
@@ -269,6 +270,37 @@ module Analysis
         @findings << "Excesso de pontos de exclamação no e-mail"
         @score += 5
         @details[:excessive_punctuation] = true
+      end
+    end
+
+    # Detects significant divergence between text/plain and text/html MIME parts.
+    # An attacker can place innocent content in text/plain (which the LLM analyzes)
+    # and the real scam in text/html (which the victim reads).
+    def detect_mime_mismatch
+      text_plain = @email.body_text.to_s.strip
+      html_raw = @email.body_html.to_s.strip
+      return if text_plain.blank? || html_raw.blank?
+
+      text_from_html = strip_html_to_text(html_raw).strip
+      return if text_from_html.blank?
+
+      # Skip if either is very short (placeholder/stub)
+      return if text_plain.length < 80 || text_from_html.length < 80
+
+      # Calculate word overlap between the two versions
+      words_plain = text_plain.downcase.scan(/\w{3,}/).to_set
+      words_html = text_from_html.downcase.scan(/\w{3,}/).to_set
+      return if words_plain.empty? || words_html.empty?
+
+      intersection = words_plain & words_html
+      union = words_plain | words_html
+      similarity = intersection.size.to_f / union.size
+
+      if similarity < 0.30
+        @details[:mime_mismatch_detected] = true
+        @details[:mime_similarity] = (similarity * 100).round
+        @findings << "Divergência significativa entre text/plain e text/html (#{(similarity * 100).round}% similaridade) — possível tentativa de enganar análise automatizada"
+        @score += 30
       end
     end
 
