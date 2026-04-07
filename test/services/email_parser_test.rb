@@ -226,4 +226,84 @@ class EmailParserTest < ActiveSupport::TestCase
     assert_equal "spammer@evil.com", result[:from_address]
     assert_equal "Real Spammer", result[:from_name]
   end
+
+  # --- Issue #3: latin-1 / non-UTF8 bodies must not crash on serialization ---
+
+  test "decodes latin-1 body to UTF-8 without raising on JSON serialize" do
+    # Pure ISO-8859-1 bytes: "Olá, você está aí?" → \xD3l\xE1, voc\xEA est\xE1 a\xED?
+    latin1_body = "Ol\xE1, voc\xEA est\xE1 bem?\r\n".dup.force_encoding("ASCII-8BIT")
+    raw = (+<<~EOH).force_encoding("ASCII-8BIT") + latin1_body
+      From: cobranca@example.com
+      To: vitima@example.com
+      Subject: Fatura
+      MIME-Version: 1.0
+      Content-Type: text/plain; charset=ISO-8859-1
+      Content-Transfer-Encoding: 8bit
+
+    EOH
+    result = EmailParser.new(raw).parse
+
+    assert result[:body_text].is_a?(String)
+    assert result[:body_text].valid_encoding?, "body_text must be valid UTF-8"
+    assert_equal Encoding::UTF_8, result[:body_text].encoding
+    # Should round-trip through JSON (this is what SolidQueue does internally)
+    assert_nothing_raised { JSON.generate(body: result[:body_text]) }
+    assert_includes result[:body_text], "Olá"
+    assert_includes result[:body_text], "você"
+  end
+
+  test "scrubs invalid UTF-8 bytes when charset is mislabeled" do
+    raw = <<~EOH.b + "valid then bad: \xC3\x28\r\n".b
+      From: a@example.com
+      Subject: bad bytes
+      Content-Type: text/plain; charset=UTF-8
+      Content-Transfer-Encoding: 8bit
+
+    EOH
+    result = EmailParser.new(raw).parse
+
+    assert result[:body_text].valid_encoding?
+    assert_nothing_raised { JSON.generate(body: result[:body_text]) }
+  end
+
+  # --- Issue #4: Gmail "forward as attachment" without .eml filename ---
+
+  test "extracts attached message when Gmail ships it as application/octet-stream without .eml extension" do
+    inner = <<~INNER
+      From: phisher@evil.example
+      To: victim@example.com
+      Subject: Click here to verify
+      Message-ID: <inner-1@evil.example>
+      Date: Mon, 01 Jan 2024 12:00:00 +0000
+
+      Please click https://evil.example/login to verify your account.
+    INNER
+
+    raw = <<~OUTER
+      From: me@gmail.com
+      To: frank@fbi.example
+      Subject: Fwd: Click here to verify
+      MIME-Version: 1.0
+      Content-Type: multipart/mixed; boundary="b"
+
+      --b
+      Content-Type: text/plain
+
+      Forwarding this for analysis.
+
+      --b
+      Content-Type: application/octet-stream
+      Content-Disposition: attachment; filename="forwarded-message"
+      Content-Transfer-Encoding: 7bit
+
+      #{inner}
+      --b--
+    OUTER
+
+    result = EmailParser.new(raw).parse
+
+    assert_equal "phisher@evil.example", result[:from_address]
+    assert_equal "Click here to verify", result[:subject]
+    assert_equal "evil.example", result[:sender_domain]
+  end
 end

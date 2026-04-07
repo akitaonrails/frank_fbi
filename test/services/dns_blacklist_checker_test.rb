@@ -171,6 +171,23 @@ class DnsBlacklistCheckerTest < ActiveSupport::TestCase
     assert_not results.key?("b.barracudacentral.org")
   end
 
+  test "DNSBL_SKIP env var skips listed blacklists entirely" do
+    ENV["DNSBL_SKIP"] = "zen.spamhaus.org,dbl.spamhaus.org"
+    DnsBlacklistChecker.reset_skipped_blacklists!
+    set_dns("4.3.2.1.zen.spamhaus.org", ["127.0.0.2"]) # would be a listing
+    set_dns("example.com.dbl.spamhaus.org", ["127.0.1.4"]) # would be a listing
+
+    results = checker_with_ip.check
+
+    assert_nil results["zen.spamhaus.org"], "Skipped blacklist must not be queried"
+    assert_nil results["dbl.spamhaus.org"], "Skipped blacklist must not be queried"
+    # Non-skipped blacklists still run
+    assert results.key?("multi.uribl.com")
+  ensure
+    ENV.delete("DNSBL_SKIP")
+    DnsBlacklistChecker.reset_skipped_blacklists!
+  end
+
   private
 
   def checker_with_ip

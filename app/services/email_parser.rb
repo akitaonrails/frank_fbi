@@ -183,13 +183,13 @@ class EmailParser
   def extract_body_text(mail_object = mail)
     if mail_object.multipart?
       text_part = mail_object.text_part
-      return text_part.decoded.force_encoding("UTF-8") if text_part
+      return decode_part(text_part) if text_part
 
       html = extract_body_html(mail_object)
       return strip_html(html) if html
     end
 
-    body = mail_object.body.decoded.force_encoding("UTF-8")
+    body = decode_part(mail_object)
     mail_object.content_type&.include?("text/html") ? strip_html(body) : body
   rescue => e
     Rails.logger.warn("EmailParser: Failed to extract text body: #{e.message}")
@@ -199,14 +199,36 @@ class EmailParser
   def extract_body_html(mail_object = mail)
     if mail_object.multipart?
       html_part = mail_object.html_part
-      return html_part.decoded.force_encoding("UTF-8") if html_part
+      return decode_part(html_part) if html_part
     end
 
-    body = mail_object.body.decoded.force_encoding("UTF-8")
+    body = decode_part(mail_object)
     body if mail_object.content_type&.include?("text/html")
   rescue => e
     Rails.logger.warn("EmailParser: Failed to extract HTML body: #{e.message}")
     nil
+  end
+
+  # Decode a Mail part body to a UTF-8 String, transcoding from the declared
+  # charset when available and replacing any invalid byte sequences. The Mail
+  # gem returns ASCII-8BIT bytes regardless of the part's actual charset, so
+  # we have to be the ones who normalize. Without this, latin-1 bodies crash
+  # later when SolidQueue tries to JSON-encode them.
+  def decode_part(part)
+    return nil if part.nil?
+
+    bytes = part.decoded.to_s
+    return "" if bytes.empty?
+
+    # If the Mail gem already handed us valid UTF-8, trust it.
+    return bytes if bytes.encoding == Encoding::UTF_8 && bytes.valid_encoding?
+
+    charset = (part.respond_to?(:charset) && part.charset.to_s.presence) || "ISO-8859-1"
+    begin
+      bytes.dup.force_encoding(charset).encode("UTF-8", invalid: :replace, undef: :replace, replace: "?")
+    rescue ArgumentError, Encoding::ConverterNotFoundError
+      bytes.dup.force_encoding("UTF-8").scrub("?")
+    end
   end
 
   def extract_raw_headers(source = raw_source)

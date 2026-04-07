@@ -1,4 +1,5 @@
 require "resolv"
+require "set"
 
 class DnsBlacklistChecker
   BLACKLISTS = {
@@ -50,15 +51,33 @@ class DnsBlacklistChecker
     @ip = ip
   end
 
+  # Operators on cloud/VPS hosts often see Spamhaus + URIBL refuse free-tier
+  # DNS queries from datacenter ranges. Setting DNSBL_SKIP=zen.spamhaus.org,...
+  # short-circuits those lookups so the layer doesn't burn time on responses
+  # that will be marked rate_limited_or_blocked anyway.
+  def self.skipped_blacklists
+    @skipped_blacklists ||= ENV.fetch("DNSBL_SKIP", "")
+      .split(",")
+      .map { |s| s.strip.downcase }
+      .reject(&:empty?)
+      .to_set
+  end
+
+  def self.reset_skipped_blacklists!
+    @skipped_blacklists = nil
+  end
+
   def check
     results = {}
 
     DOMAIN_BLACKLISTS.each do |bl|
+      next if self.class.skipped_blacklists.include?(bl)
       results[bl] = check_domain_blacklist(@domain, bl)
     end
 
     if @ip
       IP_BLACKLISTS.each do |bl|
+        next if self.class.skipped_blacklists.include?(bl)
         results[bl] = check_ip_blacklist(@ip, bl)
       end
     end
