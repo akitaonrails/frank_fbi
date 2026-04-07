@@ -1,4 +1,27 @@
 namespace :frank_fbi do
+  desc "Backfill encryption for Email#body_html / body_text on rows stored before PR #5"
+  task encrypt_email_bodies: :environment do
+    total = Email.count
+    done = 0
+    skipped = 0
+    Email.find_each do |email|
+      begin
+        # Re-assigning the current value forces Active Record Encryption to
+        # write the ciphertext back. No-op if already encrypted.
+        email.update_columns(
+          body_html: email.body_html,
+          body_text: email.body_text
+        )
+        done += 1
+      rescue => e
+        skipped += 1
+        warn "[encrypt_email_bodies] skipped Email##{email.id}: #{e.class}: #{e.message}"
+      end
+      print "\r  #{done + skipped}/#{total}" if (done + skipped) % 25 == 0
+    end
+    puts "\nBackfill complete: #{done} updated, #{skipped} skipped"
+  end
+
   desc "Start the IMAP mail fetcher polling loop"
   task fetch_mail: :environment do
     MailFetcher.new.run

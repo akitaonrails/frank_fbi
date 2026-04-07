@@ -85,7 +85,8 @@ Rails.application.configure do
   # Do NOT use wildcard ranges (0.0.0.0/0) — they disable Host header validation.
   config.hosts = [
     "localhost",
-    "app",                       # Docker Compose service name
+    "app",                       # Docker Compose service name (local dev)
+    "frank-fbi-app",             # Production container_name (used by mail_fetcher APP_HOST)
     IPAddr.new("172.16.0.0/12"), # Docker default bridge + user-defined networks
   ]
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
