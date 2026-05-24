@@ -167,6 +167,8 @@ class ScreenshotCapturer
   end
 
   def resize_to_jpeg(png_data)
+    require "vips"
+
     image = Vips::Image.new_from_buffer(png_data, "")
 
     if image.width > RESIZE_WIDTH
