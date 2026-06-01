@@ -2,12 +2,13 @@ require "test_helper"
 
 class BraveSearchClientTest < ActiveSupport::TestCase
   setup do
-    @client = BraveSearchClient.new
+    @original_brave_search_api_key = ENV["BRAVE_SEARCH_API_KEY"]
     ENV["BRAVE_SEARCH_API_KEY"] = "test-key"
+    @client = BraveSearchClient.new
   end
 
   teardown do
-    ENV["BRAVE_SEARCH_API_KEY"] = ""
+    ENV["BRAVE_SEARCH_API_KEY"] = @original_brave_search_api_key
   end
 
   test "returns nil when API key is blank" do

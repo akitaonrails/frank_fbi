@@ -1,6 +1,15 @@
 require "test_helper"
 
 class Triage::FileScanAnalyzerTest < ActiveSupport::TestCase
+  setup do
+    @original_virustotal_api_key = ENV["VIRUSTOTAL_API_KEY"]
+    ENV["VIRUSTOTAL_API_KEY"] = "test-api-key"
+  end
+
+  teardown do
+    ENV["VIRUSTOTAL_API_KEY"] = @original_virustotal_api_key
+  end
+
   test "analyze creates triage_file_scan layer with no attachments" do
     email = create(:email, :messenger_triage, attachments_info: [])
 
