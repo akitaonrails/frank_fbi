@@ -71,6 +71,9 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
+          ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: 0123456789abcdef0123456789abcdef
+          ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: abcdef0123456789abcdef0123456789
+          ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: 0123456789abcdef0123456789abcdef
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test

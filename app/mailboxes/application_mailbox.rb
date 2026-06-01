@@ -21,7 +21,7 @@ class ApplicationMailbox < ActionMailbox::Base
   routing ->(inbound_email) { allowed_sender?(inbound_email) && forwarded_email?(inbound_email) } => :fraud_analysis
   routing ->(inbound_email) { allowed_sender?(inbound_email) && messenger_triage?(inbound_email) } => :messenger_triage
   routing ->(inbound_email) { admin_email?(inbound_email) || allowed_sender?(inbound_email) } => :fraud_analysis
-  routing :all => :rejection
+  routing all: :rejection
 
   private
 

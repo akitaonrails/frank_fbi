@@ -3,6 +3,9 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 # Overwrite or add rules to create your own house style
 #
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+# Keep the existing project style while still running the rest of Omakase.
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
