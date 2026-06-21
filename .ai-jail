@@ -3,5 +3,16 @@
 # Edit freely. Regenerate with: ai-jail --clean --init
 
 command = ["claude"]
-rw_maps = []
-ro_maps = []
+rw_maps = [
+    "/home/akitaonrails/Projects/DriveClubFS",
+    "/mnt/data/distrobox/gaming",
+]
+ro_maps = [
+    "/home/akitaonrails/Projects/distrobox-gaming",
+    "/mnt/terachad/Emulators/EmuDeck/roms_rare/ps4",
+]
+hide_dotdirs = []
+mask = []
+ssh = true
+pictures = true
+allow_tcp_ports = []
