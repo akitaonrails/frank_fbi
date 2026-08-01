@@ -63,6 +63,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
