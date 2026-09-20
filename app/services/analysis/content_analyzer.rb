@@ -119,7 +119,7 @@ module Analysis
 
       # Find <a> tags where display text looks like a URL but href is different
       html.scan(/<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/im).each do |href, text|
-        display_text = text.gsub(/<[^>]+>/, "").strip
+        display_text = Rails::HTML5::SafeListSanitizer.new.sanitize(text, tags: []).strip
         next unless display_text.match?(%r{https?://})
 
         begin

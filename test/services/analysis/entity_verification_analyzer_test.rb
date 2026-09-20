@@ -70,6 +70,14 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
     assert layer.details.key?("domain_age_days") || layer.details.key?("domain_whois")
   end
 
+  test "classifies only exact social network hosts" do
+    analyzer = Analysis::EntityVerificationAnalyzer.new(@email)
+
+    assert_equal "linkedin", analyzer.send(:classify_platform, "www.linkedin.com", "example.com")
+    assert_equal "site_oficial", analyzer.send(:classify_platform, "linkedin.com.example.com", "example.com")
+    assert_equal "other", analyzer.send(:classify_platform, "linkedin.com.example.com", nil)
+  end
+
   private
 
   def stub_domain_verification(analyzer)
@@ -88,9 +96,9 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
   end
 
   def run_with_stubbed_response(json_text)
-    response = Struct.new(:content, :input_tokens, :output_tokens).new(json_text, 500, 200)
+    response = Struct.new(:content, :tokens).new(json_text, RubyLLM::Tokens.new(input: 500, output: 200))
     chat = Object.new
-    chat.define_singleton_method(:with_tool) { |_tool| self }
+    chat.define_singleton_method(:with_tools) { |_tool| self }
     chat.define_singleton_method(:ask) { |_prompt| response }
 
     run_analyzer_with_chat(chat)
@@ -98,7 +106,7 @@ class Analysis::EntityVerificationAnalyzerTest < ActiveSupport::TestCase
 
   def run_with_error(message)
     chat = Object.new
-    chat.define_singleton_method(:with_tool) { |_tool| self }
+    chat.define_singleton_method(:with_tools) { |_tool| self }
     chat.define_singleton_method(:ask) { |_prompt| raise StandardError, message }
 
     run_analyzer_with_chat(chat)

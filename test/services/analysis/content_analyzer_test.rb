@@ -103,6 +103,17 @@ class Analysis::ContentAnalyzerTest < ActiveSupport::TestCase
     assert mismatches.present?, "Should detect URL mismatch"
   end
 
+  test "detects mismatches in nested HTML link text" do
+    email = create(:email,
+      body_html: '<a href="https://evil.com/steal">https://my<strong>bank.com</strong>/login</a>',
+      body_text: "Click the link"
+    )
+
+    layer = Analysis::ContentAnalyzer.new(email).analyze
+
+    assert_equal "https://mybank.com/login", layer.details.fetch("url_mismatches").first.fetch("display")
+  end
+
   test "detects WhatsApp links" do
     email = create(:email,
       body_text: "Contact us at https://wa.me/5511999999999"

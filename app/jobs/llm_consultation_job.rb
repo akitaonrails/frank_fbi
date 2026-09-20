@@ -10,7 +10,7 @@ class LlmConsultationJob < ApplicationJob
 
     start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-    chat = RubyLLM.chat(model: model_id)
+    chat = RubyLLM.chat(model: model_id, provider: :openrouter, assume_model_exists: true)
     if user_content
       # New: separate system/user messages
       chat.with_instructions(prompt_or_system)
@@ -37,8 +37,8 @@ class LlmConsultationJob < ApplicationJob
       key_findings: parsed[:key_findings],
       confidence: parsed[:confidence],
       content_patterns: parsed[:content_patterns],
-      prompt_tokens: response.input_tokens,
-      completion_tokens: response.output_tokens,
+      prompt_tokens: response.tokens&.input,
+      completion_tokens: response.tokens&.output,
       response_time_seconds: elapsed.round(2)
     )
 

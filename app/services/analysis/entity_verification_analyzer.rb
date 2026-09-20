@@ -161,8 +161,8 @@ module Analysis
 
       parsed = parse_response(response.content)
       parsed[:response_time_seconds] = elapsed.round(2)
-      parsed[:input_tokens] = response.input_tokens
-      parsed[:output_tokens] = response.output_tokens
+      parsed[:input_tokens] = response.tokens&.input
+      parsed[:output_tokens] = response.tokens&.output
       parsed[:llm_succeeded] = true
       parsed
     rescue => e
@@ -287,8 +287,8 @@ module Analysis
     end
 
     def build_chat
-      chat = RubyLLM.chat(model: MODEL)
-      chat.with_tool(BraveWebSearch)
+      chat = RubyLLM.chat(model: MODEL, provider: :openrouter)
+      chat.with_tools(BraveWebSearch)
       chat
     end
 
@@ -409,15 +409,15 @@ module Analysis
 
     def classify_platform(host, sender_domain)
       return "site_oficial" if sender_domain.present? && (host == sender_domain || host.end_with?(".#{sender_domain}"))
-      return "linkedin" if host.include?("linkedin.com")
+      return "linkedin" if %w[linkedin.com www.linkedin.com].include?(host)
       return "x" if host == "x.com" || host == "www.x.com"
-      return "twitter" if host.include?("twitter.com")
-      return "facebook" if host.include?("facebook.com")
-      return "instagram" if host.include?("instagram.com")
-      return "github" if host.include?("github.com")
-      return "youtube" if host.include?("youtube.com")
-      return "tiktok" if host.include?("tiktok.com")
-      return "threads" if host.include?("threads.net")
+      return "twitter" if %w[twitter.com www.twitter.com].include?(host)
+      return "facebook" if %w[facebook.com www.facebook.com].include?(host)
+      return "instagram" if %w[instagram.com www.instagram.com].include?(host)
+      return "github" if %w[github.com www.github.com].include?(host)
+      return "youtube" if %w[youtube.com www.youtube.com].include?(host)
+      return "tiktok" if %w[tiktok.com www.tiktok.com].include?(host)
+      return "threads" if %w[threads.net www.threads.net].include?(host)
 
       "other"
     end

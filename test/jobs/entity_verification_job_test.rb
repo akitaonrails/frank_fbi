@@ -23,11 +23,12 @@ class EntityVerificationJobTest < ActiveSupport::TestCase
     )
 
     # Stub the LLM chat to avoid real API calls
-    response = Struct.new(:content, :input_tokens, :output_tokens).new(
-      { score: 50, confidence: 0.5, verdict_summary: "Test" }.to_json, 100, 50
+    response = Struct.new(:content, :tokens).new(
+      { score: 50, confidence: 0.5, verdict_summary: "Test" }.to_json,
+      RubyLLM::Tokens.new(input: 100, output: 50)
     )
     chat = Object.new
-    chat.define_singleton_method(:with_tool) { |_tool| self }
+    chat.define_singleton_method(:with_tools) { |_tool| self }
     chat.define_singleton_method(:ask) { |_prompt| response }
 
     # Patch RubyLLM.chat at module level for this test

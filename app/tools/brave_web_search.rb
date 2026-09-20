@@ -1,7 +1,7 @@
 class BraveWebSearch < RubyLLM::Tool
   description "Search the web using Brave Search to verify entities, people, organizations, and domains mentioned in emails."
 
-  param :query, desc: "The search query to look up"
+  parameter :query, description: "The search query to look up"
 
   def execute(query:)
     result = BraveSearchClient.new.search(query)
