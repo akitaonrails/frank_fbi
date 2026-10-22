@@ -364,6 +364,8 @@ MAX_SUBMISSIONS_PER_HOUR=20  # default, 0 = disabled
 - **OpenRouter** — for LLM analysis (Layer 6). Get a key at [openrouter.ai](https://openrouter.ai)
 - **VirusTotal** — for URL scanning (Layer 4). Free tier: 4 requests/min. [virustotal.com](https://www.virustotal.com)
 - **WhoisXML API** — for WHOIS/domain age (Layer 2). Free tier: 500 lookups/month. [whoisxmlapi.com](https://www.whoisxmlapi.com)
+- **OTILabs Domain Intelligence** — optional WHOIS fallback (Layer 2): used when WhoisXML has no key or its request fails. RapidAPI free plan: 1,000 requests/month. [rapidapi.com](https://rapidapi.com/osiris-technical-institute-osiris-technical-institute-default/api/domain-intelligence-api)
+- **WhoisFreaks** — optional WHOIS fallback (Layer 2), third in the chain; also fills the registrant country. 500 one-time free credits. [whoisfreaks.com](https://whoisfreaks.com)
 - **Brave Search** — for entity verification OSINT (Layer 5). [brave.com/search/api](https://brave.com/search/api/)
 
 Layers 1 and 3 are fully deterministic and require no API keys.

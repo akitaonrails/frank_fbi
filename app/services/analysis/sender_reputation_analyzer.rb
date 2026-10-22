@@ -58,8 +58,8 @@ module Analysis
       whois = WhoisLookupService.new(domain).lookup
 
       unless whois
-        # Don't penalize if WHOIS API key is simply not configured
-        if ENV.fetch("WHOISXML_API_KEY", "").present?
+        # Don't penalize if no WHOIS provider API key is configured
+        if WhoisLookupService.any_provider_configured?
           @findings << "Consulta WHOIS falhou para #{domain} — não foi possível verificar a idade do domínio"
           @score += 5
         end
